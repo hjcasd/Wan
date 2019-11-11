@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <!--在Android P(API 28)系统的设备上，默认要求使用加密连接。譬如，默认只能使用HTTPS进行通信，若强行使用HTTP通信,则会报如下错误
+    java.net.UnknownServiceException: CLEARTEXT communication ** not permitted by network security policy-->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BaseLib</string>
+
+    <string name="message_permission_always_failed">请去设置页面申请以下权限,以便程序继续运行\n\n%1$s</string>
+    <string name="message_permission_rationale">请申请以下权限,以便程序继续运行\n\n%1$s</string>
+    <string name="setting">去设置</string>
+    <string name="resume">申请</string>
+    <string name="cancel">取消</string>
+    <string name="tip">Tips</string>
+</resources>

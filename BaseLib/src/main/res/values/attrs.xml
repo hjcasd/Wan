@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--标题栏-->
+    <declare-styleable name="TitleBar">
+        <attr name="leftImage" format="integer" />
+
+        <attr name="titleText" format="string" />
+        <attr name="titleSize" format="dimension" />
+        <attr name="titleColor" format="color" />
+
+        <attr name="rightImage" format="integer" />
+
+        <attr name="isShowLine" format="boolean" />
+    </declare-styleable>
+
+
+    <!--页面状态视图-->
+    <declare-styleable name="StatusView">
+        <attr name="loadingView" format="reference"/>
+        <attr name="errorView" format="reference"/>
+        <attr name="emptyView" format="reference"/>
+        <attr name="noNetworkView" format="reference"/>
+        <attr name="contentView" format="reference"/>
+    </declare-styleable>
+
+
+</resources>
