@@ -1,6 +1,8 @@
 package com.hjc.wan.utils.helper
 
+import com.blankj.utilcode.util.CacheDiskUtils
 import com.blankj.utilcode.util.SPUtils
+import com.hjc.wan.ui.model.LoginBean
 
 /**
  * @Author: HJC
@@ -10,35 +12,28 @@ import com.blankj.utilcode.util.SPUtils
 object AccountManager {
 
     private const val KEY_IS_LOGIN = "isLogin"
-    private const val KEY_USERNAME = "username"
+    private const val KEY_LOGIN_INFO = "loginInfo"
     private const val KEY_COOKIE = "cookie"
 
     /**
-     * 获取用户名
+     * 获取用户信息
      *
-     * @return
+     * @return 用户信息
      */
-    fun getUsername(): String {
-        return SPUtils.getInstance().getString(KEY_USERNAME)
-    }
-
-    fun setUsername(username: String) {
-        SPUtils.getInstance().put(KEY_USERNAME, username)
+    fun getLoginInfo(): LoginBean {
+        return CacheDiskUtils.getInstance().getSerializable(KEY_LOGIN_INFO) as LoginBean
     }
 
     /**
-     * 获取cookie
+     * 保存用户信息
+     * @param bean 用户信息
      */
-    fun getCookie(): String {
-        return SPUtils.getInstance().getString(KEY_COOKIE)
-    }
-
-    fun setCookie(cookie: String) {
-        SPUtils.getInstance().put(KEY_COOKIE, cookie)
+    fun setLoginInfo(bean: LoginBean) {
+        CacheDiskUtils.getInstance().put(KEY_LOGIN_INFO, bean)
     }
 
     /**
-     * 用户是否登录
+     * 获取用户是否登录
      *
      * @return
      */
@@ -54,8 +49,7 @@ object AccountManager {
      * 清除账户信息
      */
     fun clear() {
-        setLogin(false)
-        setUsername("")
-        setCookie("")
+        SPUtils.getInstance().clear()
+        CacheDiskUtils.getInstance().clear()
     }
 }

@@ -44,16 +44,9 @@ object ExceptionUtils {
     }
 
     private fun convertServerCode(apiException: ApiException): String {
-        var msg = ""
-        when (apiException.code) {
-            ServerCode.CODE_TOKEN_ERROR -> msg = "登录状态失效"
-
-            ServerCode.CODE_ID_ERROR -> msg = "身份证过期"
-
-            ServerCode.CODE_VERIFY_SMS -> msg = "需要短信验证码验证"
-
-            else -> {
-            }
+        var msg = "未知请求错误"
+        if (apiException.code == ServerCode.CODE_FAIL){
+            msg = "请求失败"
         }
         return msg
     }

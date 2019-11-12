@@ -10,6 +10,6 @@ interface LoginContract {
     }
 
     interface Presenter {
-        fun login(phone: String, password: String)
+        fun login(username: String, password: String)
     }
 }

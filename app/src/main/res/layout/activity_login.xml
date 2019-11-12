@@ -58,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="请输入账号"
+                android:textColor="@color/white"
                 android:inputType="text"
                 android:textSize="14sp" />
 
@@ -77,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="请输入密码"
+                android:textColor="@color/white"
                 android:inputType="textPassword"
                 android:textSize="14sp" />
 
@@ -88,7 +90,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/selector_btn_login"
+            android:background="@drawable/shape_btn_login"
             android:text="登录"
             android:textColor="@color/white"
             app:layout_constraintLeft_toLeftOf="@id/til_password"

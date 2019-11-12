@@ -30,8 +30,15 @@ public abstract class BaseDialog extends RxDialogFragment implements View.OnClic
 
     protected Context mContext;
 
-    private int mGravity = Gravity.CENTER;  //位置
-    private int mAnimStyle = 0; //进入退出动画
+    /**
+     * dialog显示位置
+     */
+    private int mGravity = Gravity.CENTER;
+
+    /**
+     * dialog进入退出动画
+     */
+    private int mAnimStyle = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -48,8 +55,7 @@ public abstract class BaseDialog extends RxDialogFragment implements View.OnClic
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayoutId(), container, false);
-        return view;
+        return inflater.inflate(getLayoutId(), container, false);
     }
 
 
@@ -137,7 +143,7 @@ public abstract class BaseDialog extends RxDialogFragment implements View.OnClic
     /**
      * 初始化数据
      */
-    public abstract void initData(Bundle savedInstanceState);
+    public abstract void initData(@Nullable Bundle savedInstanceState);
 
     /**
      * 设置监听器

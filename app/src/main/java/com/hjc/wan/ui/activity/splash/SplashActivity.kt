@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
 class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
     SplashContract.View {
 
+
     override fun createPresenter(): SplashPresenter {
         return SplashPresenter()
     }
@@ -43,6 +44,10 @@ class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
             getString(R.string.transition_logo_splash)
         )
         RouterManager.jumpWithScene(RoutePath.URL_LOGIN, this, compat)
+    }
+
+    override fun toMain() {
+        RouterManager.jump(RoutePath.URL_MAIN)
     }
 
 }

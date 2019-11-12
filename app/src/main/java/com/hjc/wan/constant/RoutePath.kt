@@ -7,6 +7,10 @@ package com.hjc.wan.constant
  */
 object RoutePath {
 
-    //登录页面
+    // 登录页面
     const val URL_LOGIN = "/wan/login"
+    const val URL_REGISTER = "/wan/register"
+
+    // 主页面
+    const val URL_MAIN = "/wan/main"
 }

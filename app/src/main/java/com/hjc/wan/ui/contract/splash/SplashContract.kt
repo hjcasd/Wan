@@ -7,6 +7,7 @@ interface SplashContract {
 
     interface View : IBaseView {
         fun toLogin()
+        fun toMain()
     }
 
     interface Presenter{
