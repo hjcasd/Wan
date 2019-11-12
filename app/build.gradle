@@ -123,10 +123,13 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
 
-
     //路由
     implementation 'com.alibaba:arouter-api:1.4.1'
     kapt 'com.alibaba:arouter-compiler:1.2.2'
+
+
+    //Banner
+    implementation 'com.youth.banner:banner:1.4.10'
 
     implementation project(path: ':BaseLib')
 }

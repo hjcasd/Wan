@@ -34,6 +34,10 @@ abstract class BaseMvpFragment<V : IBaseView, P : BasePresenter<V>> : BaseFragme
 
     abstract fun createView(): V
 
+    fun getPresenter(): P {
+        return mPresenter
+    }
+
     override fun onDestroyView() {
         mPresenter.detachView()
         super.onDestroyView()

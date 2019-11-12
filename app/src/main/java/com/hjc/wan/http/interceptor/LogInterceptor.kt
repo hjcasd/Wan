@@ -27,14 +27,14 @@ class LogInterceptor : Interceptor {
 
 
         val requestJson = "request code === ${response.code()}" +
-                    "\nrequest url === ${request.url()}" +
-                    "\nrequest duration === ${response.receivedResponseAtMillis() - response.sentRequestAtMillis()}ms" +
-                    "\nrequest header === ${request.headers()}" +
-                    "\nrequest body === ${bodyToString(request.body())}"
+                "\nrequest url === ${request.url()}" +
+                "\nrequest duration === ${response.receivedResponseAtMillis() - response.sentRequestAtMillis()}ms" +
+                "\nrequest header === ${request.headers()}" +
+                "\nrequest body === ${bodyToString(request.body())}"
         LogUtils.e(requestJson)
 
         val responseJson = buffer.clone().readString(UTF8)
-        LogUtils.json(LogUtils.E, responseJson)
+        FormatUtils.formatJsonAndLog(responseJson)
 
         return response
     }

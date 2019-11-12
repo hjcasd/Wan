@@ -65,4 +65,5 @@ dependencies {
 
     //Loading动画
     api 'com.github.ybq:Android-SpinKit:1.2.0'
+
 }

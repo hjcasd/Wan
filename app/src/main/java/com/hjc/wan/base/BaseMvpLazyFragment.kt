@@ -33,6 +33,10 @@ abstract class BaseMvpLazyFragment<V : IBaseView, P : BasePresenter<V>> : BaseLa
 
     abstract fun createView(): V
 
+    fun getPresenter(): P {
+        return mPresenter
+    }
+
     override fun onDestroyView() {
         mPresenter.detachView()
         super.onDestroyView()
