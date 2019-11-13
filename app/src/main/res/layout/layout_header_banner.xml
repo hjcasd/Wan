@@ -8,7 +8,7 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        app:banner_default_image="@mipmap/ic_launcher"
+        app:banner_default_image="@mipmap/icon_default_pic"
         app:delay_time="3000"
         app:image_scale_type="fit_xy">
 

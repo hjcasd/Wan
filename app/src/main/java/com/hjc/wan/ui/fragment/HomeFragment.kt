@@ -3,6 +3,7 @@ package com.hjc.wan.ui.fragment
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.CheckBox
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
@@ -27,12 +28,12 @@ import java.util.*
  */
 class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeContract.View {
 
-
     private var banner: Banner? = null
 
     private lateinit var mHomeAdapter: HomeAdapter
 
     private var mPage: Int = 0
+
 
     companion object {
 
@@ -72,25 +73,26 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         super.initData(savedInstanceState)
 
         getPresenter().loadBannerData()
-        getPresenter().loadArticleData(mPage, true)
+        getPresenter().loadListData(mPage, true)
     }
 
     override fun showBanner(result: MutableList<BannerBean>) {
         val imgList = ArrayList<String>()
+        val titleList = ArrayList<String>()
         for (bean in result) {
             imgList.add(bean.imagePath)
+            titleList.add(bean.title)
         }
         banner?.setImages(imgList)
             ?.setImageLoader(GlideImageLoader())
             ?.setBannerAnimation(Transformer.Accordion)
+            ?.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
+            ?.setBannerTitles(titleList)
             ?.setIndicatorGravity(BannerConfig.CENTER)
             ?.start()
     }
 
     override fun showList(result: MutableList<HomeArticleBean>) {
-        smartRefreshLayout.finishLoadMore()
-        smartRefreshLayout.finishRefresh()
-
         if (mPage == 0) {
             mHomeAdapter.setNewData(result)
         } else {
@@ -105,24 +107,34 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter().loadArticleData(mPage, false)
+                getPresenter().loadBannerData()
+                getPresenter().loadListData(mPage, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadArticleData(mPage, false)
+                getPresenter().loadListData(mPage, false)
             }
 
         })
-    }
 
-    override fun onDestroyView() {
-        banner?.stopAutoPlay()
-        super.onDestroyView()
+        mHomeAdapter.setOnCollectViewClickListener(object : HomeAdapter.OnCollectViewClickListener{
+
+            override fun onClick(checkBox: CheckBox, position: Int) {
+                if (checkBox.isChecked){
+                    ToastUtils.showShort("选中了: $position")
+                }else{
+                    ToastUtils.showShort("未选中: $position")
+                }
+            }
+        })
     }
 
     override fun showContent() {
         stateView.showContent()
+        smartRefreshLayout.finishLoadMore()
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.setEnableLoadMore(true)
     }
 
     override fun showLoading() {
@@ -132,14 +144,25 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
     override fun showError() {
         stateView.showError()
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.setEnableLoadMore(false)
     }
 
     override fun showEmpty() {
         stateView.showEmpty()
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.setEnableLoadMore(false)
     }
 
     override fun showNoNetwork() {
         stateView.showNoNetwork()
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.setEnableLoadMore(false)
+    }
+
+    override fun onDestroyView() {
+        banner?.stopAutoPlay()
+        super.onDestroyView()
     }
 
 }

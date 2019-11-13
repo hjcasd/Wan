@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_author"
+            android:id="@+id/tvAuthor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -44,12 +44,12 @@
             android:layout_marginRight="5dp"
             android:src="@mipmap/icon_time"
             app:layout_constraintBottom_toBottomOf="@id/iv_author"
-            app:layout_constraintRight_toLeftOf="@id/tv_time"
+            app:layout_constraintRight_toLeftOf="@id/tvTime"
             app:layout_constraintTop_toTopOf="@id/iv_author" />
 
 
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2019-11-11"
@@ -61,7 +61,7 @@
 
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -69,6 +69,7 @@
             android:maxLines="2"
             android:text="啊哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈"
             android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -82,11 +83,11 @@
             android:layout_marginTop="5dp"
             android:src="@mipmap/icon_chapter"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
 
         <TextView
-            android:id="@+id/tv_chapter"
+            android:id="@+id/tvChapter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -99,7 +100,7 @@
 
 
         <CheckBox
-            android:id="@+id/cb_collect"
+            android:id="@+id/cbCollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/selector_cb_collect"

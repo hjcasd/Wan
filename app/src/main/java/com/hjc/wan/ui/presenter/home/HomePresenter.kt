@@ -32,7 +32,7 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
             })
     }
 
-    override fun loadArticleData(page: Int, isFirst: Boolean) {
+    override fun loadListData(page: Int, isFirst: Boolean) {
         if (isFirst) {
             getView().showLoading()
         }

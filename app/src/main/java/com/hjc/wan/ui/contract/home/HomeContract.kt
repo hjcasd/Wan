@@ -17,6 +17,6 @@ interface HomeContract {
 
     interface Presenter {
         fun loadBannerData()
-        fun loadArticleData(page: Int, isFirst: Boolean)
+        fun loadListData(page: Int, isFirst: Boolean)
     }
 }

@@ -23,7 +23,7 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
-            android:text="网络错误,点击重试" />
+            android:text="网络错误，请检查后重试" />
 
     </LinearLayout>
 
