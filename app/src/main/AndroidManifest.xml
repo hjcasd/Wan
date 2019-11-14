@@ -41,7 +41,7 @@
 
 
         <activity
-            android:name="com.hjc.wan.ui.activity.splash.SplashActivity"
+            android:name="com.hjc.wan.ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,13 +51,13 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name="com.hjc.wan.ui.activity.MainActivity"
+            android:name="com.hjc.wan.ui.main.MainActivity"
             android:screenOrientation="portrait" />
 
 

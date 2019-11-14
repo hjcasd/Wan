@@ -2,7 +2,7 @@ package com.hjc.wan.http
 
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.bean.BaseResponse
-import com.hjc.wan.ui.model.*
+import com.hjc.wan.model.*
 import io.reactivex.Observable
 import retrofit2.http.*
 

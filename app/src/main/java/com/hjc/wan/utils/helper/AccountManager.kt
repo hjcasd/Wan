@@ -2,7 +2,7 @@ package com.hjc.wan.utils.helper
 
 import com.blankj.utilcode.util.CacheDiskUtils
 import com.blankj.utilcode.util.SPUtils
-import com.hjc.wan.ui.model.LoginBean
+import com.hjc.wan.model.LoginBean
 
 /**
  * @Author: HJC
