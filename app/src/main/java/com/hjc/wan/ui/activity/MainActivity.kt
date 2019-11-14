@@ -6,11 +6,11 @@ import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragmentActivity
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.contract.MainContract
-import com.hjc.wan.ui.fragment.HomeFragment
 import com.hjc.wan.ui.fragment.MineFragment
 import com.hjc.wan.ui.fragment.PublicFragment
-import com.hjc.wan.ui.fragment.SquareFragment
+import com.hjc.wan.ui.fragment.home.HomeFragment
 import com.hjc.wan.ui.fragment.project.ProjectFragment
+import com.hjc.wan.ui.fragment.square.SquareFragment
 import com.hjc.wan.ui.presenter.MainPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 

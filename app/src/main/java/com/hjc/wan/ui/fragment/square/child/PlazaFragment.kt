@@ -1,88 +1,78 @@
-package com.hjc.wan.ui.fragment.project
+package com.hjc.wan.ui.fragment.square.child
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.CheckBox
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
-import com.hjc.wan.ui.contract.project.ProjectChildContract
-import com.hjc.wan.ui.fragment.project.adapter.ProjectChildAdapter
+import com.hjc.wan.ui.contract.square.PlazaContract
+import com.hjc.wan.ui.fragment.square.adapter.PlazaAdapter
 import com.hjc.wan.ui.model.ArticleBean
-import com.hjc.wan.ui.presenter.project.ProjectChildPresenter
+import com.hjc.wan.ui.presenter.square.PlazaPresenter
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_project_child.*
+import kotlinx.android.synthetic.main.fragment_plaza.*
 import java.util.concurrent.TimeUnit
-
 
 /**
  * @Author: HJC
- * @Date: 2019/11/9 15:38
- * @Description: 子项目页面
+ * @Date: 2019/11/14 14:38
+ * @Description: 广场子页面
  */
-class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, ProjectChildPresenter>(),
-    ProjectChildContract.View {
+class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
+    PlazaContract.View {
 
-    private var cid: Int = 0
+    private var mPage = 0
 
-    private var mPage: Int = 0
-
-    private lateinit var mProjectChildAdapter: ProjectChildAdapter
+    private lateinit var mPlazaAdapter: PlazaAdapter
 
     companion object {
 
-        fun newInstance(cid: Int): ProjectChildFragment {
-            val projectChildFragment= ProjectChildFragment()
-            val bundle = Bundle()
-            bundle.putInt("cid", cid)
-            projectChildFragment.arguments = bundle
-            return projectChildFragment
+        fun newInstance(): PlazaFragment {
+            return PlazaFragment()
         }
     }
 
-    override fun createPresenter(): ProjectChildPresenter {
-        return ProjectChildPresenter()
+    override fun createPresenter(): PlazaPresenter {
+        return PlazaPresenter()
     }
 
-    override fun createView(): ProjectChildContract.View {
+    override fun createView(): PlazaContract.View {
         return this
     }
 
-
     override fun getLayoutId(): Int {
-        return R.layout.fragment_project_child
+        return R.layout.fragment_plaza
     }
 
     override fun initView() {
         super.initView()
 
         val manager = LinearLayoutManager(mContext)
-        rvProject.layoutManager = manager
+        rvPlaza.layoutManager = manager
 
-        mProjectChildAdapter = ProjectChildAdapter(null)
-        rvProject.adapter = mProjectChildAdapter
+        mPlazaAdapter = PlazaAdapter(null)
+        rvPlaza.adapter = mPlazaAdapter
     }
 
     override fun initData() {
         super.initData()
 
-        cid = arguments?.get("cid") as Int
-
         showLoading()
-        getPresenter().loadListData(mPage, cid)
+        getPresenter().loadListData(mPage)
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
-            mProjectChildAdapter.setNewData(result)
+            mPlazaAdapter.setNewData(result)
         } else {
-            mProjectChildAdapter.addData(result)
+            mPlazaAdapter.addData(result)
         }
     }
+
 
     override fun addListeners() {
         super.addListeners()
@@ -91,18 +81,18 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter().loadListData(mPage, cid)
+                getPresenter().loadListData(mPage)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadListData(mPage, cid)
+                getPresenter().loadListData(mPage)
             }
 
         })
 
-        mProjectChildAdapter.setOnCollectViewClickListener(object :
-            ProjectChildAdapter.OnCollectViewClickListener {
+        mPlazaAdapter.setOnCollectViewClickListener(object :
+            PlazaAdapter.OnCollectViewClickListener {
 
             override fun onClick(checkBox: CheckBox, position: Int) {
                 if (checkBox.isChecked) {
@@ -149,5 +139,6 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
     }
+
 
 }

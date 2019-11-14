@@ -1,40 +1,21 @@
-package com.hjc.wan.ui.presenter.home
+package com.hjc.wan.ui.presenter.square
 
-import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
-import com.hjc.wan.ui.contract.home.HomeContract
-import com.hjc.wan.ui.fragment.home.HomeFragment
+import com.hjc.wan.ui.contract.square.PlazaContract
+import com.hjc.wan.ui.fragment.square.child.PlazaFragment
 import com.hjc.wan.ui.model.ArticleBean
-import com.hjc.wan.ui.model.BannerBean
 
-class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter {
-
-    override fun loadBannerData() {
-        val homeFragment = getView() as HomeFragment
-        RetrofitClient.getApi()
-            .getBanner()
-            .compose(RxHelper.bind(homeFragment))
-            .subscribe(object : CommonObserver<MutableList<BannerBean>>() {
-
-                override fun onSuccess(result: MutableList<BannerBean>?) {
-                    if (result != null && result.size > 0) {
-                        getView().showBanner(result)
-                    } else {
-                        ToastUtils.showShort("Banner数据请求失败")
-                    }
-                }
-            })
-    }
+class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Presenter{
 
     override fun loadListData(page: Int) {
-        val homeFragment = getView() as HomeFragment
+        val plazaFragment = getView() as PlazaFragment
         RetrofitClient.getApi()
-            .getArticle(page)
-            .compose(RxHelper.bind(homeFragment))
+            .getSquareData(page)
+            .compose(RxHelper.bind(plazaFragment))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {

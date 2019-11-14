@@ -1,5 +1,6 @@
-package com.hjc.wan.ui.fragment
+package com.hjc.wan.ui.fragment.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -7,8 +8,9 @@ import android.widget.CheckBox
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
+import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.ui.contract.home.HomeContract
-import com.hjc.wan.ui.fragment.adapter.HomeAdapter
+import com.hjc.wan.ui.fragment.home.adapter.HomeAdapter
 import com.hjc.wan.ui.model.ArticleBean
 import com.hjc.wan.ui.model.BannerBean
 import com.hjc.wan.ui.presenter.home.HomePresenter
@@ -18,8 +20,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.youth.banner.Banner
 import com.youth.banner.BannerConfig
 import com.youth.banner.Transformer
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * @Author: HJC
@@ -131,11 +135,16 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         })
     }
 
+    @SuppressLint("CheckResult")
     override fun showContent() {
-        stateView.showContent()
-        smartRefreshLayout.finishLoadMore()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(true)
+        Observable.timer(500, TimeUnit.MILLISECONDS)
+            .compose(RxSchedulers.ioToMain())
+            .subscribe {
+                stateView.showContent()
+                smartRefreshLayout.finishLoadMore()
+                smartRefreshLayout.finishRefresh()
+                smartRefreshLayout.setEnableLoadMore(true)
+            }
     }
 
     override fun showLoading() {

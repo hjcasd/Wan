@@ -1,17 +1,15 @@
-package com.hjc.wan.ui.fragment.adapter
+package com.hjc.wan.ui.fragment.square.adapter
 
 import android.text.Html
 import android.widget.CheckBox
-import android.widget.ImageView
 import com.blankj.utilcode.util.StringUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.hjc.wan.R
 import com.hjc.wan.ui.model.ArticleBean
-import com.hjc.wan.utils.image.ImageManager
 
-class ProjectChildAdapter(data: MutableList<ArticleBean>?) :
-    BaseQuickAdapter<ArticleBean, BaseViewHolder>(R.layout.item_rv_project, data) {
+class PlazaAdapter(data: MutableList<ArticleBean>?) :
+    BaseQuickAdapter<ArticleBean, BaseViewHolder>(R.layout.item_rv_home, data) {
 
     private var mOnCollectViewClickListener: OnCollectViewClickListener? = null
 
@@ -21,17 +19,14 @@ class ProjectChildAdapter(data: MutableList<ArticleBean>?) :
         } else {
             item.shareUser
         }
-        helper.setText(R.id.tvAuthor, author)
+        helper.setText(R.id.tv_author, author)
 
-        helper.setText(R.id.tvTitle, Html.fromHtml(item.title))
-        helper.setText(R.id.tvContent, Html.fromHtml(item.desc))
-        helper.setText(R.id.tvTime, item.niceDate)
-        helper.setText(R.id.tvChapter, item.chapterName)
+        helper.setText(R.id.tv_title, Html.fromHtml(item.title))
+        helper.setText(R.id.tv_time, item.niceDate)
+        helper.setText(R.id.tv_chapter, item.chapterName)
 
-        val ivPic = helper.getView<ImageView>(R.id.ivPic)
-        ImageManager.loadImage(ivPic, item.envelopePic)
 
-        val cbCollect = helper.getView<CheckBox>(R.id.cbCollect)
+        val cbCollect = helper.getView<CheckBox>(R.id.cb_collect)
         cbCollect.isChecked = item.collect
         cbCollect.setOnClickListener { v ->
             mOnCollectViewClickListener?.onClick(cbCollect, helper.adapterPosition)

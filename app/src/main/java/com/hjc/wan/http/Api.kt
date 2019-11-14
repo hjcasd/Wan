@@ -2,10 +2,7 @@ package com.hjc.wan.http
 
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.bean.BaseResponse
-import com.hjc.wan.ui.model.ArticleBean
-import com.hjc.wan.ui.model.BannerBean
-import com.hjc.wan.ui.model.ClassifyBean
-import com.hjc.wan.ui.model.LoginBean
+import com.hjc.wan.ui.model.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -51,4 +48,25 @@ interface Api {
      */
     @GET("/project/list/{page}/json")
     fun getProjectDataByType(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+
+
+    /**
+     * 获取广场数据
+     */
+    @GET("/user_article/list/{page}/json")
+    fun getSquareData(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+
+
+    /**
+     * 获取体系数据
+     */
+    @GET("/tree/json")
+    fun getSystemData(): Observable<BaseResponse<MutableList<SystemBean>>>
+
+
+    /**
+     * 获取导航数据
+     */
+    @GET("/navi/json")
+    fun getNavigationData(): Observable<BaseResponse<MutableList<NavigationBean>>>
 }

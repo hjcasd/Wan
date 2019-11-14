@@ -133,5 +133,8 @@ dependencies {
     //指示器
     implementation 'com.github.hackware1993:MagicIndicator:1.6.0'
 
+    //流式布局
+    implementation 'com.nex3z:flow-layout:1.2.4'
+
     implementation project(path: ':BaseLib')
 }
