@@ -127,9 +127,11 @@ dependencies {
     implementation 'com.alibaba:arouter-api:1.4.1'
     kapt 'com.alibaba:arouter-compiler:1.2.2'
 
-
     //Banner
     implementation 'com.youth.banner:banner:1.4.10'
+
+    //指示器
+    implementation 'com.github.hackware1993:MagicIndicator:1.6.0'
 
     implementation project(path: ':BaseLib')
 }

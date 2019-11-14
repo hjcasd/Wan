@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_author"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/icon_author"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="哈哈"
+            android:textColor="@color/black_666"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_author"
+            app:layout_constraintLeft_toRightOf="@id/iv_author"
+            app:layout_constraintTop_toTopOf="@id/iv_author" />
+
+
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/icon_time"
+            app:layout_constraintBottom_toBottomOf="@id/iv_author"
+            app:layout_constraintRight_toLeftOf="@id/tvTime"
+            app:layout_constraintTop_toTopOf="@id/iv_author" />
+
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2019-11-11"
+            android:textColor="@color/black_666"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_author"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_author" />
+
+
+        <ImageView
+            android:id="@+id/ivPic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_author" />
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="啊哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/ivPic"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivPic" />
+
+
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="啊哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈"
+            android:textColor="@color/black_333"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/tvTitle"
+            app:layout_constraintRight_toRightOf="parent"
+           app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
+
+
+        <ImageView
+            android:id="@+id/iv_chapter"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/icon_chapter"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivPic" />
+
+
+        <TextView
+            android:id="@+id/tvChapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="类别"
+            android:textColor="@color/black_666"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_chapter"
+            app:layout_constraintLeft_toRightOf="@id/iv_chapter"
+            app:layout_constraintTop_toTopOf="@id/iv_chapter" />
+
+
+        <CheckBox
+            android:id="@+id/cbCollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_cb_collect"
+            app:layout_constraintBottom_toBottomOf="@id/iv_chapter"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.v7.widget.CardView>

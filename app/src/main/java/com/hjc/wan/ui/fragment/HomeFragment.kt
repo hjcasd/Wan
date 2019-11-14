@@ -9,8 +9,8 @@ import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
 import com.hjc.wan.ui.contract.home.HomeContract
 import com.hjc.wan.ui.fragment.adapter.HomeAdapter
+import com.hjc.wan.ui.model.ArticleBean
 import com.hjc.wan.ui.model.BannerBean
-import com.hjc.wan.ui.model.HomeArticleBean
 import com.hjc.wan.ui.presenter.home.HomePresenter
 import com.hjc.wan.utils.image.GlideImageLoader
 import com.scwang.smartrefresh.layout.api.RefreshLayout
@@ -72,8 +72,9 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
+        showLoading()
         getPresenter().loadBannerData()
-        getPresenter().loadListData(mPage, true)
+        getPresenter().loadListData(mPage)
     }
 
     override fun showBanner(result: MutableList<BannerBean>) {
@@ -92,7 +93,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
             ?.start()
     }
 
-    override fun showList(result: MutableList<HomeArticleBean>) {
+    override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
             mHomeAdapter.setNewData(result)
         } else {
@@ -108,12 +109,12 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
                 getPresenter().loadBannerData()
-                getPresenter().loadListData(mPage, false)
+                getPresenter().loadListData(mPage)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadListData(mPage, false)
+                getPresenter().loadListData(mPage)
             }
 
         })

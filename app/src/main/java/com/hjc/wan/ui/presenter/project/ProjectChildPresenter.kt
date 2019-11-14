@@ -1,40 +1,22 @@
-package com.hjc.wan.ui.presenter.home
+package com.hjc.wan.ui.presenter.project
 
-import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
-import com.hjc.wan.ui.contract.home.HomeContract
-import com.hjc.wan.ui.fragment.HomeFragment
+import com.hjc.wan.ui.contract.project.ProjectChildContract
+import com.hjc.wan.ui.fragment.project.ProjectChildFragment
 import com.hjc.wan.ui.model.ArticleBean
-import com.hjc.wan.ui.model.BannerBean
 
-class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter {
+class ProjectChildPresenter : BasePresenter<ProjectChildContract.View>(),
+    ProjectChildContract.Presenter {
 
-    override fun loadBannerData() {
-        val homeFragment = getView() as HomeFragment
+    override fun loadListData(page: Int, cid: Int) {
+        val projectChildFragment = getView() as ProjectChildFragment
         RetrofitClient.getApi()
-            .getBanner()
-            .compose(RxHelper.bind(homeFragment))
-            .subscribe(object : CommonObserver<MutableList<BannerBean>>() {
-
-                override fun onSuccess(result: MutableList<BannerBean>?) {
-                    if (result != null && result.size > 0) {
-                        getView().showBanner(result)
-                    } else {
-                        ToastUtils.showShort("Banner数据请求失败")
-                    }
-                }
-            })
-    }
-
-    override fun loadListData(page: Int) {
-        val homeFragment = getView() as HomeFragment
-        RetrofitClient.getApi()
-            .getArticle(page)
-            .compose(RxHelper.bind(homeFragment))
+            .getProjectDataByType(page, cid)
+            .compose(RxHelper.bind(projectChildFragment))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {

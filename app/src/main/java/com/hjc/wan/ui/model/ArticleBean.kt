@@ -2,7 +2,7 @@ package com.hjc.wan.ui.model
 
 import java.io.Serializable
 
-data class HomeArticleBean(
+data class ArticleBean(
     var apkLink: String,
     var author: String,
     var chapterId: Int,

@@ -1,10 +1,11 @@
 package com.hjc.wan.http
 
-import com.hjc.wan.http.bean.BaseResponse
-import com.hjc.wan.ui.model.BannerBean
-import com.hjc.wan.ui.model.HomeArticleBean
-import com.hjc.wan.ui.model.LoginBean
 import com.hjc.wan.http.bean.BasePageResponse
+import com.hjc.wan.http.bean.BaseResponse
+import com.hjc.wan.ui.model.ArticleBean
+import com.hjc.wan.ui.model.BannerBean
+import com.hjc.wan.ui.model.ClassifyBean
+import com.hjc.wan.ui.model.LoginBean
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -32,11 +33,22 @@ interface Api {
 
 
     /**
-     * 玩安卓，文章列表、知识体系下的文章列表
-     *
-     * @param page 页码，从0开始
-     * @param cid  体系id
+     * 获取首页列表数据
      */
     @GET("article/list/{page}/json")
-     fun getArticle(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<HomeArticleBean>>>>
+    fun getArticle(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+
+
+    /**
+     * 获取项目分类数据
+     */
+    @GET("/project/tree/json")
+    fun getProjectTypes(): Observable<BaseResponse<MutableList<ClassifyBean>>>
+
+
+    /**
+     * 根据分类id获取项目数据
+     */
+    @GET("/project/list/{page}/json")
+    fun getProjectDataByType(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 }

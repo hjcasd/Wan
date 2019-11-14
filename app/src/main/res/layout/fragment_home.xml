@@ -9,7 +9,7 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/app_color"
         app:titleColor="@color/white"
         app:titleText="首页" />
 

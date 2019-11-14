@@ -1,7 +1,6 @@
 package com.hjc.wan.base
 
 import android.view.View
-import com.alibaba.android.arouter.launcher.ARouter
 import com.hjc.baselib.fragment.BaseLazyFragment
 
 /**
@@ -14,8 +13,6 @@ abstract class BaseMvpLazyFragment<V : IBaseView, P : BasePresenter<V>> : BaseLa
     private lateinit var mView: V
 
     override fun initData() {
-        ARouter.getInstance().inject(this)
-
         mPresenter = createPresenter()
         mView = createView()
         mPresenter.attachView(mView)

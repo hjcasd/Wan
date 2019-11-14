@@ -1,22 +1,19 @@
-package com.hjc.wan.ui.contract.home
+package com.hjc.wan.ui.contract.project
 
 import com.hjc.wan.base.IBaseView
 import com.hjc.wan.ui.model.ArticleBean
-import com.hjc.wan.ui.model.BannerBean
 
-interface HomeContract {
+interface ProjectChildContract {
     interface View : IBaseView {
         fun showContent()
-        fun showError()
         fun showEmpty()
+        fun showError()
         fun showNoNetwork()
 
-        fun showBanner(result: MutableList<BannerBean>)
         fun showList(result: MutableList<ArticleBean>)
     }
 
     interface Presenter {
-        fun loadBannerData()
-        fun loadListData(page: Int)
+        fun loadListData(page: Int, cid: Int)
     }
 }

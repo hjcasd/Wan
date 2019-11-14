@@ -43,14 +43,14 @@
         <RadioButton
             android:id="@+id/rbPublic"
             style="@style/MenuTabStyle"
-            android:drawableTop="@drawable/selector_rb_tab3"
+            android:drawableTop="@drawable/selector_rb_tab4"
             android:text="@string/tab_public" />
 
 
         <RadioButton
             android:id="@+id/rbMine"
             style="@style/MenuTabStyle"
-            android:drawableTop="@drawable/selector_rb_tab4"
+            android:drawableTop="@drawable/selector_rb_tab5"
             android:text="@string/tab_mine" />
 
     </RadioGroup>

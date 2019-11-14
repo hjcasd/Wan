@@ -9,7 +9,7 @@
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/app_color</item>
         <item name="android:windowFullscreen">false</item>
     </style>
 
