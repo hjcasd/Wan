@@ -22,6 +22,8 @@ interface Api {
     fun login(@Field("username") username: String, @Field("password") pwd: String): Observable<BaseResponse<LoginBean>>
 
 
+
+
     /**
      * 获取banner数据
      */
@@ -36,6 +38,8 @@ interface Api {
     fun getArticle(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 
 
+
+
     /**
      * 获取项目分类数据
      */
@@ -48,6 +52,8 @@ interface Api {
      */
     @GET("/project/list/{page}/json")
     fun getProjectDataByType(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+
+
 
 
     /**
@@ -69,4 +75,28 @@ interface Api {
      */
     @GET("/navi/json")
     fun getNavigationData(): Observable<BaseResponse<MutableList<NavigationBean>>>
+
+
+
+
+    /**
+     * 获取公众号分类数据
+     */
+    @GET("/wxarticle/chapters/json")
+    fun getPublicTypes(): Observable<BaseResponse<MutableList<ClassifyBean>>>
+
+
+    /**
+     * 根据分类id获取公众号数据
+     */
+    @GET("/wxarticle/list/{id}/{page}/json")
+    fun getPublicDataByType(@Path("page") pageNo: Int, @Path("id") id: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+
+
+
+    /**
+     * 获取当前账户的个人积分
+     */
+    @GET("/lg/coin/userinfo/json")
+    fun getIntegral(): Observable<BaseResponse<IntegralBean>>
 }

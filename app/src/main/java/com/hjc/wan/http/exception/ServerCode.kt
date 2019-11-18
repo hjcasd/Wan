@@ -8,6 +8,8 @@ package com.hjc.wan.http.exception
 object ServerCode {
     // 请求成功
     const val CODE_SUCCESS = 0
-    // 请求失败
-    const val CODE_FAIL = -1
+    // 未知错误
+    const val CODE_FAIL = 1
+    // 未登录
+    const val CODE_UN_LOGIN = -1001
 }

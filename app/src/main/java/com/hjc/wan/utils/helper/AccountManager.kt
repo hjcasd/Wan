@@ -46,6 +46,20 @@ object AccountManager {
     }
 
     /**
+     * 获取cookie
+     */
+    fun getCookie(): String {
+        return SPUtils.getInstance().getString(KEY_COOKIE)
+    }
+
+    /**
+     * 保存cookie
+     */
+    fun setCookie(cookie: String) {
+        SPUtils.getInstance().put(KEY_COOKIE, cookie)
+    }
+
+    /**
      * 清除账户信息
      */
     fun clear() {

@@ -1,4 +1,4 @@
-package com.hjc.wan.ui.project.child
+package com.hjc.wan.ui.publics.child
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,62 +9,61 @@ import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
-import com.hjc.wan.ui.project.adapter.ProjectChildAdapter
-import com.hjc.wan.ui.project.contract.ProjectChildContract
-import com.hjc.wan.ui.project.presenter.ProjectChildPresenter
+import com.hjc.wan.ui.publics.adapter.PublicChildAdapter
+import com.hjc.wan.ui.publics.contract.PublicChildContract
+import com.hjc.wan.ui.publics.presenter.PublicChildPresenter
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_project_child.*
+import kotlinx.android.synthetic.main.fragment_public_child.*
 import java.util.concurrent.TimeUnit
-
 
 /**
  * @Author: HJC
- * @Date: 2019/11/9 15:38
- * @Description: 项目子页面
+ * @Date: 2019/11/18 10:54
+ * @Description: 公众号子页面
  */
-class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, ProjectChildPresenter>(),
-    ProjectChildContract.View {
+class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, PublicChildPresenter>(),
+    PublicChildContract.View {
 
     private var cid: Int = 0
 
-    private var mPage: Int = 0
+    private var mPage: Int = 1
 
-    private lateinit var mProjectChildAdapter: ProjectChildAdapter
+    private lateinit var mPublicChildAdapter: PublicChildAdapter
 
     companion object {
 
-        fun newInstance(cid: Int): ProjectChildFragment {
-            val projectChildFragment= ProjectChildFragment()
+        fun newInstance(cid: Int): PublicChildFragment {
+            val publicChildFragment= PublicChildFragment()
             val bundle = Bundle()
             bundle.putInt("cid", cid)
-            projectChildFragment.arguments = bundle
-            return projectChildFragment
+            publicChildFragment.arguments = bundle
+            return publicChildFragment
         }
     }
 
-    override fun createPresenter(): ProjectChildPresenter {
-        return ProjectChildPresenter()
+    override fun createPresenter(): PublicChildPresenter {
+        return PublicChildPresenter()
     }
 
-    override fun createView(): ProjectChildContract.View {
+    override fun createView(): PublicChildContract.View {
         return this
     }
 
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_project_child
+        return R.layout.fragment_public_child
     }
 
     override fun initView() {
         super.initView()
 
         val manager = LinearLayoutManager(mContext)
-        rvProject.layoutManager = manager
+        rvPublic.layoutManager = manager
 
-        mProjectChildAdapter = ProjectChildAdapter(null)
-        rvProject.adapter = mProjectChildAdapter
+        mPublicChildAdapter = PublicChildAdapter(null)
+        rvPublic.adapter = mPublicChildAdapter
     }
 
     override fun initData() {
@@ -78,9 +77,9 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
-            mProjectChildAdapter.setNewData(result)
+            mPublicChildAdapter.setNewData(result)
         } else {
-            mProjectChildAdapter.addData(result)
+            mPublicChildAdapter.addData(result)
         }
     }
 
@@ -101,8 +100,8 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
 
         })
 
-        mProjectChildAdapter.setOnCollectViewClickListener(object :
-            ProjectChildAdapter.OnCollectViewClickListener {
+        mPublicChildAdapter.setOnCollectViewClickListener(object :
+            PublicChildAdapter.OnCollectViewClickListener {
 
             override fun onClick(checkBox: CheckBox, position: Int) {
                 if (checkBox.isChecked) {

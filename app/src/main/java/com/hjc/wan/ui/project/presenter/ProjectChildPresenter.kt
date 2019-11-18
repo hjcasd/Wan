@@ -1,13 +1,13 @@
-package com.hjc.wan.ui.project.contract
+package com.hjc.wan.ui.project.presenter
 
 import com.hjc.wan.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
-import com.hjc.wan.ui.project.presenter.ProjectChildContract
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.project.child.ProjectChildFragment
+import com.hjc.wan.ui.project.contract.ProjectChildContract
 
 class ProjectChildPresenter : BasePresenter<ProjectChildContract.View>(),
     ProjectChildContract.Presenter {

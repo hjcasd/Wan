@@ -10,11 +10,11 @@ import android.view.animation.DecelerateInterpolator
 import com.blankj.utilcode.util.ConvertUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
-import com.hjc.wan.ui.adapter.MyViewPagerAdapter
 import com.hjc.wan.model.ClassifyBean
+import com.hjc.wan.ui.adapter.MyViewPagerAdapter
 import com.hjc.wan.ui.project.child.ProjectChildFragment
-import com.hjc.wan.ui.project.contract.ProjectPresenter
-import com.hjc.wan.ui.project.presenter.ProjectContract
+import com.hjc.wan.ui.project.contract.ProjectContract
+import com.hjc.wan.ui.project.presenter.ProjectPresenter
 import com.hjc.wan.widget.indicator.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_project.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper

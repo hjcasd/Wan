@@ -1,14 +1,15 @@
-package com.hjc.wan.ui.project.presenter
+package com.hjc.wan.ui.publics.contract
 
 import com.hjc.wan.base.IBaseView
 import com.hjc.wan.model.ClassifyBean
 
-interface ProjectContract {
+interface PublicContract {
     interface View : IBaseView {
         fun showIndicator(classifyList: MutableList<ClassifyBean>)
     }
 
     interface Presenter {
-        fun getProjectTitles()
+        fun getPublicTitles()
     }
+
 }

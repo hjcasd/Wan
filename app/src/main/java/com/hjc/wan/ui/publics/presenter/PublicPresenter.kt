@@ -1,32 +1,31 @@
-package com.hjc.wan.ui.project.contract
+package com.hjc.wan.ui.publics.presenter
 
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
-import com.hjc.wan.ui.project.presenter.ProjectContract
 import com.hjc.wan.model.ClassifyBean
-import com.hjc.wan.ui.project.ProjectFragment
+import com.hjc.wan.ui.publics.PublicFragment
+import com.hjc.wan.ui.publics.contract.PublicContract
 
-class ProjectPresenter : BasePresenter<ProjectContract.View>(), ProjectContract.Presenter {
+class PublicPresenter : BasePresenter<PublicContract.View>(), PublicContract.Presenter {
 
-    override fun getProjectTitles() {
-        val projectFragment = getView() as ProjectFragment
+    override fun getPublicTitles() {
+        val publicFragment = getView() as PublicFragment
         RetrofitClient.getApi()
-            .getProjectTypes()
-            .compose(RxHelper.bind(projectFragment))
+            .getPublicTypes()
+            .compose(RxHelper.bind(publicFragment))
             .subscribe(object : CommonObserver<MutableList<ClassifyBean>>() {
 
                 override fun onSuccess(result: MutableList<ClassifyBean>?) {
                     if (result != null && result.size > 0) {
                         getView().showIndicator(result)
                     } else {
-                        ToastUtils.showShort("获取项目分类数据失败")
+                        ToastUtils.showShort("获取公众号分类数据失败")
                     }
                 }
 
             })
     }
-
 }

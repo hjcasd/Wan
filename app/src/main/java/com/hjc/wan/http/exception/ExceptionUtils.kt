@@ -47,6 +47,8 @@ object ExceptionUtils {
         var msg = "未知请求错误"
         if (apiException.code == ServerCode.CODE_FAIL){
             msg = "请求失败"
+        }else if(apiException.code == ServerCode.CODE_UN_LOGIN){
+            msg = "请先登录"
         }
         return msg
     }

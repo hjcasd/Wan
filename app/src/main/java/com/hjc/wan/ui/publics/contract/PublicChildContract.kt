@@ -1,9 +1,9 @@
-package com.hjc.wan.ui.project.presenter
+package com.hjc.wan.ui.publics.contract
 
 import com.hjc.wan.base.IBaseView
 import com.hjc.wan.model.ArticleBean
 
-interface ProjectChildContract {
+interface PublicChildContract {
     interface View : IBaseView {
         fun showContent()
         fun showEmpty()
