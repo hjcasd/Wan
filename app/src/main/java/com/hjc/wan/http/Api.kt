@@ -77,6 +77,13 @@ interface Api {
     fun getNavigationData(): Observable<BaseResponse<MutableList<NavigationBean>>>
 
 
+    /**
+     * 知识体系下的文章数据
+     */
+    @GET("/article/list/{page}/json")
+    fun getSystemTagData(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+
+
 
 
     /**

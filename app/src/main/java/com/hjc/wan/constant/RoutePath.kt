@@ -16,4 +16,7 @@ object RoutePath {
 
     // Web页面
     const val URL_WEB = "/wan/web"
+
+    // 体系tag页面
+    const val URL_SYSTEM_TAG = "/wan/system/tag"
 }

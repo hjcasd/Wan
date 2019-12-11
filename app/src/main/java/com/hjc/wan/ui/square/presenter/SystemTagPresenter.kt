@@ -8,16 +8,19 @@ import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
 import com.hjc.wan.http.observer.ProgressObserver
 import com.hjc.wan.model.ArticleBean
-import com.hjc.wan.ui.square.child.PlazaFragment
-import com.hjc.wan.ui.square.contract.PlazaContract
+import com.hjc.wan.ui.square.activity.SystemTagActivity
+import com.hjc.wan.ui.square.contract.SystemTagContract
 
-class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Presenter{
+class SystemTagPresenter : BasePresenter<SystemTagContract.View>(), SystemTagContract.Presenter {
 
-    override fun loadListData(page: Int) {
-        val plazaFragment = getView() as PlazaFragment
+    /**
+     * 加载列表
+     */
+    override fun loadListData(page: Int, cid: Int) {
+        val systemTagActivity = getView() as SystemTagActivity
         RetrofitClient.getApi()
-            .getSquareData(page)
-            .compose(RxHelper.bind(plazaFragment))
+            .getSystemTagData(page, cid)
+            .compose(RxHelper.bind(systemTagActivity))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {
@@ -45,12 +48,12 @@ class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Present
     /**
      * 收藏
      */
-    override fun collectArticle(bean : ArticleBean) {
-        val plazaFragment = getView() as PlazaFragment
+    override fun collectArticle(bean: ArticleBean) {
+        val systemTagActivity = getView() as SystemTagActivity
         RetrofitClient.getApi()
             .collect(bean.id)
-            .compose(RxHelper.bind(plazaFragment))
-            .subscribe(object : ProgressObserver<Any>(plazaFragment.childFragmentManager){
+            .compose(RxHelper.bind(systemTagActivity))
+            .subscribe(object : ProgressObserver<Any>(systemTagActivity.supportFragmentManager) {
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("收藏成功")
@@ -63,12 +66,12 @@ class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Present
     /**
      * 取消收藏
      */
-    override fun unCollectArticle(bean : ArticleBean) {
-        val plazaFragment = getView() as PlazaFragment
+    override fun unCollectArticle(bean: ArticleBean) {
+        val systemTagActivity = getView() as SystemTagActivity
         RetrofitClient.getApi()
             .unCollect(bean.id)
-            .compose(RxHelper.bind(plazaFragment))
-            .subscribe(object : ProgressObserver<Any>(plazaFragment.childFragmentManager){
+            .compose(RxHelper.bind(systemTagActivity))
+            .subscribe(object : ProgressObserver<Any>(systemTagActivity.supportFragmentManager) {
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("已取消收藏")

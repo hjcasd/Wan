@@ -11,9 +11,13 @@ interface PlazaContract {
         fun showNoNetwork()
 
         fun showList(result: MutableList<ArticleBean>)
+        fun showCollectList(bean : ArticleBean)
+        fun showUnCollectList(bean : ArticleBean)
     }
 
     interface Presenter {
         fun loadListData(page: Int)
+        fun collectArticle(bean : ArticleBean)
+        fun unCollectArticle(bean : ArticleBean)
     }
 }

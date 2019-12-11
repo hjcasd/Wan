@@ -1,6 +1,7 @@
 package com.hjc.wan.utils.helper
 
 import android.content.Context
+import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.StringUtils
@@ -18,6 +19,19 @@ object RouterManager {
     fun jump(path: String) {
         ARouter.getInstance()
             .build(path)
+            .withTransition(R.anim.slide_enter_bottom, R.anim.slide_exit_bottom)
+            .navigation()
+    }
+
+    /**
+     * 页面跳转
+     * @param path 要跳转页面对应的路由url
+     * @param bundle 传递的参数
+     */
+    fun jumpWithBundle(path: String, bundle: Bundle) {
+        ARouter.getInstance()
+            .build(path)
+            .withBundle("params", bundle)
             .withTransition(R.anim.slide_enter_bottom, R.anim.slide_exit_bottom)
             .navigation()
     }

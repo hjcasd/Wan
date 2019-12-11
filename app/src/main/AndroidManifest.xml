@@ -64,6 +64,10 @@
             android:name=".ui.web.WebActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.square.activity.SystemTagActivity"
+            android:screenOrientation="portrait" />
+
 
         <!--============================================文件访问权限=========================================-->
         <provider

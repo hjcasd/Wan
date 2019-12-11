@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.CheckBox
-import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
@@ -12,6 +11,7 @@ import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.publics.adapter.PublicChildAdapter
 import com.hjc.wan.ui.publics.contract.PublicChildContract
 import com.hjc.wan.ui.publics.presenter.PublicChildPresenter
+import com.hjc.wan.utils.helper.RouterManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
@@ -26,11 +26,14 @@ import java.util.concurrent.TimeUnit
 class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, PublicChildPresenter>(),
     PublicChildContract.View {
 
+    private lateinit var mPublicChildAdapter: PublicChildAdapter
+
+    private var articleList: MutableList<ArticleBean> = mutableListOf()
+
     private var cid: Int = 0
 
     private var mPage: Int = 1
 
-    private lateinit var mPublicChildAdapter: PublicChildAdapter
 
     companion object {
 
@@ -77,8 +80,10 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
+            articleList = result
             mPublicChildAdapter.setNewData(result)
         } else {
+            articleList.addAll(result)
             mPublicChildAdapter.addData(result)
         }
     }
@@ -100,17 +105,34 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
 
         })
 
+        mPublicChildAdapter.setOnItemClickListener { _, _, position ->
+            val bean = articleList[position]
+            RouterManager.jumpToWeb(bean.title, bean.link)
+        }
+
         mPublicChildAdapter.setOnCollectViewClickListener(object :
             PublicChildAdapter.OnCollectViewClickListener {
 
             override fun onClick(checkBox: CheckBox, position: Int) {
-                if (checkBox.isChecked) {
-                    ToastUtils.showShort("选中了: $position")
+                val bean = articleList[position]
+                if (!bean.collect) {
+                    getPresenter().collectArticle(bean)
                 } else {
-                    ToastUtils.showShort("未选中: $position")
+                    getPresenter().unCollectArticle(bean)
                 }
             }
         })
+    }
+
+
+    override fun showCollectList(bean: ArticleBean) {
+        bean.collect = true
+        mPublicChildAdapter.notifyDataSetChanged()
+    }
+
+    override fun showUnCollectList(bean: ArticleBean) {
+        bean.collect = false
+        mPublicChildAdapter.notifyDataSetChanged()
     }
 
 

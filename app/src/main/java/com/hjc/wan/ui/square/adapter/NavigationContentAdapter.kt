@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.hjc.wan.R
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.NavigationBean
+import com.hjc.wan.utils.helper.RouterManager
 import com.nex3z.flowlayout.FlowLayout
 
 class NavigationContentAdapter(data: MutableList<NavigationBean>?) :
@@ -33,8 +34,12 @@ class NavigationContentAdapter(data: MutableList<NavigationBean>?) :
         for (bean in tagList) {
             val view = View.inflate(mContext, R.layout.view_navigation_tag, null)
             val tvTag = view.findViewById<TextView>(R.id.tv_tag)
-            tvTag.setText(bean.title)
+            tvTag.text = bean.title
             flLabels.addView(tvTag)
+
+            tvTag.setOnClickListener {
+                RouterManager.jumpToWeb(bean.title, bean.link)
+            }
         }
     }
 

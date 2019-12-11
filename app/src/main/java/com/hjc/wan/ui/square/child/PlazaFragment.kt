@@ -3,14 +3,14 @@ package com.hjc.wan.ui.square.child
 import android.annotation.SuppressLint
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.CheckBox
-import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
-import com.hjc.wan.ui.square.contract.PlazaContract
-import com.hjc.wan.ui.square.adapter.PlazaAdapter
 import com.hjc.wan.model.ArticleBean
+import com.hjc.wan.ui.square.adapter.PlazaAdapter
+import com.hjc.wan.ui.square.contract.PlazaContract
 import com.hjc.wan.ui.square.presenter.PlazaPresenter
+import com.hjc.wan.utils.helper.RouterManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
@@ -25,9 +25,12 @@ import java.util.concurrent.TimeUnit
 class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     PlazaContract.View {
 
+    private lateinit var mPlazaAdapter: PlazaAdapter
+
+    private var articleList: MutableList<ArticleBean> = mutableListOf()
+
     private var mPage = 0
 
-    private lateinit var mPlazaAdapter: PlazaAdapter
 
     companion object {
 
@@ -43,6 +46,7 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     override fun createView(): PlazaContract.View {
         return this
     }
+
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_plaza
@@ -67,12 +71,13 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
+            articleList = result
             mPlazaAdapter.setNewData(result)
         } else {
+            articleList.addAll(result)
             mPlazaAdapter.addData(result)
         }
     }
-
 
     override fun addListeners() {
         super.addListeners()
@@ -91,17 +96,34 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
 
         })
 
+        mPlazaAdapter.setOnItemClickListener { _, _, position ->
+            val bean = articleList[position]
+            RouterManager.jumpToWeb(bean.title, bean.link)
+        }
+
         mPlazaAdapter.setOnCollectViewClickListener(object :
             PlazaAdapter.OnCollectViewClickListener {
 
             override fun onClick(checkBox: CheckBox, position: Int) {
-                if (checkBox.isChecked) {
-                    ToastUtils.showShort("选中了: $position")
+                val bean = articleList[position]
+                if (!bean.collect) {
+                    getPresenter().collectArticle(bean)
                 } else {
-                    ToastUtils.showShort("未选中: $position")
+                    getPresenter().unCollectArticle(bean)
                 }
             }
         })
+    }
+
+
+    override fun showCollectList(bean: ArticleBean) {
+        bean.collect = true
+        mPlazaAdapter.notifyDataSetChanged()
+    }
+
+    override fun showUnCollectList(bean: ArticleBean) {
+        bean.collect = false
+        mPlazaAdapter.notifyDataSetChanged()
     }
 
 
@@ -139,6 +161,5 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
     }
-
 
 }

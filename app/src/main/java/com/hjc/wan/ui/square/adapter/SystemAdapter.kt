@@ -1,12 +1,15 @@
 package com.hjc.wan.ui.square.adapter
 
+import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.hjc.wan.R
+import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.ClassifyBean
 import com.hjc.wan.model.SystemBean
+import com.hjc.wan.utils.helper.RouterManager
 import com.nex3z.flowlayout.FlowLayout
 
 class SystemAdapter(data: MutableList<SystemBean>?) :
@@ -32,8 +35,15 @@ class SystemAdapter(data: MutableList<SystemBean>?) :
         for (bean in tagList) {
             val view = View.inflate(mContext, R.layout.view_tree_tag, null)
             val tvTag = view.findViewById<TextView>(R.id.tv_tag)
-            tvTag.setText(bean.name)
+            tvTag.text = bean.name
             flLabels.addView(tvTag)
+
+            tvTag.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putString("title", bean.name)
+                bundle.putInt("id", bean.id)
+                RouterManager.jumpWithBundle(RoutePath.URL_SYSTEM_TAG, bundle)
+            }
         }
     }
 }

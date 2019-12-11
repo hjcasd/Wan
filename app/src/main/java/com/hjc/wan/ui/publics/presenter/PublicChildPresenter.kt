@@ -1,10 +1,12 @@
 package com.hjc.wan.ui.publics.presenter
 
+import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
+import com.hjc.wan.http.observer.ProgressObserver
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.publics.child.PublicChildFragment
 import com.hjc.wan.ui.publics.contract.PublicChildContract
@@ -36,6 +38,42 @@ class PublicChildPresenter : BasePresenter<PublicChildContract.View>(),
                     } else {
                         getView().showError()
                     }
+                }
+
+            })
+    }
+
+    /**
+     * 收藏
+     */
+    override fun collectArticle(bean : ArticleBean) {
+        val publicChildFragment = getView() as PublicChildFragment
+        RetrofitClient.getApi()
+            .collect(bean.id)
+            .compose(RxHelper.bind(publicChildFragment))
+            .subscribe(object : ProgressObserver<Any>(publicChildFragment.childFragmentManager){
+
+                override fun onSuccess(result: Any?) {
+                    ToastUtils.showShort("收藏成功")
+                    getView().showCollectList(bean)
+                }
+
+            })
+    }
+
+    /**
+     * 取消收藏
+     */
+    override fun unCollectArticle(bean : ArticleBean) {
+        val publicChildFragment = getView() as PublicChildFragment
+        RetrofitClient.getApi()
+            .unCollect(bean.id)
+            .compose(RxHelper.bind(publicChildFragment))
+            .subscribe(object : ProgressObserver<Any>(publicChildFragment.childFragmentManager){
+
+                override fun onSuccess(result: Any?) {
+                    ToastUtils.showShort("已取消收藏")
+                    getView().showUnCollectList(bean)
                 }
 
             })

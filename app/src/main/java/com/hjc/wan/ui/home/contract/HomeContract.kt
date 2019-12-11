@@ -11,11 +11,11 @@ interface HomeContract {
         fun showEmpty()
         fun showNoNetwork()
 
-        fun showCollectList(bean : ArticleBean)
-        fun showUnCollectList(bean : ArticleBean)
-
         fun showBanner(result: MutableList<BannerBean>)
         fun showList(result: MutableList<ArticleBean>)
+
+        fun showCollectList(bean : ArticleBean)
+        fun showUnCollectList(bean : ArticleBean)
     }
 
     interface Presenter {
