@@ -79,7 +79,7 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
-        if (mPage == 0) {
+        if (mPage == 1) {
             articleList = result
             mPublicChildAdapter.setNewData(result)
         } else {
@@ -94,7 +94,7 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
-                mPage = 0
+                mPage = 1
                 getPresenter().loadListData(mPage, cid)
             }
 

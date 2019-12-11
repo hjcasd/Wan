@@ -33,7 +33,7 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
 
     private var cid: Int = 0
 
-    private var mPage: Int = 0
+    private var mPage: Int = 1
 
 
     companion object {
@@ -80,7 +80,7 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
-        if (mPage == 0) {
+        if (mPage == 1) {
             articleList = result
             mProjectChildAdapter.setNewData(result)
         } else {
@@ -95,7 +95,7 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
-                mPage = 0
+                mPage = 1
                 getPresenter().loadListData(mPage, cid)
             }
 

@@ -23,11 +23,18 @@ class PublicChildPresenter : BasePresenter<PublicChildContract.View>(),
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {
                     val data = result?.datas
-                    if (data != null && data.size > 0) {
-                        getView().showContent()
-                        getView().showList(data)
-                    } else {
-                        getView().showEmpty()
+                    data?.let {
+                        if (data.size > 0) {
+                            getView().showContent()
+                            getView().showList(data)
+                        } else {
+                            if (page == 0) {
+                                getView().showEmpty()
+                            } else {
+                                getView().showContent()
+                                ToastUtils.showShort("没有更多数据了")
+                            }
+                        }
                     }
                 }
 
