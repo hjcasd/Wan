@@ -3,7 +3,11 @@ package com.hjc.wan.utils.helper
 import android.content.Context
 import android.support.v4.app.ActivityOptionsCompat
 import com.alibaba.android.arouter.launcher.ARouter
+import com.blankj.utilcode.util.StringUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.hjc.baselib.utils.ClickUtils
 import com.hjc.wan.R
+import com.hjc.wan.constant.RoutePath
 
 object RouterManager {
 
@@ -30,5 +34,29 @@ object RouterManager {
             .build(path)
             .withOptionsCompat(compat)
             .navigation(context)
+    }
+
+
+    /**
+     * 页面跳转
+     * @param title 标题
+     * @param url 链接地址
+     */
+    fun jumpToWeb(title: String, url: String) {
+        if (ClickUtils.isFastClick()) {
+            ToastUtils.showShort("点的太快了,歇会呗!")
+            return
+        }
+        if (StringUtils.isEmpty(url)) {
+            ToastUtils.showShort("链接地址不能为空")
+            return
+        }
+
+        ARouter.getInstance()
+            .build(RoutePath.URL_WEB)
+            .withString("title", title)
+            .withString("url", url)
+            .withTransition(R.anim.slide_enter_bottom, R.anim.slide_exit_bottom)
+            .navigation()
     }
 }

@@ -48,6 +48,7 @@ class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
 
     override fun toMain() {
         RouterManager.jump(RoutePath.URL_MAIN)
+        finish()
     }
 
 }

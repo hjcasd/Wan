@@ -99,4 +99,23 @@ interface Api {
      */
     @GET("/lg/coin/userinfo/json")
     fun getIntegral(): Observable<BaseResponse<IntegralBean>>
+
+
+    /**
+     * 列表收藏文章
+     */
+    @POST("/lg/collect/{id}/json")
+    fun collect(@Path("id") id: Int): Observable<BaseResponse<Any>>
+
+    /**
+     * 列表取消收藏文章
+     */
+    @POST("/lg/uncollect_originId/{id}/json")
+    fun unCollect(@Path("id") id: Int): Observable<BaseResponse<Any>>
+
+    /**
+     * 详情收藏网址
+     */
+    @POST("/lg/collect/addtool/json")
+    fun collectLink(@Query("name") name: String, @Query("link") link: String): Observable<BaseResponse<CollectLinkBean>>
 }

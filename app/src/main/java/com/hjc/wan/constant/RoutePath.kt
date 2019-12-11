@@ -13,4 +13,7 @@ object RoutePath {
 
     // 主页面
     const val URL_MAIN = "/wan/main"
+
+    // Web页面
+    const val URL_WEB = "/wan/web"
 }

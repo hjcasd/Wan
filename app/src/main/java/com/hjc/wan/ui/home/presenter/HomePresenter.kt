@@ -6,13 +6,17 @@ import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
-import com.hjc.wan.ui.home.contract.HomeContract
+import com.hjc.wan.http.observer.ProgressObserver
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
 import com.hjc.wan.ui.home.HomeFragment
+import com.hjc.wan.ui.home.contract.HomeContract
 
 class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter {
 
+    /**
+     * 加载banner
+     */
     override fun loadBannerData() {
         val homeFragment = getView() as HomeFragment
         RetrofitClient.getApi()
@@ -30,6 +34,9 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
             })
     }
 
+    /**
+     * 加载列表
+     */
     override fun loadListData(page: Int) {
         val homeFragment = getView() as HomeFragment
         RetrofitClient.getApi()
@@ -54,6 +61,42 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
                     } else {
                         getView().showError()
                     }
+                }
+
+            })
+    }
+
+    /**
+     * 收藏
+     */
+    override fun collectArticle(bean : ArticleBean) {
+        val homeFragment = getView() as HomeFragment
+        RetrofitClient.getApi()
+            .collect(bean.id)
+            .compose(RxHelper.bind(homeFragment))
+            .subscribe(object : ProgressObserver<Any>(homeFragment.childFragmentManager){
+
+                override fun onSuccess(result: Any?) {
+                    ToastUtils.showShort("收藏成功")
+                    getView().showCollectList(bean)
+                }
+
+            })
+    }
+
+    /**
+     * 取消收藏
+     */
+    override fun unCollectArticle(bean : ArticleBean) {
+        val homeFragment = getView() as HomeFragment
+        RetrofitClient.getApi()
+            .unCollect(bean.id)
+            .compose(RxHelper.bind(homeFragment))
+            .subscribe(object : ProgressObserver<Any>(homeFragment.childFragmentManager){
+
+                override fun onSuccess(result: Any?) {
+                    ToastUtils.showShort("已取消收藏")
+                    getView().showUnCollectList(bean)
                 }
 
             })

@@ -55,7 +55,8 @@ class HomeAdapter(data: MutableList<ArticleBean>?) :
         val cbCollect = helper.getView<CheckBox>(R.id.cb_collect)
         cbCollect.isChecked = item.collect
         cbCollect.setOnClickListener { v ->
-            mOnCollectViewClickListener?.onClick(cbCollect, helper.adapterPosition)
+            // 由于存在头布局,所以position-1
+            mOnCollectViewClickListener?.onClick(cbCollect, helper.adapterPosition - 1)
         }
     }
 
@@ -78,7 +79,7 @@ class HomeAdapter(data: MutableList<ArticleBean>?) :
         val cbCollect = helper.getView<CheckBox>(R.id.cb_collect)
         cbCollect.isChecked = item.collect
         cbCollect.setOnClickListener { v ->
-            mOnCollectViewClickListener?.onClick(cbCollect, helper.adapterPosition)
+            mOnCollectViewClickListener?.onClick(cbCollect, helper.adapterPosition - 1)
         }
     }
 

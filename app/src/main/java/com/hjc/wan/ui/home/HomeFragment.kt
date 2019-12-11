@@ -5,15 +5,15 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.CheckBox
-import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
 import com.hjc.wan.http.helper.RxSchedulers
-import com.hjc.wan.ui.home.adapter.HomeAdapter
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
+import com.hjc.wan.ui.home.adapter.HomeAdapter
 import com.hjc.wan.ui.home.contract.HomeContract
 import com.hjc.wan.ui.home.presenter.HomePresenter
+import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.image.GlideImageLoader
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
@@ -33,6 +33,9 @@ import java.util.concurrent.TimeUnit
 class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeContract.View {
 
     private var banner: Banner? = null
+
+    private lateinit var mBannerList: MutableList<BannerBean>
+    private lateinit var articleList: MutableList<ArticleBean>
 
     private lateinit var mHomeAdapter: HomeAdapter
 
@@ -82,6 +85,8 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     }
 
     override fun showBanner(result: MutableList<BannerBean>) {
+        mBannerList = result
+
         val imgList = ArrayList<String>()
         val titleList = ArrayList<String>()
         for (bean in result) {
@@ -98,6 +103,8 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
+        articleList = result
+
         if (mPage == 0) {
             mHomeAdapter.setNewData(result)
         } else {
@@ -106,7 +113,10 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     }
 
     override fun addListeners() {
-        banner?.setOnBannerListener { position -> ToastUtils.showShort("position: $position") }
+        banner?.setOnBannerListener { position ->
+            val bean = mBannerList[position]
+            RouterManager.jumpToWeb(bean.title, bean.url)
+        }
 
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
@@ -123,17 +133,25 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
         })
 
-        mHomeAdapter.setOnCollectViewClickListener(object : HomeAdapter.OnCollectViewClickListener{
+        mHomeAdapter.setOnItemClickListener { _, _, position ->
+            val bean = articleList[position]
+            RouterManager.jumpToWeb(bean.title, bean.link)
+        }
+
+        mHomeAdapter.setOnCollectViewClickListener(object : HomeAdapter.OnCollectViewClickListener {
 
             override fun onClick(checkBox: CheckBox, position: Int) {
-                if (checkBox.isChecked){
-                    ToastUtils.showShort("选中了: $position")
-                }else{
-                    ToastUtils.showShort("未选中: $position")
+                val bean = articleList[position]
+                if (!bean.collect) {
+                    getPresenter().collectArticle(bean)
+                } else {
+                    getPresenter().unCollectArticle(bean)
                 }
             }
         })
     }
+
+
 
     @SuppressLint("CheckResult")
     override fun showContent() {
@@ -169,6 +187,17 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
     }
+
+    override fun showCollectList(bean: ArticleBean) {
+        bean.collect = true
+        mHomeAdapter.notifyDataSetChanged()
+    }
+
+    override fun showUnCollectList(bean: ArticleBean) {
+        bean.collect = false
+        mHomeAdapter.notifyDataSetChanged()
+    }
+
 
     override fun onDestroyView() {
         banner?.stopAutoPlay()
