@@ -7,17 +7,23 @@ package com.hjc.wan.base
  */
 interface IBaseView {
 
-    /**
-     * 显示loading
-     */
-    fun showLoading() {
+    fun showLoading(){
 
     }
 
-    /**
-     * 隐藏loading
-     */
-    fun hideLoading() {
+    fun showContent(){
+
+    }
+
+    fun showError(){
+
+    }
+
+    fun showEmpty(){
+
+    }
+
+    fun showNoNetwork(){
 
     }
 }

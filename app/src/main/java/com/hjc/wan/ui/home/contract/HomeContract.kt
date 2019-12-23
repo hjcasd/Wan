@@ -5,12 +5,8 @@ import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
 
 interface HomeContract {
-    interface View : IBaseView {
-        fun showContent()
-        fun showError()
-        fun showEmpty()
-        fun showNoNetwork()
 
+    interface View : IBaseView {
         fun showBanner(result: MutableList<BannerBean>)
         fun showList(result: MutableList<ArticleBean>)
 

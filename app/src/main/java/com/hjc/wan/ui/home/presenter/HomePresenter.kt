@@ -18,15 +18,16 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
      * 加载banner
      */
     override fun loadBannerData() {
-        val homeFragment = getView() as HomeFragment
+        val fragment = getView() as HomeFragment
+
         RetrofitClient.getApi()
             .getBanner()
-            .compose(RxHelper.bind(homeFragment))
+            .compose(RxHelper.bind(fragment))
             .subscribe(object : CommonObserver<MutableList<BannerBean>>() {
 
                 override fun onSuccess(result: MutableList<BannerBean>?) {
                     if (result != null && result.size > 0) {
-                        getView().showBanner(result)
+                        getView()?.showBanner(result)
                     } else {
                         ToastUtils.showShort("Banner数据请求失败")
                     }
@@ -38,23 +39,24 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
      * 加载列表
      */
     override fun loadListData(page: Int) {
-        val homeFragment = getView() as HomeFragment
+        val fragment = getView() as HomeFragment
+
         RetrofitClient.getApi()
             .getArticle(page)
-            .compose(RxHelper.bind(homeFragment))
+            .compose(RxHelper.bind(fragment))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {
                     val data = result?.datas
                     data?.let {
                         if (data.size > 0) {
-                            getView().showContent()
-                            getView().showList(data)
+                            getView()?.showContent()
+                            getView()?.showList(data)
                         } else {
                             if (page == 0) {
-                                getView().showEmpty()
+                                getView()?.showEmpty()
                             } else {
-                                getView().showContent()
+                                getView()?.showContent()
                                 ToastUtils.showShort("没有更多数据了")
                             }
                         }
@@ -64,9 +66,9 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
                 override fun onFailure(errorMsg: String) {
                     super.onFailure(errorMsg)
                     if (errorMsg == "网络不可用" || errorMsg == "请求网络超时") {
-                        getView().showNoNetwork()
+                        getView()?.showNoNetwork()
                     } else {
-                        getView().showError()
+                        getView()?.showError()
                     }
                 }
 
@@ -76,16 +78,17 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
     /**
      * 收藏
      */
-    override fun collectArticle(bean : ArticleBean) {
-        val homeFragment = getView() as HomeFragment
+    override fun collectArticle(bean: ArticleBean) {
+        val fragment = getView() as HomeFragment
+
         RetrofitClient.getApi()
             .collect(bean.id)
-            .compose(RxHelper.bind(homeFragment))
-            .subscribe(object : ProgressObserver<Any>(homeFragment.childFragmentManager){
+            .compose(RxHelper.bind(fragment))
+            .subscribe(object : ProgressObserver<Any>(fragment.childFragmentManager) {
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("收藏成功")
-                    getView().showCollectList(bean)
+                    getView()?.showCollectList(bean)
                 }
 
             })
@@ -94,16 +97,17 @@ class HomePresenter : BasePresenter<HomeContract.View>(), HomeContract.Presenter
     /**
      * 取消收藏
      */
-    override fun unCollectArticle(bean : ArticleBean) {
-        val homeFragment = getView() as HomeFragment
+    override fun unCollectArticle(bean: ArticleBean) {
+        val fragment = getView() as HomeFragment
+
         RetrofitClient.getApi()
             .unCollect(bean.id)
-            .compose(RxHelper.bind(homeFragment))
-            .subscribe(object : ProgressObserver<Any>(homeFragment.childFragmentManager){
+            .compose(RxHelper.bind(fragment))
+            .subscribe(object : ProgressObserver<Any>(fragment.childFragmentManager) {
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("已取消收藏")
-                    getView().showUnCollectList(bean)
+                    getView()?.showUnCollectList(bean)
                 }
 
             })

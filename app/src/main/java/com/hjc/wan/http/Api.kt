@@ -22,8 +22,6 @@ interface Api {
     fun login(@Field("username") username: String, @Field("password") pwd: String): Observable<BaseResponse<LoginBean>>
 
 
-
-
     /**
      * 获取banner数据
      */
@@ -36,8 +34,6 @@ interface Api {
      */
     @GET("article/list/{page}/json")
     fun getArticle(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
-
-
 
 
     /**
@@ -54,36 +50,32 @@ interface Api {
     fun getProjectDataByType(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 
 
-
-
     /**
      * 获取广场数据
      */
     @GET("/user_article/list/{page}/json")
-    fun getSquareData(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
+    fun getSquare(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 
 
     /**
      * 获取体系数据
      */
     @GET("/tree/json")
-    fun getSystemData(): Observable<BaseResponse<MutableList<SystemBean>>>
+    fun getSystem(): Observable<BaseResponse<MutableList<SystemBean>>>
 
 
     /**
      * 获取导航数据
      */
     @GET("/navi/json")
-    fun getNavigationData(): Observable<BaseResponse<MutableList<NavigationBean>>>
+    fun getNavigation(): Observable<BaseResponse<MutableList<NavigationBean>>>
 
 
     /**
      * 知识体系下的文章数据
      */
     @GET("/article/list/{page}/json")
-    fun getSystemTagData(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
-
-
+    fun getSystemTag(@Path("page") pageNo: Int, @Query("cid") cid: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 
 
     /**
@@ -100,7 +92,6 @@ interface Api {
     fun getPublicDataByType(@Path("page") pageNo: Int, @Path("id") id: Int): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 
 
-
     /**
      * 获取当前账户的个人积分
      */
@@ -108,21 +99,63 @@ interface Api {
     fun getIntegral(): Observable<BaseResponse<IntegralBean>>
 
 
+
     /**
-     * 列表收藏文章
+     * 列表中收藏文章
      */
     @POST("/lg/collect/{id}/json")
     fun collect(@Path("id") id: Int): Observable<BaseResponse<Any>>
 
     /**
-     * 列表取消收藏文章
+     * 列表中取消收藏文章
      */
     @POST("/lg/uncollect_originId/{id}/json")
     fun unCollect(@Path("id") id: Int): Observable<BaseResponse<Any>>
 
     /**
-     * 详情收藏网址
+     * 详情页面收藏网址
      */
     @POST("/lg/collect/addtool/json")
     fun collectLink(@Query("name") name: String, @Query("link") link: String): Observable<BaseResponse<CollectLinkBean>>
+
+
+
+    /**
+     * 获取积分排行榜数据
+     */
+    @GET("/coin/rank/{page}/json")
+    fun getIntegralRank(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<IntegralBean>>>>
+
+    /**
+     * 获取积分历史数据
+     */
+    @GET("/lg/coin/list/{page}/json")
+    fun getIntegralHistory(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<IntegralHistoryBean>>>>
+
+
+
+    /**
+     * 获取收藏的文章列表数据
+     */
+    @GET("/lg/collect/list/{page}/json")
+    fun getCollectArticle(@Path("page") pageNo: Int): Observable<BaseResponse<BasePageResponse<MutableList<CollectArticleBean>>>>
+
+    /**
+     * 取消收藏的文章
+     */
+    @POST("/lg/uncollect/{id}/json")
+    fun unCollectOrigin(@Path("id") id: Int, @Query("originId") originId: Int): Observable<BaseResponse<Any>>
+
+
+    /**
+     * 获取收藏的网址列表数据
+     */
+    @GET("/lg/collect/usertools/json")
+    fun getCollectLink(): Observable<BaseResponse<MutableList<CollectLinkBean>>>
+
+    /**
+     * 取消收藏的网址
+     */
+    @POST("/lg/collect/deletetool/json")
+    fun deleteLink(@Query("id") id: Int): Observable<BaseResponse<Any>>
 }

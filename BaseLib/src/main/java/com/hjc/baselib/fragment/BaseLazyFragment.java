@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hjc.baselib.utils.ClickUtils;
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -62,6 +63,8 @@ public abstract class BaseLazyFragment extends RxFragment implements View.OnClic
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ARouter.getInstance().inject(this);
+
         isPrepared = true;
         lazyLoad();
     }
@@ -86,9 +89,7 @@ public abstract class BaseLazyFragment extends RxFragment implements View.OnClic
     /**
      * 初始化View
      */
-    protected void initView(){
-
-    }
+    public abstract void initView();
 
 	/**
 	 * 初始化数据

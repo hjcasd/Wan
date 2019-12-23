@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hjc.baselib.utils.ClickUtils;
 import com.hjc.baselib.utils.helper.ActivityManager;
@@ -22,6 +23,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements View.O
         setContentView(getLayoutId());
 
         ActivityManager.addActivity(this);
+        ARouter.getInstance().inject(this);
 
         initView();
         initData(savedInstanceState);
@@ -37,9 +39,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements View.O
     /**
      * 初始化View
      */
-    protected void initView(){
-
-    }
+    public abstract void initView();
 
     /**
      * 初始化数据

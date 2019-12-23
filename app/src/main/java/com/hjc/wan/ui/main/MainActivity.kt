@@ -48,7 +48,7 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter().requestPermission()
+        getPresenter()?.requestPermission()
 
         mHomeFragment = HomeFragment.newInstance()
         mProjectFragment = ProjectFragment.newInstance()

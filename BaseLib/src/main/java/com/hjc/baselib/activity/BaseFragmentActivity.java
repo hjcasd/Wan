@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hjc.baselib.fragment.BaseFragment;
 import com.hjc.baselib.utils.ClickUtils;
@@ -26,6 +27,7 @@ public abstract class BaseFragmentActivity extends RxFragmentActivity implements
         setContentView(getLayoutId());
 
         ActivityManager.addActivity(this);
+        ARouter.getInstance().inject(this);
 
         initView();
         initData(savedInstanceState);
@@ -40,9 +42,7 @@ public abstract class BaseFragmentActivity extends RxFragmentActivity implements
     /**
      * 初始化View
      */
-    protected void initView(){
-
-    }
+    public abstract void initView();
 
     /**
      * 初始化数据

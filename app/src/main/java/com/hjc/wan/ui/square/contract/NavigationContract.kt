@@ -6,11 +6,6 @@ import com.hjc.wan.model.NavigationBean
 interface NavigationContract {
 
     interface View : IBaseView {
-        fun showContent()
-        fun showEmpty()
-        fun showError()
-        fun showNoNetwork()
-
         fun showList(result: MutableList<NavigationBean>)
     }
 

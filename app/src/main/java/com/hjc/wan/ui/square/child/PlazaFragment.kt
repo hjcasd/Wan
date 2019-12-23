@@ -66,7 +66,7 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         super.initData()
 
         showLoading()
-        getPresenter().loadListData(mPage)
+        getPresenter()?.loadListData(mPage)
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
@@ -86,12 +86,12 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter().loadListData(mPage)
+                getPresenter()?.loadListData(mPage)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadListData(mPage)
+                getPresenter()?.loadListData(mPage)
             }
 
         })
@@ -107,9 +107,9 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
             override fun onClick(checkBox: CheckBox, position: Int) {
                 val bean = articleList[position]
                 if (!bean.collect) {
-                    getPresenter().collectArticle(bean)
+                    getPresenter()?.collectArticle(bean)
                 } else {
-                    getPresenter().unCollectArticle(bean)
+                    getPresenter()?.unCollectArticle(bean)
                 }
             }
         })
@@ -140,7 +140,6 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     }
 
     override fun showLoading() {
-        super.showLoading()
         stateView.showLoading()
     }
 

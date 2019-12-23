@@ -56,7 +56,7 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter().getProjectTitles()
+        getPresenter()?.loadProjectTitles()
     }
 
     override fun showIndicator(classifyList: MutableList<ClassifyBean>) {

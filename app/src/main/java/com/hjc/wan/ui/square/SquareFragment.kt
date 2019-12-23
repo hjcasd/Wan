@@ -57,7 +57,7 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter().getSquareTitles()
+        getPresenter()?.loadSquareTitles()
     }
 
     override fun showIndicator(titleList: MutableList<String>) {

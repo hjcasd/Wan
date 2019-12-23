@@ -12,11 +12,12 @@ import com.hjc.wan.ui.web.contract.WebContract
 class WebPresenter : BasePresenter<WebContract.View>(), WebContract.Presenter {
 
     override fun collectLink(name: String, link: String) {
-        val webActivity = getView() as WebActivity
+        val activity = getView() as WebActivity
+
         RetrofitClient.getApi()
             .collectLink(name, link)
-            .compose(RxHelper.bind(webActivity))
-            .subscribe(object : ProgressObserver<CollectLinkBean>(webActivity.supportFragmentManager){
+            .compose(RxHelper.bind(activity))
+            .subscribe(object : ProgressObserver<CollectLinkBean>(activity.supportFragmentManager){
 
                 override fun onSuccess(result: CollectLinkBean?) {
                     ToastUtils.showShort("收藏成功")

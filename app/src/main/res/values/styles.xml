@@ -32,4 +32,18 @@
         <item name="android:textColor">@drawable/selector_text_tab</item>
     </style>
 
+
+    <!--我的收藏 - 标题收起时的字体颜色-->
+    <style name="collapsing_title_style_collapsed" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--我的收藏 - 标题展开时的字体颜色-->
+    <style name="collapsing_title_style_expanded" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
 </resources>

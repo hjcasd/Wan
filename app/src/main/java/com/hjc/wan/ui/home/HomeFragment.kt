@@ -82,8 +82,8 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         super.initData(savedInstanceState)
 
         showLoading()
-        getPresenter().loadBannerData()
-        getPresenter().loadListData(mPage)
+        getPresenter()?.loadBannerData()
+        getPresenter()?.loadListData(mPage)
     }
 
     override fun showBanner(result: MutableList<BannerBean>) {
@@ -124,13 +124,13 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter().loadBannerData()
-                getPresenter().loadListData(mPage)
+                getPresenter()?.loadBannerData()
+                getPresenter()?.loadListData(mPage)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadListData(mPage)
+                getPresenter()?.loadListData(mPage)
             }
 
         })
@@ -145,9 +145,9 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
             override fun onClick(checkBox: CheckBox, position: Int) {
                 val bean = articleList[position]
                 if (!bean.collect) {
-                    getPresenter().collectArticle(bean)
+                    getPresenter()?.collectArticle(bean)
                 } else {
-                    getPresenter().unCollectArticle(bean)
+                    getPresenter()?.unCollectArticle(bean)
                 }
             }
         })
@@ -178,7 +178,6 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     }
 
     override fun showLoading() {
-        super.showLoading()
         stateView.showLoading()
     }
 
@@ -199,7 +198,6 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
     }
-
 
     override fun onDestroyView() {
         banner?.stopAutoPlay()

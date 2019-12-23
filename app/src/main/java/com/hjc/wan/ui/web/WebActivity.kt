@@ -44,7 +44,7 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
         return R.layout.activity_web
     }
 
-    public override fun initView() {
+    override fun initView() {
         super.initView()
 
         setSupportActionBar(toolbar)
@@ -79,7 +79,7 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
 
             // 添加到收藏
             R.id.item_collect -> {
-                getPresenter().collectLink(mTitle, mUrl)
+                getPresenter()?.collectLink(mTitle, mUrl)
             }
 
             // 分享

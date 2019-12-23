@@ -19,4 +19,11 @@ object RoutePath {
 
     // 体系tag页面
     const val URL_SYSTEM_TAG = "/wan/system/tag"
+
+    // 积分排行页面
+    const val URL_INTEGRAL_RANK = "/wan/mine/integralRank"
+    const val URL_INTEGRAL_HISTORY = "/wan/mine/integralHistory"
+
+    // 我的收藏页面
+    const val URL_MY_COLLECT = "/wan/mine/collect"
 }

@@ -9,14 +9,27 @@ import com.hjc.baselib.fragment.BaseFragment
  * @Date: 2019/1/4 15:02
  * @Description: Fragment基类(mvp)
  */
-abstract class BaseMvpFragment<V : IBaseView, P : BasePresenter<V>> : BaseFragment(), View.OnClickListener {
-    private lateinit var mPresenter: P
+abstract class BaseMvpFragment<V : IBaseView, P : BasePresenter<V>?> : BaseFragment(), IBaseView {
+
+    private var mPresenter: P? = null
     private lateinit var mView: V
 
     override fun initData(savedInstanceState: Bundle?) {
         mPresenter = createPresenter()
         mView = createView()
-        mPresenter.attachView(mView)
+        mPresenter?.attachView(mView)
+    }
+
+    abstract fun createPresenter(): P
+
+    abstract fun createView(): V
+
+    fun getPresenter(): P? {
+        return mPresenter
+    }
+
+    override fun initView() {
+
     }
 
     override fun addListeners() {
@@ -27,16 +40,8 @@ abstract class BaseMvpFragment<V : IBaseView, P : BasePresenter<V>> : BaseFragme
 
     }
 
-    abstract fun createPresenter(): P
-
-    abstract fun createView(): V
-
-    fun getPresenter(): P {
-        return mPresenter
-    }
-
     override fun onDestroyView() {
-        mPresenter.detachView()
+        mPresenter?.detachView()
         super.onDestroyView()
     }
 }

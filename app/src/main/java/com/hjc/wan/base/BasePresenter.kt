@@ -12,14 +12,14 @@ abstract class BasePresenter<V> {
     /**
      * 持有UI接口的弱引用
      */
-    private var mViewRef: WeakReference<V>? = null
+    private lateinit var mViewRef: WeakReference<V>
 
     fun attachView(view: V) {
         mViewRef = WeakReference(view)
     }
 
-    fun getView(): V {
-        return mViewRef?.get()!!
+    fun getView(): V? {
+        return mViewRef.get()
     }
 
     /**
@@ -27,8 +27,7 @@ abstract class BasePresenter<V> {
      * 在onDestroy方法中调用，防止内存泄漏
      */
     fun detachView() {
-        mViewRef?.clear()
-        mViewRef = null
+        mViewRef.clear()
     }
 
 }

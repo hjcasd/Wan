@@ -11,9 +11,9 @@ import com.yanzhenjie.permission.runtime.Permission
 class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter {
 
     override fun requestPermission() {
-        val mainActivity = getView() as MainActivity
+        val activity = getView() as MainActivity
 
-        PermissionManager(mainActivity)
+        PermissionManager(activity)
             .requestPermissionInActivity(object : PermissionCallBack {
                 override fun onGranted() {
                     ToastUtils.showShort("申请存储权限成功")

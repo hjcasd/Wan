@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hjc.baselib.utils.ClickUtils;
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -36,6 +37,8 @@ public abstract class BaseFragment extends RxFragment implements View.OnClickLis
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+		ARouter.getInstance().inject(this);
+
         initView();
         initData(savedInstanceState);
         addListeners();
@@ -49,9 +52,7 @@ public abstract class BaseFragment extends RxFragment implements View.OnClickLis
 	/**
 	 * 初始化View
 	 */
-	protected void initView(){
-
-	}
+	public abstract void initView();
 
 	/**
 	 * 初始化数据

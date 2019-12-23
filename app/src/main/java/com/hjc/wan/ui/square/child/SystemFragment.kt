@@ -5,9 +5,9 @@ import android.support.v7.widget.LinearLayoutManager
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
-import com.hjc.wan.ui.square.contract.SystemContract
-import com.hjc.wan.ui.square.adapter.SystemAdapter
 import com.hjc.wan.model.SystemBean
+import com.hjc.wan.ui.square.adapter.SystemAdapter
+import com.hjc.wan.ui.square.contract.SystemContract
 import com.hjc.wan.ui.square.presenter.SystemPresenter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_system.*
@@ -56,7 +56,7 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
         super.initData()
 
         showLoading()
-        getPresenter().loadListData()
+        getPresenter()?.loadListData()
     }
 
     override fun showList(result: MutableList<SystemBean>) {
@@ -66,7 +66,7 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     override fun addListeners() {
         super.addListeners()
 
-        smartRefreshLayout.setOnRefreshListener { getPresenter().loadListData() }
+        smartRefreshLayout.setOnRefreshListener { getPresenter()?.loadListData() }
     }
 
     @SuppressLint("CheckResult")
@@ -80,7 +80,6 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     }
 
     override fun showLoading() {
-        super.showLoading()
         stateView.showLoading()
     }
 

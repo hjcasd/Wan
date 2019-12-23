@@ -2,19 +2,30 @@ package com.hjc.wan.base
 
 import android.os.Bundle
 import android.view.View
-import com.alibaba.android.arouter.launcher.ARouter
 import com.hjc.baselib.activity.BaseFragmentActivity
 
-abstract class BaseMvpFragmentActivity<V : IBaseView, P : BasePresenter<V>>  : BaseFragmentActivity(){
-    private lateinit var mPresenter: P
+abstract class BaseMvpFragmentActivity<V : IBaseView, P : BasePresenter<V>?> :
+    BaseFragmentActivity(), IBaseView {
+
+    private var mPresenter: P? = null
     private lateinit var mView: V
 
     override fun initData(savedInstanceState: Bundle?) {
-        ARouter.getInstance().inject(this)
-
         mPresenter = createPresenter()
         mView = createView()
-        mPresenter.attachView(mView)
+        mPresenter?.attachView(mView)
+    }
+
+    abstract fun createPresenter(): P
+
+    abstract fun createView(): V
+
+    fun getPresenter(): P? {
+        return mPresenter
+    }
+
+    override fun initView() {
+
     }
 
     override fun addListeners() {
@@ -25,16 +36,8 @@ abstract class BaseMvpFragmentActivity<V : IBaseView, P : BasePresenter<V>>  : B
 
     }
 
-    abstract fun createPresenter(): P
-
-    abstract fun createView(): V
-
-    fun getPresenter(): P {
-        return mPresenter
-    }
-
     override fun onDestroy() {
-        mPresenter.detachView()
+        mPresenter?.detachView()
         super.onDestroy()
     }
 }

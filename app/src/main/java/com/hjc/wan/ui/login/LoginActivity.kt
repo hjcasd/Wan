@@ -73,7 +73,7 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
             return
         }
 
-        getPresenter().login(username, password)
+        getPresenter()?.login(username, password)
     }
 
     override fun toMain() {

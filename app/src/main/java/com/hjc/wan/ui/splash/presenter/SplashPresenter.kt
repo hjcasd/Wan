@@ -8,8 +8,7 @@ import com.hjc.wan.utils.helper.AccountManager
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
 
-class SplashPresenter : BasePresenter<SplashContract.View>(),
-    SplashContract.Presenter {
+class SplashPresenter : BasePresenter<SplashContract.View>(), SplashContract.Presenter {
 
     @SuppressLint("CheckResult")
     override fun startCountdown() {
@@ -17,9 +16,9 @@ class SplashPresenter : BasePresenter<SplashContract.View>(),
             .compose(RxSchedulers.ioToMain())
             .subscribe {
                 if (AccountManager.isLogin()) {
-                   getView().toMain()
+                    getView()?.toMain()
                 } else {
-                    getView().toLogin()
+                    getView()?.toLogin()
                 }
             }
     }

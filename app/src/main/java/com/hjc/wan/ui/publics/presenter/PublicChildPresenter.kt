@@ -15,23 +15,24 @@ class PublicChildPresenter : BasePresenter<PublicChildContract.View>(),
     PublicChildContract.Presenter {
 
     override fun loadListData(page: Int, cid: Int) {
-        val publicChildFragment = getView() as PublicChildFragment
+        val fragment = getView() as PublicChildFragment
+
         RetrofitClient.getApi()
             .getPublicDataByType(page, cid)
-            .compose(RxHelper.bind(publicChildFragment))
+            .compose(RxHelper.bind(fragment))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {
                     val data = result?.datas
                     data?.let {
                         if (data.size > 0) {
-                            getView().showContent()
-                            getView().showList(data)
+                            getView()?.showContent()
+                            getView()?.showList(data)
                         } else {
                             if (page == 0) {
-                                getView().showEmpty()
+                                getView()?.showEmpty()
                             } else {
-                                getView().showContent()
+                                getView()?.showContent()
                                 ToastUtils.showShort("没有更多数据了")
                             }
                         }
@@ -41,9 +42,9 @@ class PublicChildPresenter : BasePresenter<PublicChildContract.View>(),
                 override fun onFailure(errorMsg: String) {
                     super.onFailure(errorMsg)
                     if (errorMsg == "网络不可用" || errorMsg == "请求网络超时") {
-                        getView().showNoNetwork()
+                        getView()?.showNoNetwork()
                     } else {
-                        getView().showError()
+                        getView()?.showError()
                     }
                 }
 
@@ -54,15 +55,16 @@ class PublicChildPresenter : BasePresenter<PublicChildContract.View>(),
      * 收藏
      */
     override fun collectArticle(bean : ArticleBean) {
-        val publicChildFragment = getView() as PublicChildFragment
+        val fragment = getView() as PublicChildFragment
+
         RetrofitClient.getApi()
             .collect(bean.id)
-            .compose(RxHelper.bind(publicChildFragment))
-            .subscribe(object : ProgressObserver<Any>(publicChildFragment.childFragmentManager){
+            .compose(RxHelper.bind(fragment))
+            .subscribe(object : ProgressObserver<Any>(fragment.childFragmentManager){
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("收藏成功")
-                    getView().showCollectList(bean)
+                    getView()?.showCollectList(bean)
                 }
 
             })
@@ -72,15 +74,16 @@ class PublicChildPresenter : BasePresenter<PublicChildContract.View>(),
      * 取消收藏
      */
     override fun unCollectArticle(bean : ArticleBean) {
-        val publicChildFragment = getView() as PublicChildFragment
+        val fragment = getView() as PublicChildFragment
+
         RetrofitClient.getApi()
             .unCollect(bean.id)
-            .compose(RxHelper.bind(publicChildFragment))
-            .subscribe(object : ProgressObserver<Any>(publicChildFragment.childFragmentManager){
+            .compose(RxHelper.bind(fragment))
+            .subscribe(object : ProgressObserver<Any>(fragment.childFragmentManager){
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("已取消收藏")
-                    getView().showUnCollectList(bean)
+                    getView()?.showUnCollectList(bean)
                 }
 
             })

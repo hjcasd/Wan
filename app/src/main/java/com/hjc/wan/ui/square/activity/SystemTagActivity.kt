@@ -78,7 +78,7 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
             mCid = cid
 
             showLoading()
-            getPresenter().loadListData(mPage, mCid)
+            getPresenter()?.loadListData(mPage, mCid)
         }
     }
 
@@ -102,12 +102,12 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter().loadListData(mPage, mCid)
+                getPresenter()?.loadListData(mPage, mCid)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadListData(mPage, mCid)
+                getPresenter()?.loadListData(mPage, mCid)
             }
 
         })
@@ -123,9 +123,9 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
             override fun onClick(checkBox: CheckBox, position: Int) {
                 val bean = articleList[position]
                 if (!bean.collect) {
-                    getPresenter().collectArticle(bean)
+                    getPresenter()?.collectArticle(bean)
                 } else {
-                    getPresenter().unCollectArticle(bean)
+                    getPresenter()?.unCollectArticle(bean)
                 }
             }
         })
@@ -156,7 +156,6 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
     }
 
     override fun showLoading() {
-        super.showLoading()
         stateView.showLoading()
     }
 

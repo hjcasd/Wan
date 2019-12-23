@@ -15,27 +15,27 @@ class HomeAdapter(data: MutableList<ArticleBean>?) :
     BaseQuickAdapter<ArticleBean, BaseViewHolder>(R.layout.item_rv_home, data) {
 
     private val TYPE_TEXT = 1
-    private val TYPE_IMAGE_ONE = 2
+    private val TYPE_IMAGE = 2
 
     private var mOnCollectViewClickListener: OnCollectViewClickListener? = null
 
     init {
         multiTypeDelegate = object : MultiTypeDelegate<ArticleBean>() {
             override fun getItemType(articleBean: ArticleBean): Int {
-                return if (StringUtils.isEmpty(articleBean.envelopePic)) TYPE_TEXT else TYPE_IMAGE_ONE
+                return if (StringUtils.isEmpty(articleBean.envelopePic)) TYPE_TEXT else TYPE_IMAGE
             }
         }
 
         multiTypeDelegate
             .registerItemType(TYPE_TEXT, R.layout.item_rv_home)
-            .registerItemType(TYPE_IMAGE_ONE, R.layout.item_rv_project)
+            .registerItemType(TYPE_IMAGE, R.layout.item_rv_project)
     }
 
     override fun convert(helper: BaseViewHolder, item: ArticleBean) {
         when (helper.itemViewType) {
             TYPE_TEXT -> initType1(helper, item)
 
-            TYPE_IMAGE_ONE -> initType2(helper, item)
+            TYPE_IMAGE -> initType2(helper, item)
         }
     }
 

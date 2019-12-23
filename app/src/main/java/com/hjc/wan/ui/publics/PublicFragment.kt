@@ -55,7 +55,7 @@ class PublicFragment : BaseMvpFragment<PublicContract.View, PublicPresenter>(),
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter().getPublicTitles()
+        getPresenter()?.loadPublicTitles()
     }
 
 

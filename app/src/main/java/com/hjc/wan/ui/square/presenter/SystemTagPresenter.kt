@@ -17,23 +17,24 @@ class SystemTagPresenter : BasePresenter<SystemTagContract.View>(), SystemTagCon
      * 加载列表
      */
     override fun loadListData(page: Int, cid: Int) {
-        val systemTagActivity = getView() as SystemTagActivity
+        val activity = getView() as SystemTagActivity
+
         RetrofitClient.getApi()
-            .getSystemTagData(page, cid)
-            .compose(RxHelper.bind(systemTagActivity))
+            .getSystemTag(page, cid)
+            .compose(RxHelper.bind(activity))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {
                     val data = result?.datas
                     data?.let {
                         if (data.size > 0) {
-                            getView().showContent()
-                            getView().showList(data)
+                            getView()?.showContent()
+                            getView()?.showList(data)
                         } else {
                             if (page == 0) {
-                                getView().showEmpty()
+                                getView()?.showEmpty()
                             } else {
-                                getView().showContent()
+                                getView()?.showContent()
                                 ToastUtils.showShort("没有更多数据了")
                             }
                         }
@@ -43,9 +44,9 @@ class SystemTagPresenter : BasePresenter<SystemTagContract.View>(), SystemTagCon
                 override fun onFailure(errorMsg: String) {
                     super.onFailure(errorMsg)
                     if (errorMsg == "网络不可用" || errorMsg == "请求网络超时") {
-                        getView().showNoNetwork()
+                        getView()?.showNoNetwork()
                     } else {
-                        getView().showError()
+                        getView()?.showError()
                     }
                 }
 
@@ -56,15 +57,16 @@ class SystemTagPresenter : BasePresenter<SystemTagContract.View>(), SystemTagCon
      * 收藏
      */
     override fun collectArticle(bean: ArticleBean) {
-        val systemTagActivity = getView() as SystemTagActivity
+        val activity = getView() as SystemTagActivity
+
         RetrofitClient.getApi()
             .collect(bean.id)
-            .compose(RxHelper.bind(systemTagActivity))
-            .subscribe(object : ProgressObserver<Any>(systemTagActivity.supportFragmentManager) {
+            .compose(RxHelper.bind(activity))
+            .subscribe(object : ProgressObserver<Any>(activity.supportFragmentManager) {
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("收藏成功")
-                    getView().showCollectList(bean)
+                    getView()?.showCollectList(bean)
                 }
 
             })
@@ -74,15 +76,16 @@ class SystemTagPresenter : BasePresenter<SystemTagContract.View>(), SystemTagCon
      * 取消收藏
      */
     override fun unCollectArticle(bean: ArticleBean) {
-        val systemTagActivity = getView() as SystemTagActivity
+        val activity = getView() as SystemTagActivity
+
         RetrofitClient.getApi()
             .unCollect(bean.id)
-            .compose(RxHelper.bind(systemTagActivity))
-            .subscribe(object : ProgressObserver<Any>(systemTagActivity.supportFragmentManager) {
+            .compose(RxHelper.bind(activity))
+            .subscribe(object : ProgressObserver<Any>(activity.supportFragmentManager) {
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("已取消收藏")
-                    getView().showUnCollectList(bean)
+                    getView()?.showUnCollectList(bean)
                 }
 
             })

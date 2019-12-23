@@ -14,23 +14,24 @@ import com.hjc.wan.ui.square.contract.PlazaContract
 class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Presenter{
 
     override fun loadListData(page: Int) {
-        val plazaFragment = getView() as PlazaFragment
+        val fragment = getView() as PlazaFragment
+
         RetrofitClient.getApi()
-            .getSquareData(page)
-            .compose(RxHelper.bind(plazaFragment))
+            .getSquare(page)
+            .compose(RxHelper.bind(fragment))
             .subscribe(object : CommonObserver<BasePageResponse<MutableList<ArticleBean>>>() {
 
                 override fun onSuccess(result: BasePageResponse<MutableList<ArticleBean>>?) {
                     val data = result?.datas
                     data?.let {
                         if (data.size > 0) {
-                            getView().showContent()
-                            getView().showList(data)
+                            getView()?.showContent()
+                            getView()?.showList(data)
                         } else {
                             if (page == 0) {
-                                getView().showEmpty()
+                                getView()?.showEmpty()
                             } else {
-                                getView().showContent()
+                                getView()?.showContent()
                                 ToastUtils.showShort("没有更多数据了")
                             }
                         }
@@ -40,9 +41,9 @@ class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Present
                 override fun onFailure(errorMsg: String) {
                     super.onFailure(errorMsg)
                     if (errorMsg == "网络不可用" || errorMsg == "请求网络超时") {
-                        getView().showNoNetwork()
+                        getView()?.showNoNetwork()
                     } else {
-                        getView().showError()
+                        getView()?.showError()
                     }
                 }
 
@@ -53,15 +54,16 @@ class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Present
      * 收藏
      */
     override fun collectArticle(bean : ArticleBean) {
-        val plazaFragment = getView() as PlazaFragment
+        val fragment = getView() as PlazaFragment
+
         RetrofitClient.getApi()
             .collect(bean.id)
-            .compose(RxHelper.bind(plazaFragment))
-            .subscribe(object : ProgressObserver<Any>(plazaFragment.childFragmentManager){
+            .compose(RxHelper.bind(fragment))
+            .subscribe(object : ProgressObserver<Any>(fragment.childFragmentManager){
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("收藏成功")
-                    getView().showCollectList(bean)
+                    getView()?.showCollectList(bean)
                 }
 
             })
@@ -71,15 +73,16 @@ class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Present
      * 取消收藏
      */
     override fun unCollectArticle(bean : ArticleBean) {
-        val plazaFragment = getView() as PlazaFragment
+        val fragment = getView() as PlazaFragment
+
         RetrofitClient.getApi()
             .unCollect(bean.id)
-            .compose(RxHelper.bind(plazaFragment))
-            .subscribe(object : ProgressObserver<Any>(plazaFragment.childFragmentManager){
+            .compose(RxHelper.bind(fragment))
+            .subscribe(object : ProgressObserver<Any>(fragment.childFragmentManager){
 
                 override fun onSuccess(result: Any?) {
                     ToastUtils.showShort("已取消收藏")
-                    getView().showUnCollectList(bean)
+                    getView()?.showUnCollectList(bean)
                 }
 
             })

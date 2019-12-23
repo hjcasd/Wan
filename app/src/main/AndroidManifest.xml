@@ -68,6 +68,18 @@
             android:name=".ui.square.activity.SystemTagActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.integral.IntegralRankActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.integral.IntegralHistoryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.collect.CollectActivity"
+            android:screenOrientation="portrait" />
+
 
         <!--============================================文件访问权限=========================================-->
         <provider

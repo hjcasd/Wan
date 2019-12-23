@@ -5,9 +5,11 @@ import android.view.View
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
+import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.IntegralBean
 import com.hjc.wan.ui.mine.contract.MineContract
 import com.hjc.wan.ui.mine.presenter.MinePresenter
+import com.hjc.wan.utils.helper.RouterManager
 import kotlinx.android.synthetic.main.fragment_mine.*
 
 /**
@@ -40,7 +42,7 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter().getIntegralInfo(true)
+        getPresenter()?.loadIntegralData(true)
     }
 
 
@@ -64,7 +66,7 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         llSetting.setOnClickListener(this)
 
         smartRefreshLayout.setOnRefreshListener {
-            getPresenter().getIntegralInfo(false)
+            getPresenter()?.loadIntegralData(false)
         }
     }
 
@@ -72,10 +74,10 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         super.onSingleClick(v)
         when (v?.id) {
             R.id.llIntegral -> {
-                ToastUtils.showShort("我的积分")
+                RouterManager.jump(RoutePath.URL_INTEGRAL_RANK)
             }
             R.id.llCollect -> {
-                ToastUtils.showShort("我的收藏")
+                RouterManager.jump(RoutePath.URL_MY_COLLECT)
             }
             R.id.llArticle -> {
                 ToastUtils.showShort("我的文章")
@@ -95,19 +97,5 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
             }
         }
     }
-
-
-    override fun toIntegral() {
-    }
-
-    override fun toCollect() {
-    }
-
-    override fun toArticle() {
-    }
-
-    override fun toTodo() {
-    }
-
 
 }

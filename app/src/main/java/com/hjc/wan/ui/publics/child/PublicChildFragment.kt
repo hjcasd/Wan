@@ -75,7 +75,7 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
         cid = arguments?.getInt("cid") ?: 0
 
         showLoading()
-        getPresenter().loadListData(mPage, cid)
+        getPresenter()?.loadListData(mPage, cid)
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
@@ -95,12 +95,12 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 1
-                getPresenter().loadListData(mPage, cid)
+                getPresenter()?.loadListData(mPage, cid)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter().loadListData(mPage, cid)
+                getPresenter()?.loadListData(mPage, cid)
             }
 
         })
@@ -116,9 +116,9 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
             override fun onClick(checkBox: CheckBox, position: Int) {
                 val bean = articleList[position]
                 if (!bean.collect) {
-                    getPresenter().collectArticle(bean)
+                    getPresenter()?.collectArticle(bean)
                 } else {
-                    getPresenter().unCollectArticle(bean)
+                    getPresenter()?.unCollectArticle(bean)
                 }
             }
         })
@@ -149,7 +149,6 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
     }
 
     override fun showLoading() {
-        super.showLoading()
         stateView.showLoading()
     }
 

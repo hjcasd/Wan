@@ -11,8 +11,9 @@ import com.hjc.wan.ui.project.contract.ProjectContract
 
 class ProjectPresenter : BasePresenter<ProjectContract.View>(), ProjectContract.Presenter {
 
-    override fun getProjectTitles() {
+    override fun loadProjectTitles() {
         val projectFragment = getView() as ProjectFragment
+
         RetrofitClient.getApi()
             .getProjectTypes()
             .compose(RxHelper.bind(projectFragment))
@@ -20,7 +21,7 @@ class ProjectPresenter : BasePresenter<ProjectContract.View>(), ProjectContract.
 
                 override fun onSuccess(result: MutableList<ClassifyBean>?) {
                     if (result != null && result.size > 0) {
-                        getView().showIndicator(result)
+                        getView()?.showIndicator(result)
                     } else {
                         ToastUtils.showShort("获取项目分类数据失败")
                     }

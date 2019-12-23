@@ -4,9 +4,7 @@ import com.hjc.wan.base.IBaseView
 
 interface MainContract {
 
-    interface View : IBaseView {
-
-    }
+    interface View : IBaseView
 
     interface Presenter {
         fun requestPermission()

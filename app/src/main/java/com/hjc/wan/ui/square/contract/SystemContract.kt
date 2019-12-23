@@ -6,11 +6,6 @@ import com.hjc.wan.model.SystemBean
 interface SystemContract {
 
     interface View : IBaseView {
-        fun showContent()
-        fun showEmpty()
-        fun showError()
-        fun showNoNetwork()
-
         fun showList(result: MutableList<SystemBean>)
     }
 

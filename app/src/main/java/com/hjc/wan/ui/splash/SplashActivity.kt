@@ -34,7 +34,7 @@ class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter().startCountdown()
+        getPresenter()?.startCountdown()
     }
 
     override fun toLogin() {

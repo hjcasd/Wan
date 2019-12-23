@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
-import com.hjc.wan.ui.square.contract.NavigationContract
+import com.hjc.wan.model.NavigationBean
 import com.hjc.wan.ui.square.adapter.NavigationContentAdapter
 import com.hjc.wan.ui.square.adapter.NavigationMenuAdapter
-import com.hjc.wan.model.NavigationBean
+import com.hjc.wan.ui.square.contract.NavigationContract
 import com.hjc.wan.ui.square.presenter.NavigationPresenter
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_navigation.*
@@ -68,7 +68,7 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
         super.initData()
 
         showLoading()
-        getPresenter().loadListData()
+        getPresenter()?.loadListData()
     }
 
     override fun showList(result: MutableList<NavigationBean>) {
@@ -118,7 +118,6 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     }
 
     override fun showLoading() {
-        super.showLoading()
         stateView.showLoading()
     }
 
