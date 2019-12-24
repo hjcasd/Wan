@@ -73,11 +73,15 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.integral.IntegralHistoryActivity"
+            android:name=".ui.integral.child.IntegralHistoryActivity"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.collect.CollectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.todo.TodoActivity"
             android:screenOrientation="portrait" />
 
 

@@ -99,7 +99,6 @@ interface Api {
     fun getIntegral(): Observable<BaseResponse<IntegralBean>>
 
 
-
     /**
      * 列表中收藏文章
      */
@@ -119,7 +118,6 @@ interface Api {
     fun collectLink(@Query("name") name: String, @Query("link") link: String): Observable<BaseResponse<CollectLinkBean>>
 
 
-
     /**
      * 获取积分排行榜数据
      */
@@ -131,7 +129,6 @@ interface Api {
      */
     @GET("/lg/coin/list/{page}/json")
     fun getIntegralHistory(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<IntegralHistoryBean>>>>
-
 
 
     /**
@@ -158,4 +155,51 @@ interface Api {
      */
     @POST("/lg/collect/deletetool/json")
     fun deleteLink(@Query("id") id: Int): Observable<BaseResponse<Any>>
+
+
+    /**
+     * 获取Todo列表数据 根据完成时间排序
+     */
+    @GET("/lg/todo/v2/list/{page}/json")
+    fun getTodoData(@Path("page") page: Int): Observable<BaseResponse<BasePageResponse<MutableList<TodoBean>>>>
+
+    /**
+     * 添加一个TODO
+     */
+    @POST("/lg/todo/add/json")
+    @FormUrlEncoded
+    fun addTodo(
+        @Field("title") title: String,
+        @Field("content") content: String,
+        @Field("date") date: String,
+        @Field("type") type: Int,
+        @Field("priority") priority: Int
+    ): Observable<BaseResponse<Any>>
+
+    /**
+     * 修改一个TODO
+     */
+    @POST("/lg/todo/update/{id}/json")
+    @FormUrlEncoded
+    fun updateTodo(
+        @Field("title") title: String,
+        @Field("content") content: String,
+        @Field("date") date: String,
+        @Field("type") type: Int,
+        @Field("priority") priority: Int,
+        @Path("id") id: Int
+    ): Observable<BaseResponse<Any>>
+
+    /**
+     * 删除一个TODO
+     */
+    @POST("/lg/todo/delete/{id}/json")
+    fun deleteTodo(@Path("id") id: Int): Observable<BaseResponse<Any>>
+
+    /**
+     * 完成一个TODO
+     */
+    @POST("/lg/todo/done/{id}/json")
+    @FormUrlEncoded
+    fun doneTodo(@Path("id") id: Int, @Field("status") status: Int): Observable<BaseResponse<Any>>
 }

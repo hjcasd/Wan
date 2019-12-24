@@ -83,7 +83,7 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
                 ToastUtils.showShort("我的文章")
             }
             R.id.llTodo -> {
-                ToastUtils.showShort("待办事项")
+                RouterManager.jump(RoutePath.URL_TO_DO)
             }
 
             R.id.llOpen -> {

@@ -1,4 +1,4 @@
-package com.hjc.wan.ui.integral.presenter
+package com.hjc.wan.ui.todo.presenter
 
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.base.BasePresenter
@@ -6,21 +6,21 @@ import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
-import com.hjc.wan.model.IntegralHistoryBean
-import com.hjc.wan.ui.integral.child.IntegralHistoryActivity
-import com.hjc.wan.ui.integral.contract.IntegralHistoryContract
+import com.hjc.wan.model.TodoBean
+import com.hjc.wan.ui.todo.TodoActivity
+import com.hjc.wan.ui.todo.contract.TodoContract
 
-class IntegralHistoryPresenter : BasePresenter<IntegralHistoryContract.View>(), IntegralHistoryContract.Presenter {
+class TodoPresenter : BasePresenter<TodoContract.View>(), TodoContract.Presenter {
 
     override fun loadListData(page: Int) {
-        val activity = getView() as IntegralHistoryActivity
+        val activity = getView() as TodoActivity
 
         RetrofitClient.getApi()
-            .getIntegralHistory(page)
+            .getTodoData(page)
             .compose(RxHelper.bind(activity))
-            .subscribe(object : CommonObserver<BasePageResponse<MutableList<IntegralHistoryBean>>>() {
+            .subscribe(object : CommonObserver<BasePageResponse<MutableList<TodoBean>>>() {
 
-                override fun onSuccess(result: BasePageResponse<MutableList<IntegralHistoryBean>>?) {
+                override fun onSuccess(result: BasePageResponse<MutableList<TodoBean>>?) {
                     val data = result?.datas
                     data?.let {
                         if (data.size > 0) {

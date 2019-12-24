@@ -26,4 +26,7 @@ object RoutePath {
 
     // 我的收藏页面
     const val URL_MY_COLLECT = "/wan/mine/collect"
+
+    // 待办清单页面
+    const val URL_TO_DO = "/wan/mine/todo"
 }

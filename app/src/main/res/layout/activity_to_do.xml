@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.hjc.baselib.widget.bar.TitleBar
         android:id="@+id/titleBar"
@@ -10,9 +11,9 @@
         android:layout_height="wrap_content"
         android:background="@color/app_color"
         app:leftImage="@mipmap/icon_back"
-        app:rightImage="@mipmap/icon_rule"
+        app:rightImage="@mipmap/icon_add"
         app:titleColor="@color/white"
-        app:titleText="积分排行">
+        app:titleText="待办清单">
 
     </com.hjc.baselib.widget.bar.TitleBar>
 
@@ -20,7 +21,6 @@
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/titleBar"
         android:background="@color/app_bg">
 
         <com.scwang.smartrefresh.header.MaterialHeader
@@ -35,7 +35,7 @@
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvIntegralRank"
+                android:id="@+id/rvTodo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical" />
@@ -50,14 +50,4 @@
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:src="@mipmap/icon_history" />
-
-</RelativeLayout>
+</LinearLayout>

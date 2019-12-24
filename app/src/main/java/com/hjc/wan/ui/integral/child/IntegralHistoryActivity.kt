@@ -1,4 +1,4 @@
-package com.hjc.wan.ui.integral
+package com.hjc.wan.ui.integral.child
 
 import android.annotation.SuppressLint
 import android.os.Bundle
