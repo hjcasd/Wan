@@ -1,6 +1,7 @@
 package com.hjc.wan.ui.todo
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -14,10 +15,11 @@ import com.hjc.wan.model.TodoBean
 import com.hjc.wan.ui.todo.adapter.TodoAdapter
 import com.hjc.wan.ui.todo.contract.TodoContract
 import com.hjc.wan.ui.todo.presenter.TodoPresenter
+import com.hjc.wan.utils.helper.RouterManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_to_do.*
+import kotlinx.android.synthetic.main.activity_todo.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -41,7 +43,7 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.activity_to_do
+        return R.layout.activity_todo
     }
 
     override fun initView() {
@@ -79,7 +81,9 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
             }
 
             override fun rightClick(view: View?) {
-
+                val bundle = Bundle()
+                bundle.putInt("from", 0)
+                RouterManager.jumpWithCode(this@TodoActivity, RoutePath.URL_ADD_TO_DO, bundle, 100)
             }
 
         })
@@ -97,6 +101,15 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
             }
 
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100 && resultCode == 1000){
+            mPage = 1
+            getPresenter()?.loadListData(mPage)
+        }
     }
 
 

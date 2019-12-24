@@ -29,4 +29,5 @@ object RoutePath {
 
     // 待办清单页面
     const val URL_TO_DO = "/wan/mine/todo"
+    const val URL_ADD_TO_DO = "/wan/mine/addTodo"
 }

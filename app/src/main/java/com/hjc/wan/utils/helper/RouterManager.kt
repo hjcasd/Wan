@@ -1,5 +1,6 @@
 package com.hjc.wan.utils.helper
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
@@ -19,7 +20,6 @@ object RouterManager {
     fun jump(path: String) {
         ARouter.getInstance()
             .build(path)
-            .withTransition(R.anim.slide_enter_bottom, R.anim.slide_exit_bottom)
             .navigation()
     }
 
@@ -32,8 +32,21 @@ object RouterManager {
         ARouter.getInstance()
             .build(path)
             .withBundle("params", bundle)
-            .withTransition(R.anim.slide_enter_bottom, R.anim.slide_exit_bottom)
             .navigation()
+    }
+
+    /**
+     * 页面跳转
+     * @param context 对应页面
+     * @param path 要跳转页面对应的路由url
+     * @param bundle 传递的参数
+     * @param requestCode code码
+     */
+    fun jumpWithCode(context: Activity, path: String, bundle: Bundle, requestCode: Int) {
+        ARouter.getInstance()
+            .build(path)
+            .withBundle("params", bundle)
+            .navigation(context, requestCode)
     }
 
 

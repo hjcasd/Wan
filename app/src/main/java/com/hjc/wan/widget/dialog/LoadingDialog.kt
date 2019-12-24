@@ -1,13 +1,9 @@
 package com.hjc.wan.widget.dialog
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.hjc.baselib.dialog.BaseDialog
 import com.hjc.wan.R
-import com.hjc.wan.http.helper.RxSchedulers
-import io.reactivex.Observable
-import java.util.concurrent.TimeUnit
 
 /**
  * @Author: HJC
@@ -36,13 +32,6 @@ class LoadingDialog : BaseDialog() {
         val window = dialog.window
         window?.setDimAmount(0f)
         isCancelable = false
-    }
-
-    @SuppressLint("CheckResult")
-    fun dismissDialog() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe { dismiss() }
     }
 
     override fun addListeners() {

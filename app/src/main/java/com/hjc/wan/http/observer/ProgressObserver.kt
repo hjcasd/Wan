@@ -70,7 +70,7 @@ abstract class ProgressObserver<T> : Observer<BaseResponse<T>> {
     }
 
     private fun hideLoading() {
-        mLoadingDialog.dismissDialog()
+        mLoadingDialog.dismiss()
     }
 
     abstract fun onSuccess(result: T?)
