@@ -41,7 +41,20 @@ class AddTodoPresenter : BasePresenter<AddTodoContract.View>(), AddTodoContract.
         priority: Int,
         id: Int
     ) {
+        val activity = getView() as AddTodoActivity
 
+        RetrofitClient.getApi()
+            .updateTodo(title, content, date, type, priority, id)
+            .compose(RxHelper.bind(activity))
+            .subscribe(object : ProgressObserver<Any>(activity.supportFragmentManager) {
+
+                override fun onSuccess(result: Any?) {
+                    ToastUtils.showShort("编辑成功")
+                    activity.setResult(1000)
+                    activity.finish()
+                }
+
+            })
     }
 
 }

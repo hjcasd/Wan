@@ -17,7 +17,7 @@ class TodoAdapter(data: MutableList<TodoBean>?) :
             helper.setText(R.id.tv_title, it.title)
             helper.setText(R.id.tv_time, it.dateStr)
             helper.setText(R.id.tv_content, it.content)
-
+            helper.addOnClickListener(R.id.iv_more)
 
             if (it.status == 1) {
                 //已完成

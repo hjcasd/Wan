@@ -7,9 +7,12 @@ interface TodoContract {
 
     interface View : IBaseView {
         fun showList(result: MutableList<TodoBean>)
+        fun refreshList()
     }
 
     interface Presenter {
         fun loadListData(page: Int)
+        fun deleteTodo(id: Int)
+        fun finishTodo(id: Int)
     }
 }

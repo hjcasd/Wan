@@ -6,6 +6,7 @@ import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
+import com.hjc.wan.http.observer.ProgressObserver
 import com.hjc.wan.model.TodoBean
 import com.hjc.wan.ui.todo.TodoActivity
 import com.hjc.wan.ui.todo.contract.TodoContract
@@ -44,6 +45,37 @@ class TodoPresenter : BasePresenter<TodoContract.View>(), TodoContract.Presenter
                     } else {
                         getView()?.showError()
                     }
+                }
+
+            })
+    }
+
+    override fun deleteTodo(id: Int) {
+        val activity = getView() as TodoActivity
+
+        RetrofitClient.getApi()
+            .deleteTodo(id)
+            .compose(RxHelper.bind(activity))
+            .subscribe(object : ProgressObserver<Any>(activity.supportFragmentManager) {
+
+                override fun onSuccess(result: Any?) {
+                    ToastUtils.showShort("删除成功")
+                    getView()?.refreshList()
+                }
+
+            })
+    }
+
+    override fun finishTodo(id: Int) {
+        val activity = getView() as TodoActivity
+
+        RetrofitClient.getApi()
+            .doneTodo(id, 1)
+            .compose(RxHelper.bind(activity))
+            .subscribe(object : ProgressObserver<Any>(activity.supportFragmentManager) {
+
+                override fun onSuccess(result: Any?) {
+                    getView()?.refreshList()
                 }
 
             })

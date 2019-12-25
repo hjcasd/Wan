@@ -176,35 +176,35 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/llArticle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:gravity="center_vertical"
-                            android:padding="10dp">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/llArticle"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="?attr/selectableItemBackground"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:padding="10dp">-->
 
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@mipmap/icon_my_article" />
+<!--                            <ImageView-->
+<!--                                android:layout_width="24dp"-->
+<!--                                android:layout_height="24dp"-->
+<!--                                android:src="@mipmap/icon_my_article" />-->
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="1"
-                                android:text="我的文章"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
+<!--                            <TextView-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="10dp"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:text="我的文章"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:textStyle="bold" />-->
 
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:layout_marginLeft="10dp"
-                                android:src="@mipmap/icon_arrow_right" />
+<!--                            <ImageView-->
+<!--                                android:layout_width="16dp"-->
+<!--                                android:layout_height="16dp"-->
+<!--                                android:layout_marginLeft="10dp"-->
+<!--                                android:src="@mipmap/icon_arrow_right" />-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
                         <LinearLayout
                             android:id="@+id/llTodo"

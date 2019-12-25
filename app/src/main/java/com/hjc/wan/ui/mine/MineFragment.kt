@@ -1,5 +1,8 @@
 package com.hjc.wan.ui.mine
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ToastUtils
@@ -46,6 +49,7 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun showIntegral(result: IntegralBean) {
         smartRefreshLayout.finishRefresh()
         tvName.text = result.username
@@ -58,7 +62,7 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
 
         llIntegral.setOnClickListener(this)
         llCollect.setOnClickListener(this)
-        llArticle.setOnClickListener(this)
+//        llArticle.setOnClickListener(this)
         llTodo.setOnClickListener(this)
 
         llOpen.setOnClickListener(this)
@@ -79,18 +83,28 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
             R.id.llCollect -> {
                 RouterManager.jump(RoutePath.URL_MY_COLLECT)
             }
-            R.id.llArticle -> {
-                ToastUtils.showShort("我的文章")
-            }
+//            R.id.llArticle -> {
+//                ToastUtils.showShort("我的文章")
+//            }
             R.id.llTodo -> {
                 RouterManager.jump(RoutePath.URL_TO_DO)
             }
 
             R.id.llOpen -> {
-                ToastUtils.showShort("开源网站")
+                RouterManager.jumpToWeb("玩Android网站", "https://www.wanandroid.com/")
             }
             R.id.llJoin -> {
-                ToastUtils.showShort("加入我们")
+                val key = "arD6CZ5Bt8_ReDpb56-5n5cIY6sBqTtl"
+                val intent = Intent()
+                intent.data =
+                    Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D$key")
+                // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    // 未安装手Q或安装的版本不支持
+                    ToastUtils.showShort("未安装手机QQ或安装的版本不支持")
+                }
             }
             R.id.llSetting -> {
                 ToastUtils.showShort("系统设置")
