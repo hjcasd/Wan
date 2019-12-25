@@ -88,6 +88,10 @@
             android:name=".ui.todo.child.AddTodoActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:screenOrientation="portrait" />
+
 
         <!--============================================文件访问权限=========================================-->
         <provider

@@ -19,7 +19,7 @@ import java.util.*
  * @Date: 2019/12/23 15:23
  * @Description: 我的收藏页面
  */
-@Route(path = RoutePath.URL_MY_COLLECT)
+@Route(path = RoutePath.URL_COLLECT)
 class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(),
     CollectContract.View {
 

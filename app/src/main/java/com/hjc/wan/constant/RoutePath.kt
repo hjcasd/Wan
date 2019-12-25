@@ -25,9 +25,12 @@ object RoutePath {
     const val URL_INTEGRAL_HISTORY = "/wan/mine/integralHistory"
 
     // 我的收藏页面
-    const val URL_MY_COLLECT = "/wan/mine/collect"
+    const val URL_COLLECT = "/wan/mine/collect"
 
     // 待办清单页面
     const val URL_TO_DO = "/wan/mine/todo"
     const val URL_ADD_TO_DO = "/wan/mine/addTodo"
+
+    // 设置页面
+    const val URL_SETTING = "/wan/mine/setting"
 }

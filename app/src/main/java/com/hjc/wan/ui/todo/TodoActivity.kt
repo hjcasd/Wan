@@ -136,9 +136,9 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun handleMessage(messageEvent: MessageEvent<Int>) {
-        if (messageEvent.code == EventCode.A) {
+        if (messageEvent.code == EventCode.DELETE_TODO) {
             getPresenter()?.deleteTodo(messageEvent.data)
-        } else if (messageEvent.code == EventCode.B) {
+        } else if (messageEvent.code == EventCode.DONE_TODO) {
             getPresenter()?.finishTodo(messageEvent.data)
         }
     }
