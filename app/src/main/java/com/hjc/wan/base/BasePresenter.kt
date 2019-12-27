@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference
  * @Date: 2019/1/4 15:03
  * @Description: Presenter层基类
  */
-abstract class BasePresenter<V> {
+abstract class BasePresenter<V : IBaseView> {
 
     /**
      * 持有UI接口的弱引用
