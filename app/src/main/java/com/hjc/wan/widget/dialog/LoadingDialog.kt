@@ -29,7 +29,7 @@ class LoadingDialog : BaseDialog() {
 
     override fun initData(savedInstanceState: Bundle?) {
         //去掉遮盖层
-        val window = dialog.window
+        val window = dialog?.window
         window?.setDimAmount(0f)
         isCancelable = false
     }

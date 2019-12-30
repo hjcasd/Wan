@@ -1,7 +1,6 @@
 package com.hjc.wan.ui.collect.child
 
 import android.annotation.SuppressLint
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
@@ -84,7 +83,7 @@ class CollectArticleFragment :
             RouterManager.jumpToWeb(bean.title, bean.link)
         }
 
-        mAdapter.setOnItemChildClickListener { adapter, view, position ->
+        mAdapter.setOnItemChildClickListener { _, _, position ->
             val dataList = mAdapter.data
             val bean = dataList[position]
 
