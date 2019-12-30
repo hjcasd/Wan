@@ -1,7 +1,7 @@
 package com.hjc.wan.ui.square.child
 
 import android.annotation.SuppressLint
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
@@ -45,7 +45,7 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     override fun initView() {
         super.initView()
 
-        val manager = LinearLayoutManager(mContext)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
         rvSystem.layoutManager = manager
 
         mSystemAdapter = SystemAdapter(null)

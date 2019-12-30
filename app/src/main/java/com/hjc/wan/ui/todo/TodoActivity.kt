@@ -3,7 +3,7 @@ package com.hjc.wan.ui.todo
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.hjc.baselib.event.EventManager
@@ -55,7 +55,7 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
     override fun initView() {
         super.initView()
 
-        val manager = LinearLayoutManager(this)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rvTodo.layoutManager = manager
 
         mAdapter = TodoAdapter(null)

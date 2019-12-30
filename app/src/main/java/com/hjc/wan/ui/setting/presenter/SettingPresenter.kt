@@ -5,10 +5,6 @@ import com.hjc.wan.ui.setting.contract.SettingContract
 
 class SettingPresenter : BasePresenter<SettingContract.View>(), SettingContract.Presenter {
 
-    override fun clearCache() {
-
-    }
-
     override fun logout() {
 
     }

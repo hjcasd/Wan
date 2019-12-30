@@ -2,7 +2,7 @@ package com.hjc.wan.ui.integral.child
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
@@ -48,7 +48,7 @@ class IntegralHistoryActivity :
     override fun initView() {
         super.initView()
 
-        val manager = LinearLayoutManager(this)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rvIntegralHistory.layoutManager = manager
 
         mIntegralHistoryAdapter = IntegralHistoryAdapter(null)

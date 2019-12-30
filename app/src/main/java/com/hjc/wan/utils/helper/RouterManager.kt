@@ -3,7 +3,7 @@ package com.hjc.wan.utils.helper
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
+import androidx.core.app.ActivityOptionsCompat
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils

@@ -1,7 +1,7 @@
 package com.hjc.wan.ui.collect
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity

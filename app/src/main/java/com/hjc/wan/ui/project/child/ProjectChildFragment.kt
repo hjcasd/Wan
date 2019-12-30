@@ -2,7 +2,7 @@ package com.hjc.wan.ui.project.child
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.CheckBox
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
@@ -63,7 +63,7 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
     override fun initView() {
         super.initView()
 
-        val manager = LinearLayoutManager(mContext)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
         rvProject.layoutManager = manager
 
         mProjectChildAdapter = ProjectChildAdapter(null)

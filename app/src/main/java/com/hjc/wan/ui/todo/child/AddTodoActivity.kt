@@ -1,17 +1,15 @@
 package com.hjc.wan.ui.todo.child
 
-import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.datetime.datePicker
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.StringUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
@@ -120,30 +118,24 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-
-        val dialog = DatePickerDialog(
-            this,
-            OnDateSetListener { view, year, month, day ->
-                tvTime.text = "${year}-${month + 1}-${day}"
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        dialog.show()
+        MaterialDialog(this).show {
+            cornerRadius(0f)
+            datePicker(minDate = Calendar.getInstance()) { dialog, date ->
+                this@AddTodoActivity.tvTime.text = TimeUtils.date2String(date.time, "yyyy-MM-dd")
+            }
+        }
     }
 
     override fun showPriorityDialog() {
-        val dialog = BottomSheetDialog(this)
+        val dialog =
+            BottomSheetDialog(this)
 
         val view = View.inflate(this, R.layout.dialog_priority, null)
         dialog.setContentView(view)
 
-        val rvPriority: RecyclerView = view.findViewById(R.id.rv_priority)
-        val manager = LinearLayoutManager(this)
+        val rvPriority: androidx.recyclerview.widget.RecyclerView = view.findViewById(R.id.rv_priority)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rvPriority.layoutManager = manager
 
         val adapter = PriorityAdapter(mTitles)

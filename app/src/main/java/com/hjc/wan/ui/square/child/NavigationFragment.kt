@@ -1,8 +1,8 @@
 package com.hjc.wan.ui.square.child
 
 import android.annotation.SuppressLint
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
@@ -27,7 +27,7 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     private lateinit var mNavigationMenuAdapter: NavigationMenuAdapter
     private lateinit var mNavigationContentAdapter: NavigationContentAdapter
 
-    private lateinit var contentManager: LinearLayoutManager
+    private lateinit var contentManager: androidx.recyclerview.widget.LinearLayoutManager
 
     private var oldPosition = 0
 
@@ -53,12 +53,13 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     override fun initView() {
         super.initView()
 
-        val manager = LinearLayoutManager(mContext)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
         rvNavigationMenu.layoutManager = manager
         mNavigationMenuAdapter = NavigationMenuAdapter(null)
         rvNavigationMenu.adapter = mNavigationMenuAdapter
 
-        contentManager = LinearLayoutManager(mContext)
+        contentManager =
+            androidx.recyclerview.widget.LinearLayoutManager(mContext)
         rvNavigationContent.layoutManager = contentManager
         mNavigationContentAdapter = NavigationContentAdapter(null)
         rvNavigationContent.adapter = mNavigationContentAdapter
@@ -94,8 +95,8 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
         })
 
         //侧边栏菜单随右边列表一起滚动
-        rvNavigationContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        rvNavigationContent.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val firstPosition = contentManager.findFirstVisibleItemPosition()
                 if (oldPosition != firstPosition) {

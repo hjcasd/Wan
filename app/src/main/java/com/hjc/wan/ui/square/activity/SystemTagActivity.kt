@@ -2,7 +2,7 @@ package com.hjc.wan.ui.square.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.CheckBox
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -58,7 +58,7 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
 
     override fun initView() {
         super.initView()
-        val manager = LinearLayoutManager(this)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rvTag.layoutManager = manager
 
         mSystemTagAdapter = SystemTagAdapter(null)

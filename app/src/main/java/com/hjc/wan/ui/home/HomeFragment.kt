@@ -2,7 +2,7 @@ package com.hjc.wan.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.CheckBox
 import com.hjc.wan.R
@@ -69,7 +69,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         val headerView = View.inflate(mContext, R.layout.layout_header_banner, null)
         banner = headerView.findViewById<View>(R.id.banner) as Banner?
 
-        val manager = LinearLayoutManager(mContext)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
         rvHome.layoutManager = manager
 
         mHomeAdapter = HomeAdapter(null)

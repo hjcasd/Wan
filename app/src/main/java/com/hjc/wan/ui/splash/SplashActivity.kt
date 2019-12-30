@@ -1,7 +1,7 @@
 package com.hjc.wan.ui.splash
 
 import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
+import androidx.core.app.ActivityOptionsCompat
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath

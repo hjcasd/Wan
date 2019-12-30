@@ -7,5 +7,9 @@
     <string name="tab_public">公众号</string>
     <string name="tab_mine">我的</string>
 
+    <string name="confirm">确定</string>
+    <string name="canel">取消</string>
+    <string name="title">温馨提示</string>
+
     <string name="transition_logo_splash" translatable="false">transition_logo_splash</string>
 </resources>

@@ -10,7 +10,6 @@ interface SettingContract {
     }
 
     interface Presenter{
-        fun clearCache()
         fun logout()
         fun checkVersion()
     }

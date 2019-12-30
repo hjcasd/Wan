@@ -1,6 +1,6 @@
 package com.hjc.wan.http.observer
 
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.wan.http.bean.BaseResponse
 import com.hjc.wan.http.exception.ApiException

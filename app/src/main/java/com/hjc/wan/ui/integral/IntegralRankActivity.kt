@@ -2,7 +2,7 @@ package com.hjc.wan.ui.integral
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.hjc.baselib.widget.bar.OnViewClickListener
@@ -50,7 +50,7 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
     override fun initView() {
         super.initView()
 
-        val manager = LinearLayoutManager(this)
+        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rvIntegralRank.layoutManager = manager
 
         mIntegralRankAdapter = IntegralRankAdapter(null)
