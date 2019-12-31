@@ -72,9 +72,9 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
                 mPriority = bean.priority
                 tvPriority.text = mTitles[mPriority]
 
-                colorView.setView(SettingManager.getColorByType(mPriority))
+                colorView.setViewColor(SettingManager.getColorByType(mPriority))
             } else {
-                colorView.setView(SettingManager.getColorByType(0))
+                colorView.setViewColor(SettingManager.getColorByType(0))
                 titleBar.setTitle("添加待办事项")
             }
         }
@@ -131,7 +131,7 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         adapter.setOnItemClickListener { _, _, position ->
             tvPriority.text = mTitles[position]
             mPriority = position
-            colorView.setView(SettingManager.getColorByType(mPriority))
+            colorView.setViewColor(SettingManager.getColorByType(mPriority))
             dialog.dismiss()
         }
 

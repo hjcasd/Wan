@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
@@ -15,6 +16,7 @@ import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.setting.contract.SettingContract
 import com.hjc.wan.ui.setting.presenter.SettingPresenter
+import com.hjc.wan.utils.ColorUtils
 import com.hjc.wan.utils.helper.CacheManager
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
@@ -50,6 +52,9 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
         val type = SettingManager.getListAnimationType()
         tvAnimation.text = resources.getStringArray(R.array.setting_modes)[type]
+
+        val themeColor = SettingManager.getThemeColor()
+        colorView.setViewColor(themeColor)
     }
 
 
@@ -135,7 +140,20 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
      * 主题颜色
      */
     private fun changeTheme() {
-
+        MaterialDialog(this).show {
+            cornerRadius(10f)
+            title(R.string.choose_theme_color)
+            colorChooser(
+                ColorUtils.ACCENT_COLORS,
+                initialSelection = SettingManager.getThemeColor(),
+                subColors = ColorUtils.PRIMARY_SUB_COLORS
+            ) { _, color ->
+                SettingManager.setThemeColor(color)
+                this@SettingActivity.colorView.setViewColor(color)
+            }
+            positiveButton(R.string.confirm)
+            negativeButton(R.string.cancel)
+        }
     }
 
 }

@@ -2,7 +2,9 @@ package com.hjc.wan.utils.helper
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.SPUtils
+import com.hjc.wan.R
 
 /**
  * @Author: HJC
@@ -12,6 +14,7 @@ import com.blankj.utilcode.util.SPUtils
 object SettingManager {
 
     private const val KEY_MODE = "mode"
+    private const val KEY_COLOR = "color"
 
     /**
      * 获取颜色值
@@ -47,5 +50,18 @@ object SettingManager {
         SPUtils.getInstance().put(KEY_MODE, mode)
     }
 
+    /**
+     * 获取主题色
+     */
+    fun getThemeColor(): Int {
+        return SPUtils.getInstance().getInt(KEY_COLOR,  ColorUtils.getColor(R.color.colorPrimary))
+    }
+
+    /**
+     * 设置主题色
+     */
+    fun setThemeColor(color: Int) {
+        SPUtils.getInstance().put(KEY_COLOR, color)
+    }
 
 }

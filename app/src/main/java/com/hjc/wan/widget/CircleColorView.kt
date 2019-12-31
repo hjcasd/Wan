@@ -94,12 +94,12 @@ class CircleColorView(
         transparentGrid = null
     }
 
-    fun setView(parseColor: Int) {
+    fun setViewColor(parseColor: Int) {
         color = parseColor
         border = parseColor
     }
 
-    fun setSelectView(parseColor: Int) {
+    fun setSelectViewColor(parseColor: Int) {
         color = parseColor
         border = Color.DKGRAY
     }

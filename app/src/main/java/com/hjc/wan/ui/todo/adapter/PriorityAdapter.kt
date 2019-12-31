@@ -14,7 +14,7 @@ class PriorityAdapter(data: MutableList<String>?) :
             helper.setText(R.id.tv_priority, item)
 
             val colorView = helper.getView<CircleColorView>(R.id.color_view)
-            colorView.setView(SettingManager.getColorByType(helper.adapterPosition))
+            colorView.setViewColor(SettingManager.getColorByType(helper.adapterPosition))
         }
     }
 }

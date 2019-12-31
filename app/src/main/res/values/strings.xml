@@ -11,5 +11,7 @@
     <string name="canel">取消</string>
     <string name="title">温馨提示</string>
 
+    <string name="choose_theme_color">主题颜色</string>
+
     <string name="transition_logo_splash" translatable="false">transition_logo_splash</string>
 </resources>
