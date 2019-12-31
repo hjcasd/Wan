@@ -3,19 +3,24 @@ package com.hjc.wan.ui.publics.child
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.widget.CheckBox
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.publics.adapter.PublicChildAdapter
 import com.hjc.wan.ui.publics.contract.PublicChildContract
 import com.hjc.wan.ui.publics.presenter.PublicChildPresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_public_child.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -26,9 +31,7 @@ import java.util.concurrent.TimeUnit
 class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, PublicChildPresenter>(),
     PublicChildContract.View {
 
-    private lateinit var mPublicChildAdapter: PublicChildAdapter
-
-    private var articleList: MutableList<ArticleBean> = mutableListOf()
+    private lateinit var mAdapter: PublicChildAdapter
 
     private var cid: Int = 0
 
@@ -62,15 +65,22 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        val manager = LinearLayoutManager(mContext)
         rvPublic.layoutManager = manager
 
-        mPublicChildAdapter = PublicChildAdapter(null)
-        rvPublic.adapter = mPublicChildAdapter
+        mAdapter = PublicChildAdapter(null)
+        rvPublic.adapter = mAdapter
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData() {
         super.initData()
+        EventManager.register(this)
 
         cid = arguments?.getInt("cid") ?: 0
 
@@ -80,11 +90,9 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 1) {
-            articleList = result
-            mPublicChildAdapter.setNewData(result)
+            mAdapter.setNewData(result)
         } else {
-            articleList.addAll(result)
-            mPublicChildAdapter.addData(result)
+            mAdapter.addData(result)
         }
     }
 
@@ -105,34 +113,32 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
 
         })
 
-        mPublicChildAdapter.setOnItemClickListener { _, _, position ->
-            val bean = articleList[position]
-            RouterManager.jumpToWeb(bean.title, bean.link)
-        }
+        mAdapter.apply {
+            setOnItemClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
+                RouterManager.jumpToWeb(bean.title, bean.link)
+            }
 
-        mPublicChildAdapter.setOnCollectViewClickListener(object :
-            PublicChildAdapter.OnCollectViewClickListener {
-
-            override fun onClick(checkBox: CheckBox, position: Int) {
-                val bean = articleList[position]
+            setOnItemChildClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
                 if (!bean.collect) {
                     getPresenter()?.collectArticle(bean)
                 } else {
                     getPresenter()?.unCollectArticle(bean)
                 }
             }
-        })
+        }
     }
 
 
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
-        mPublicChildAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun showUnCollectList(bean: ArticleBean) {
         bean.collect = false
-        mPublicChildAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
 
@@ -168,6 +174,23 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
+        }
     }
 
 }

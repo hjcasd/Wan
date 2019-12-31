@@ -3,8 +3,8 @@ package com.hjc.wan.ui.todo
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
@@ -19,6 +19,7 @@ import com.hjc.wan.ui.todo.adapter.TodoAdapter
 import com.hjc.wan.ui.todo.contract.TodoContract
 import com.hjc.wan.ui.todo.presenter.TodoPresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.dialog.OperateDialog
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
@@ -55,11 +56,17 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        val manager = LinearLayoutManager(this)
         rvTodo.layoutManager = manager
 
         mAdapter = TodoAdapter(null)
         rvTodo.adapter = mAdapter
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -113,33 +120,39 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
 
         })
 
-        mAdapter.setOnItemClickListener { _, _, position ->
-            val dataList = mAdapter.data
-            val bean = dataList[position]
+        mAdapter.apply {
+            setOnItemClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
 
-            val bundle = Bundle()
-            bundle.putInt("from", 1)
-            bundle.putSerializable("bean", bean)
-            RouterManager.jumpWithCode(this@TodoActivity, RoutePath.URL_ADD_TO_DO, bundle, 100)
-        }
+                val bundle = Bundle()
+                bundle.putInt("from", 1)
+                bundle.putSerializable("bean", bean)
+                RouterManager.jumpWithCode(this@TodoActivity, RoutePath.URL_ADD_TO_DO, bundle, 100)
+            }
 
-        mAdapter.setOnItemChildClickListener { _, _, position ->
-            val dataList = mAdapter.data
-            val bean = dataList[position]
+            setOnItemChildClickListener { _, _, position ->
+                val bean =  mAdapter.data[position]
 
-            OperateDialog.newInstance(bean.id, bean.isDone())
-                .setAnimStyle(R.style.dialog_anim_bottom)
-                .showDialog(supportFragmentManager)
+                OperateDialog.newInstance(bean.id, bean.isDone())
+                    .setAnimStyle(R.style.dialog_anim_bottom)
+                    .showDialog(supportFragmentManager)
+            }
         }
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(messageEvent: MessageEvent<Int>) {
-        if (messageEvent.code == EventCode.DELETE_TODO) {
-            getPresenter()?.deleteTodo(messageEvent.data)
-        } else if (messageEvent.code == EventCode.DONE_TODO) {
-            getPresenter()?.finishTodo(messageEvent.data)
+    fun handleMessage(event: MessageEvent<Int>) {
+        if (event.code == EventCode.DELETE_TODO) {
+            getPresenter()?.deleteTodo(event.data)
+        } else if (event.code == EventCode.DONE_TODO) {
+            getPresenter()?.finishTodo(event.data)
+        } else if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
     }
 

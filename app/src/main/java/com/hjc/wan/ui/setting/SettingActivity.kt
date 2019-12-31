@@ -4,15 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.setting.contract.SettingContract
 import com.hjc.wan.ui.setting.presenter.SettingPresenter
 import com.hjc.wan.utils.helper.CacheManager
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
@@ -42,6 +47,9 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
         val totalCacheSize = CacheManager.getTotalCacheSize(this)
         tvCache.text = totalCacheSize
+
+        val type = SettingManager.getListAnimationType()
+        tvAnimation.text = resources.getStringArray(R.array.setting_modes)[type]
     }
 
 
@@ -63,13 +71,13 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
         when (v?.id) {
             R.id.llClearCache -> {
-               clearCache()
+                clearCache()
             }
             R.id.llAnimation -> {
-                ToastUtils.showShort("列表动画")
+                changeListAnimationType()
             }
             R.id.rlTheme -> {
-                ToastUtils.showShort("主题颜色")
+                changeTheme()
             }
             R.id.llVersion -> {
                 ToastUtils.showShort("已经是最新版本了")
@@ -79,13 +87,18 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
             }
             R.id.btnLogout -> {
                 ToastUtils.showShort("退出登录")
+                getPresenter()?.logout()
             }
         }
     }
 
+    /**
+     * 清除缓存
+     */
     @SuppressLint("SetTextI18n")
     private fun clearCache() {
         MaterialDialog(this).show {
+            cornerRadius(10f)
             title(R.string.title)
             message(text = "确定清除缓存吗")
             positiveButton(text = "清除") {
@@ -97,11 +110,31 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
         }
     }
 
-    override fun changeListAnimation() {
+    /**
+     * 列表动画
+     */
+    private fun changeListAnimationType() {
+        MaterialDialog(this).show {
+            cornerRadius(10f)
+            listItemsSingleChoice(
+                R.array.setting_modes,
+                initialSelection = SettingManager.getListAnimationType()
+            ) { dialog, index, text ->
+                SettingManager.setListAnimationType(index)
+                this@SettingActivity.tvAnimation.text = text
 
+                EventManager.sendEvent(MessageEvent(EventCode.CHANGE_LIST_ANIMATION, null))
+            }
+            title(text = "设置列表动画")
+            positiveButton(R.string.confirm)
+            negativeButton(R.string.cancel)
+        }
     }
 
-    override fun changeTheme() {
+    /**
+     * 主题颜色
+     */
+    private fun changeTheme() {
 
     }
 

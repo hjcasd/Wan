@@ -1,13 +1,12 @@
 package com.hjc.wan.ui.todo.adapter
 
-import android.graphics.Color
 import android.widget.ImageView
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.hjc.wan.R
 import com.hjc.wan.model.TodoBean
-import com.hjc.wan.utils.CommonUtils
+import com.hjc.wan.utils.helper.SettingManager
 
 class TodoAdapter(data: MutableList<TodoBean>?) :
     BaseQuickAdapter<TodoBean, BaseViewHolder>(R.layout.item_rv_to_do, data) {
@@ -35,19 +34,8 @@ class TodoAdapter(data: MutableList<TodoBean>?) :
                 }
             }
             helper.getView<ImageView>(R.id.iv_tag).imageTintList =
-                CommonUtils.getOneColorStateList(getColorByType(it.priority))
+                SettingManager.getOneColorStateList(SettingManager.getColorByType(it.priority))
         }
-    }
-
-    private fun getColorByType(type: Int): Int {
-        var color = Color.parseColor("#fe7b7b")
-        when (type) {
-            0 -> color = Color.parseColor("#fe7b7b")
-            1 -> color = Color.parseColor("#dda239")
-            2 -> color = Color.parseColor("#69adef")
-            3 -> color = Color.parseColor("#6cc959")
-        }
-        return color
     }
 
 }

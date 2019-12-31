@@ -2,7 +2,6 @@ package com.hjc.wan.ui.square.child
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.http.helper.RxSchedulers
@@ -27,7 +26,7 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     private lateinit var mNavigationMenuAdapter: NavigationMenuAdapter
     private lateinit var mNavigationContentAdapter: NavigationContentAdapter
 
-    private lateinit var contentManager: androidx.recyclerview.widget.LinearLayoutManager
+    private lateinit var contentManager: LinearLayoutManager
 
     private var oldPosition = 0
 
@@ -53,13 +52,12 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        val manager = LinearLayoutManager(mContext)
         rvNavigationMenu.layoutManager = manager
         mNavigationMenuAdapter = NavigationMenuAdapter(null)
         rvNavigationMenu.adapter = mNavigationMenuAdapter
 
-        contentManager =
-            androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        contentManager = LinearLayoutManager(mContext)
         rvNavigationContent.layoutManager = contentManager
         mNavigationContentAdapter = NavigationContentAdapter(null)
         rvNavigationContent.adapter = mNavigationContentAdapter

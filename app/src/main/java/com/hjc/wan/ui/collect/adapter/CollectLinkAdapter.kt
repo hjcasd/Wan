@@ -8,7 +8,6 @@ import com.hjc.wan.model.CollectLinkBean
 class CollectLinkAdapter(data: MutableList<CollectLinkBean>?) :
     BaseQuickAdapter<CollectLinkBean, BaseViewHolder>(R.layout.item_rv_link, data) {
 
-
     override fun convert(helper: BaseViewHolder, item: CollectLinkBean?) {
         item?.let {
             helper.setText(R.id.tv_name, it.name)

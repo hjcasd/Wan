@@ -2,19 +2,24 @@ package com.hjc.wan.ui.square.child
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.widget.CheckBox
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.square.adapter.PlazaAdapter
 import com.hjc.wan.ui.square.contract.PlazaContract
 import com.hjc.wan.ui.square.presenter.PlazaPresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_plaza.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -25,9 +30,7 @@ import java.util.concurrent.TimeUnit
 class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     PlazaContract.View {
 
-    private lateinit var mPlazaAdapter: PlazaAdapter
-
-    private var articleList: MutableList<ArticleBean> = mutableListOf()
+    private lateinit var mAdapter: PlazaAdapter
 
     private var mPage = 0
 
@@ -55,15 +58,22 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        val manager =LinearLayoutManager(mContext)
         rvPlaza.layoutManager = manager
 
-        mPlazaAdapter = PlazaAdapter(null)
-        rvPlaza.adapter = mPlazaAdapter
+        mAdapter = PlazaAdapter(null)
+        rvPlaza.adapter = mAdapter
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData() {
         super.initData()
+        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData(mPage)
@@ -71,11 +81,9 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
-            articleList = result
-            mPlazaAdapter.setNewData(result)
+            mAdapter.setNewData(result)
         } else {
-            articleList.addAll(result)
-            mPlazaAdapter.addData(result)
+            mAdapter.addData(result)
         }
     }
 
@@ -96,34 +104,32 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
 
         })
 
-        mPlazaAdapter.setOnItemClickListener { _, _, position ->
-            val bean = articleList[position]
-            RouterManager.jumpToWeb(bean.title, bean.link)
-        }
+        mAdapter.apply {
+            setOnItemClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
+                RouterManager.jumpToWeb(bean.title, bean.link)
+            }
 
-        mPlazaAdapter.setOnCollectViewClickListener(object :
-            PlazaAdapter.OnCollectViewClickListener {
-
-            override fun onClick(checkBox: CheckBox, position: Int) {
-                val bean = articleList[position]
+            setOnItemChildClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
                 if (!bean.collect) {
                     getPresenter()?.collectArticle(bean)
                 } else {
                     getPresenter()?.unCollectArticle(bean)
                 }
             }
-        })
+        }
     }
 
 
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
-        mPlazaAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun showUnCollectList(bean: ArticleBean) {
         bean.collect = false
-        mPlazaAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
 
@@ -159,6 +165,22 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+    
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
+        }
     }
 
 }

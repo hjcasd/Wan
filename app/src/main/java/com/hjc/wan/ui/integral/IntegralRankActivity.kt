@@ -2,12 +2,15 @@ package com.hjc.wan.ui.integral
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.widget.bar.OnViewClickListener
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.IntegralBean
@@ -15,10 +18,13 @@ import com.hjc.wan.ui.integral.adapter.IntegralRankAdapter
 import com.hjc.wan.ui.integral.contract.IntegralRankContract
 import com.hjc.wan.ui.integral.presenter.IntegralRankPresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_integral_rank.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -30,7 +36,7 @@ import java.util.concurrent.TimeUnit
 class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, IntegralRankPresenter>(),
     IntegralRankContract.View {
 
-    private lateinit var mIntegralRankAdapter: IntegralRankAdapter
+    private lateinit var mAdapter: IntegralRankAdapter
 
     private var mPage: Int = 1
 
@@ -50,15 +56,22 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        val manager = LinearLayoutManager(this)
         rvIntegralRank.layoutManager = manager
 
-        mIntegralRankAdapter = IntegralRankAdapter(null)
-        rvIntegralRank.adapter = mIntegralRankAdapter
+        mAdapter = IntegralRankAdapter(null)
+        rvIntegralRank.adapter = mAdapter
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData(mPage)
@@ -66,9 +79,9 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
 
     override fun showList(result: MutableList<IntegralBean>) {
         if (mPage == 1) {
-            mIntegralRankAdapter.setNewData(result)
+            mAdapter.setNewData(result)
         } else {
-            mIntegralRankAdapter.addData(result)
+            mAdapter.addData(result)
         }
     }
 
@@ -143,6 +156,23 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
+        }
     }
 
 }

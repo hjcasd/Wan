@@ -17,6 +17,7 @@ import com.hjc.wan.model.TodoBean
 import com.hjc.wan.ui.todo.adapter.PriorityAdapter
 import com.hjc.wan.ui.todo.contract.AddTodoContract
 import com.hjc.wan.ui.todo.presenter.AddTodoPresenter
+import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_add_todo.*
 import java.util.*
 
@@ -71,21 +72,9 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
                 mPriority = bean.priority
                 tvPriority.text = mTitles[mPriority]
 
-                when (mPriority) {
-                    0 -> {
-                        ivCircle.setImageResource(R.drawable.shape_circle_red)
-                    }
-                    1 -> {
-                        ivCircle.setImageResource(R.drawable.shape_circle_yelllow)
-                    }
-                    2 -> {
-                        ivCircle.setImageResource(R.drawable.shape_circle_blue)
-                    }
-                    3 -> {
-                        ivCircle.setImageResource(R.drawable.shape_circle_green)
-                    }
-                }
+                colorView.setView(SettingManager.getColorByType(mPriority))
             } else {
+                colorView.setView(SettingManager.getColorByType(0))
                 titleBar.setTitle("添加待办事项")
             }
         }
@@ -120,7 +109,6 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
 
     override fun showDatePicker() {
         MaterialDialog(this).show {
-            cornerRadius(0f)
             datePicker(minDate = Calendar.getInstance()) { dialog, date ->
                 this@AddTodoActivity.tvTime.text = TimeUtils.date2String(date.time, "yyyy-MM-dd")
             }
@@ -128,8 +116,7 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
     }
 
     override fun showPriorityDialog() {
-        val dialog =
-            BottomSheetDialog(this)
+        val dialog = BottomSheetDialog(this)
 
         val view = View.inflate(this, R.layout.dialog_priority, null)
         dialog.setContentView(view)
@@ -144,20 +131,7 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         adapter.setOnItemClickListener { _, _, position ->
             tvPriority.text = mTitles[position]
             mPriority = position
-            when (position) {
-                0 -> {
-                    ivCircle.setImageResource(R.drawable.shape_circle_red)
-                }
-                1 -> {
-                    ivCircle.setImageResource(R.drawable.shape_circle_yelllow)
-                }
-                2 -> {
-                    ivCircle.setImageResource(R.drawable.shape_circle_blue)
-                }
-                3 -> {
-                    ivCircle.setImageResource(R.drawable.shape_circle_green)
-                }
-            }
+            colorView.setView(SettingManager.getColorByType(mPriority))
             dialog.dismiss()
         }
 

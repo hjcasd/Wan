@@ -35,7 +35,6 @@ class CollectArticleAdapter(data: MutableList<CollectArticleBean>?) :
             "匿名用户"
         }
         helper.setText(R.id.tv_author, author)
-
         helper.setText(R.id.tv_title, Html.fromHtml(item.title))
         helper.setText(R.id.tv_time, item.niceDate)
         helper.setText(R.id.tv_chapter, item.chapterName)

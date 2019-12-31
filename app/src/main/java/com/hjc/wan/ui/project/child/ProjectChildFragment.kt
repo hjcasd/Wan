@@ -3,19 +3,24 @@ package com.hjc.wan.ui.project.child
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.widget.CheckBox
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.project.adapter.ProjectChildAdapter
 import com.hjc.wan.ui.project.contract.ProjectChildContract
 import com.hjc.wan.ui.project.presenter.ProjectChildPresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_project_child.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 
@@ -27,9 +32,7 @@ import java.util.concurrent.TimeUnit
 class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, ProjectChildPresenter>(),
     ProjectChildContract.View {
 
-    private lateinit var mProjectChildAdapter: ProjectChildAdapter
-
-    private var articleList: MutableList<ArticleBean> = mutableListOf()
+    private lateinit var mAdapter: ProjectChildAdapter
 
     private var cid: Int = 0
 
@@ -63,15 +66,22 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        val manager = LinearLayoutManager(mContext)
         rvProject.layoutManager = manager
 
-        mProjectChildAdapter = ProjectChildAdapter(null)
-        rvProject.adapter = mProjectChildAdapter
+        mAdapter = ProjectChildAdapter(null)
+        rvProject.adapter = mAdapter
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData() {
         super.initData()
+        EventManager.register(this)
 
         cid = arguments?.getInt("cid") ?: 0
 
@@ -81,11 +91,9 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 1) {
-            articleList = result
-            mProjectChildAdapter.setNewData(result)
+            mAdapter.setNewData(result)
         } else {
-            articleList.addAll(result)
-            mProjectChildAdapter.addData(result)
+            mAdapter.addData(result)
         }
     }
 
@@ -106,34 +114,32 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
 
         })
 
-        mProjectChildAdapter.setOnItemClickListener { _, _, position ->
-            val bean = articleList[position]
-            RouterManager.jumpToWeb(bean.title, bean.link)
-        }
+        mAdapter.apply {
+            setOnItemClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
+                RouterManager.jumpToWeb(bean.title, bean.link)
+            }
 
-        mProjectChildAdapter.setOnCollectViewClickListener(object :
-            ProjectChildAdapter.OnCollectViewClickListener {
-
-            override fun onClick(checkBox: CheckBox, position: Int) {
-                val bean = articleList[position]
+            setOnItemChildClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
                 if (!bean.collect) {
                     getPresenter()?.collectArticle(bean)
                 } else {
                     getPresenter()?.unCollectArticle(bean)
                 }
             }
-        })
+        }
     }
 
 
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
-        mProjectChildAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun showUnCollectList(bean: ArticleBean) {
         bean.collect = false
-        mProjectChildAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
 
@@ -169,6 +175,23 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
+        }
     }
 
 }

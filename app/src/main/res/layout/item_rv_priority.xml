@@ -15,12 +15,11 @@
         android:textColor="@color/black_333"
         android:textSize="14sp" />
 
-    <ImageView
-        android:id="@+id/iv_circle"
+    <com.hjc.wan.widget.CircleColorView
+        android:id="@+id/color_view"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/shape_circle_red" />
+        android:layout_marginRight="10dp" />
 
 </LinearLayout>

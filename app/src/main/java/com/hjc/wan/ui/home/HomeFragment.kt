@@ -2,11 +2,13 @@ package com.hjc.wan.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
-import android.widget.CheckBox
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
@@ -14,6 +16,7 @@ import com.hjc.wan.ui.home.adapter.HomeAdapter
 import com.hjc.wan.ui.home.contract.HomeContract
 import com.hjc.wan.ui.home.presenter.HomePresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.utils.image.GlideImageLoader
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
@@ -22,6 +25,8 @@ import com.youth.banner.BannerConfig
 import com.youth.banner.Transformer
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -36,9 +41,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
     private lateinit var mBannerList: MutableList<BannerBean>
 
-    private lateinit var mHomeAdapter: HomeAdapter
-
-    private var articleList: MutableList<ArticleBean> = mutableListOf()
+    private lateinit var mAdapter: HomeAdapter
 
     private var mPage: Int = 0
 
@@ -69,17 +72,24 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         val headerView = View.inflate(mContext, R.layout.layout_header_banner, null)
         banner = headerView.findViewById<View>(R.id.banner) as Banner?
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        val manager = LinearLayoutManager(mContext)
         rvHome.layoutManager = manager
 
-        mHomeAdapter = HomeAdapter(null)
-        rvHome.adapter = mHomeAdapter
+        mAdapter = HomeAdapter(null)
+        rvHome.adapter = mAdapter
 
-        mHomeAdapter.addHeaderView(headerView)
+        mAdapter.addHeaderView(headerView)
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadBannerData()
@@ -106,11 +116,9 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
     override fun showList(result: MutableList<ArticleBean>) {
         if (mPage == 0) {
-            articleList = result
-            mHomeAdapter.setNewData(result)
+            mAdapter.setNewData(result)
         } else {
-            articleList.addAll(result)
-            mHomeAdapter.addData(result)
+            mAdapter.addData(result)
         }
     }
 
@@ -135,33 +143,32 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
         })
 
-        mHomeAdapter.setOnItemClickListener { _, _, position ->
-            val bean = articleList[position]
-            RouterManager.jumpToWeb(bean.title, bean.link)
-        }
+        mAdapter.apply {
+            setOnItemClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
+                RouterManager.jumpToWeb(bean.title, bean.link)
+            }
 
-        mHomeAdapter.setOnCollectViewClickListener(object : HomeAdapter.OnCollectViewClickListener {
-
-            override fun onClick(checkBox: CheckBox, position: Int) {
-                val bean = articleList[position]
+            setOnItemChildClickListener { _, _, position ->
+                val bean = mAdapter.data[position]
                 if (!bean.collect) {
                     getPresenter()?.collectArticle(bean)
                 } else {
                     getPresenter()?.unCollectArticle(bean)
                 }
             }
-        })
+        }
     }
 
 
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
-        mHomeAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun showUnCollectList(bean: ArticleBean) {
         bean.collect = false
-        mHomeAdapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
 
@@ -202,6 +209,23 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     override fun onDestroyView() {
         banner?.stopAutoPlay()
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
+        }
     }
 
 }

@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.text.TextUtils
 
@@ -57,13 +56,5 @@ object CommonUtils {
         intent.putExtra(Intent.EXTRA_TEXT, extraText)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(Intent.createChooser(intent, "分享"))
-    }
-
-
-    fun getOneColorStateList(color: Int): ColorStateList {
-        val colors = intArrayOf(color)
-        val states = arrayOfNulls<IntArray>(1)
-        states[0] = intArrayOf()
-        return ColorStateList(states, colors)
     }
 }

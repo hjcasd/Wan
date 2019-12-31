@@ -13,8 +13,6 @@ import com.hjc.wan.utils.image.ImageManager
 class ProjectChildAdapter(data: MutableList<ArticleBean>?) :
     BaseQuickAdapter<ArticleBean, BaseViewHolder>(R.layout.item_rv_project, data) {
 
-    private var mOnCollectViewClickListener: OnCollectViewClickListener? = null
-
     override fun convert(helper: BaseViewHolder, item: ArticleBean) {
         val author = if (!StringUtils.isEmpty(item.author)) {
             item.author
@@ -22,7 +20,6 @@ class ProjectChildAdapter(data: MutableList<ArticleBean>?) :
             item.shareUser
         }
         helper.setText(R.id.tv_author, author)
-
         helper.setText(R.id.tv_title, Html.fromHtml(item.title))
         helper.setText(R.id.tv_content, Html.fromHtml(item.desc))
         helper.setText(R.id.tv_time, item.niceDate)
@@ -33,17 +30,6 @@ class ProjectChildAdapter(data: MutableList<ArticleBean>?) :
 
         val cbCollect = helper.getView<CheckBox>(R.id.cb_collect)
         cbCollect.isChecked = item.collect
-        cbCollect.setOnClickListener { v ->
-            mOnCollectViewClickListener?.onClick(cbCollect, helper.adapterPosition)
-        }
-    }
-
-
-    fun setOnCollectViewClickListener(onCollectViewClickListener: OnCollectViewClickListener) {
-        mOnCollectViewClickListener = onCollectViewClickListener
-    }
-
-    interface OnCollectViewClickListener {
-        fun onClick(checkBox: CheckBox, position: Int)
+        helper.addOnClickListener(R.id.cb_collect)
     }
 }

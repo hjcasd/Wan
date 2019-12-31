@@ -3,10 +3,10 @@ package com.hjc.wan.ui.project
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.Html
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ConvertUtils
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment

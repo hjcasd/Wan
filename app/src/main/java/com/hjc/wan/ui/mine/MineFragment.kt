@@ -62,7 +62,6 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
 
         llIntegral.setOnClickListener(this)
         llCollect.setOnClickListener(this)
-//        llArticle.setOnClickListener(this)
         llTodo.setOnClickListener(this)
 
         llOpen.setOnClickListener(this)
@@ -83,9 +82,6 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
             R.id.llCollect -> {
                 RouterManager.jump(RoutePath.URL_COLLECT)
             }
-//            R.id.llArticle -> {
-//                ToastUtils.showShort("我的文章")
-//            }
             R.id.llTodo -> {
                 RouterManager.jump(RoutePath.URL_TO_DO)
             }

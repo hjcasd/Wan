@@ -8,7 +8,7 @@ package com.hjc.wan.constant
 object EventCode {
     const val DELETE_TODO = 0x111111
     const val DONE_TODO = 0x222222
-    const val C = 0x333333
-    const val D = 0x444444
+    const val CHANGE_LIST_ANIMATION = 0x333333
+    const val CHANGE_THEME = 0x444444
     const val E = 0x555555
 }

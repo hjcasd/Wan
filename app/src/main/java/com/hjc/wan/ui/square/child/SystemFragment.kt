@@ -2,15 +2,21 @@ package com.hjc.wan.ui.square.child
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.SystemBean
 import com.hjc.wan.ui.square.adapter.SystemAdapter
 import com.hjc.wan.ui.square.contract.SystemContract
 import com.hjc.wan.ui.square.presenter.SystemPresenter
+import com.hjc.wan.utils.helper.SettingManager
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_system.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -21,7 +27,7 @@ import java.util.concurrent.TimeUnit
 class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>(),
     SystemContract.View {
 
-    private lateinit var mSystemAdapter: SystemAdapter
+    private lateinit var mAdapter: SystemAdapter
 
     companion object {
 
@@ -45,22 +51,29 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     override fun initView() {
         super.initView()
 
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+        val manager = LinearLayoutManager(mContext)
         rvSystem.layoutManager = manager
 
-        mSystemAdapter = SystemAdapter(null)
-        rvSystem.adapter = mSystemAdapter
+        mAdapter = SystemAdapter(null)
+        rvSystem.adapter = mAdapter
+
+        if (SettingManager.getListAnimationType() != 0) {
+            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+        } else {
+            mAdapter.closeLoadAnimation()
+        }
     }
 
     override fun initData() {
         super.initData()
+        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData()
     }
 
     override fun showList(result: MutableList<SystemBean>) {
-        mSystemAdapter.setNewData(result)
+        mAdapter.setNewData(result)
     }
 
     override fun addListeners() {
@@ -96,6 +109,23 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     override fun showNoNetwork() {
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+            if (SettingManager.getListAnimationType() != 0) {
+                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
+        }
     }
 
 }
