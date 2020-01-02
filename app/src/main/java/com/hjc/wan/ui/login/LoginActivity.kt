@@ -78,6 +78,7 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
 
     override fun toMain() {
         RouterManager.jump(RoutePath.URL_MAIN)
+        finish()
     }
 
     override fun toRegister() {

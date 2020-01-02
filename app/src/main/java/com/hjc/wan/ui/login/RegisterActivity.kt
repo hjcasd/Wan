@@ -4,6 +4,7 @@ import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.hjc.baselib.utils.helper.ActivityManager
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
@@ -92,7 +93,7 @@ class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresente
 
 
     override fun toLogin() {
-        finish()
+        ActivityManager.finishAllActivities()
         RouterManager.jump(RoutePath.URL_LOGIN)
     }
 

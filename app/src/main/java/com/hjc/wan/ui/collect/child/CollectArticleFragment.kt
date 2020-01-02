@@ -2,11 +2,8 @@ package com.hjc.wan.ui.collect.child
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hjc.baselib.event.EventManager
-import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
-import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.CollectArticleBean
 import com.hjc.wan.ui.collect.adapter.CollectArticleAdapter
@@ -18,8 +15,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_collect_article.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -64,16 +59,17 @@ class CollectArticleFragment :
         mAdapter = CollectArticleAdapter(null)
         rvCollectArticle.adapter = mAdapter
 
-        if (SettingManager.getListAnimationType() != 0) {
-            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-        } else {
-            mAdapter.closeLoadAnimation()
+        SettingManager.getListAnimationType().let {
+            if (it != 0) {
+                mAdapter.openLoadAnimation(it)
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
     }
 
     override fun initData() {
         super.initData()
-        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData(mPage)
@@ -156,23 +152,6 @@ class CollectArticleFragment :
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
-            if (SettingManager.getListAnimationType() != 0) {
-                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-            } else {
-                mAdapter.closeLoadAnimation()
-            }
-        }
     }
 
 }

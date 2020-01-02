@@ -31,12 +31,6 @@ class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
         return R.layout.activity_splash
     }
 
-    override fun initView() {
-        super.initView()
-
-//        rlSplash.setBackgroundColor(SettingManager.getThemeColor())
-    }
-
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
@@ -50,6 +44,7 @@ class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
             getString(R.string.transition_logo_splash)
         )
         RouterManager.jumpWithScene(RoutePath.URL_LOGIN, this, compat)
+        finish()
     }
 
     override fun toMain() {

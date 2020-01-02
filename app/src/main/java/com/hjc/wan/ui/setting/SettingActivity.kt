@@ -11,6 +11,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.utils.helper.ActivityManager
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.EventCode
@@ -18,6 +19,7 @@ import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.setting.contract.SettingContract
 import com.hjc.wan.ui.setting.presenter.SettingPresenter
 import com.hjc.wan.utils.ColorUtils
+import com.hjc.wan.utils.helper.AccountManager
 import com.hjc.wan.utils.helper.CacheManager
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
@@ -115,7 +117,7 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
             cornerRadius(10f)
             title(R.string.title)
             message(text = "确定清除缓存吗")
-            positiveButton(text = "清除") {
+            positiveButton(text = "确定") {
                 ToastUtils.showShort("清除缓存成功")
                 CacheManager.clearTotalCache(this@SettingActivity)
                 this@SettingActivity.tvCache.text = "0.0B"
@@ -181,6 +183,12 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
             }
             negativeButton(R.string.cancel)
         }
+    }
+
+    override fun toLogin() {
+        AccountManager.clear()
+        ActivityManager.finishAllActivities()
+        RouterManager.jump(RoutePath.URL_LOGIN)
     }
 
 }

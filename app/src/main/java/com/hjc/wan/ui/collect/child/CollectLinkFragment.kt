@@ -1,11 +1,8 @@
 package com.hjc.wan.ui.collect.child
 
 import android.annotation.SuppressLint
-import com.hjc.baselib.event.EventManager
-import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpLazyFragment
-import com.hjc.wan.constant.EventCode
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.CollectLinkBean
 import com.hjc.wan.ui.collect.adapter.CollectLinkAdapter
@@ -15,8 +12,6 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_collect_link.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -59,16 +54,17 @@ class CollectLinkFragment :
         mAdapter = CollectLinkAdapter(null)
         rvCollectLink.adapter = mAdapter
 
-        if (SettingManager.getListAnimationType() != 0) {
-            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-        } else {
-            mAdapter.closeLoadAnimation()
+        SettingManager.getListAnimationType().let {
+            if (it != 0) {
+                mAdapter.openLoadAnimation(it)
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
     }
 
     override fun initData() {
         super.initData()
-        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData()
@@ -122,23 +118,6 @@ class CollectLinkFragment :
     override fun showNoNetwork() {
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
-            if (SettingManager.getListAnimationType() != 0) {
-                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-            } else {
-                mAdapter.closeLoadAnimation()
-            }
-        }
     }
 
 }

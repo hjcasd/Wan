@@ -5,6 +5,7 @@ import com.hjc.wan.base.IBaseView
 interface SettingContract {
 
     interface View : IBaseView {
+        fun toLogin()
     }
 
     interface Presenter{
