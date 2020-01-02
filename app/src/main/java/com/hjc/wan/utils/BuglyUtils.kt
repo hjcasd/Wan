@@ -27,7 +27,7 @@ object BuglyUtils {
             // 设置是否为上报进程
             val strategy = CrashReport.UserStrategy(context)
             strategy.isUploadProcess = processName == null || processName == packageName
-            CrashReport.initCrashReport(context, "04002332f3", BuildConfig.IS_DEBUG, strategy)
+            CrashReport.initCrashReport(context, "2de12851be", BuildConfig.IS_DEBUG, strategy)
         } else {
             throw UnsupportedOperationException("context must be application...")
         }

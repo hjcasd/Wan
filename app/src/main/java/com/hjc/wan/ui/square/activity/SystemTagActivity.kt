@@ -19,7 +19,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_system_tag.*
-import kotlinx.android.synthetic.main.activity_web.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -70,7 +69,7 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
             }
         }
 
-        toolbar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
