@@ -43,7 +43,7 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
                 preLogin()
             }
             R.id.tvRegister -> {
-                ToastUtils.showShort("注册")
+                RouterManager.jump(RoutePath.URL_REGISTER)
             }
         }
     }
@@ -56,7 +56,7 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
         val password = etPassword.text.toString().trim()
 
         if (StringUtils.isEmpty(username)) {
-            ToastUtils.showShort("请输入用户名")
+            ToastUtils.showShort("请输入账号")
             return
         }
         if (StringUtils.isEmpty(password)) {
@@ -65,7 +65,7 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
         }
 
         if (username.length < 6) {
-            ToastUtils.showShort("用户名长度至少为6位")
+            ToastUtils.showShort("账号长度至少为6位")
             return
         }
         if (password.length < 6) {

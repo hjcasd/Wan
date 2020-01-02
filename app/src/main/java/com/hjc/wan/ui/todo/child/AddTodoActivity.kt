@@ -1,5 +1,6 @@
 package com.hjc.wan.ui.todo.child
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
@@ -53,6 +54,16 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
 
     override fun getLayoutId(): Int {
         return R.layout.activity_add_todo
+    }
+
+    override fun initView() {
+        super.initView()
+
+        SettingManager.getThemeColor().let {
+            titleBar.setBackgroundColor(it)
+            val drawable = btnSubmit.background as GradientDrawable
+            drawable.setColor(it)
+        }
     }
 
     override fun initData(savedInstanceState: Bundle?) {

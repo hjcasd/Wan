@@ -36,6 +36,13 @@ object SettingManager {
         return ColorStateList(states, colors)
     }
 
+    fun getStateList(): ColorStateList {
+        val colors = intArrayOf(getThemeColor())
+        val states = arrayOfNulls<IntArray>(1)
+        states[0] = intArrayOf()
+        return ColorStateList(states, colors)
+    }
+
     /**
      * 获取列表动画类型
      */

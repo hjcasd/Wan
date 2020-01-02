@@ -21,6 +21,19 @@ interface Api {
     @POST("/user/login")
     fun login(@Field("username") username: String, @Field("password") pwd: String): Observable<BaseResponse<LoginBean>>
 
+    /**
+     * 注册
+     */
+    @FormUrlEncoded
+    @POST("/user/register")
+    fun register(@Field("username") username: String, @Field("password") pwd: String, @Field("repassword") rpwd: String): Observable<BaseResponse<Any>>
+
+    /**
+     * 退出
+     */
+    @GET("user/logout/json")
+    fun logout(): Observable<BaseResponse<Any>>
+
 
     /**
      * 获取banner数据

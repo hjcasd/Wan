@@ -1,9 +1,9 @@
 package com.hjc.wan.ui.web
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.StringUtils
@@ -14,6 +14,7 @@ import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.web.contract.WebContract
 import com.hjc.wan.ui.web.presenter.WebPresenter
 import com.hjc.wan.utils.CommonUtils
+import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_web.*
 
 /**
@@ -52,6 +53,8 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
         actionBar?.setDisplayShowTitleEnabled(false)
         toolbar.overflowIcon = ContextCompat.getDrawable(this, R.mipmap.icon_more)
         tvTitle.isSelected = true
+
+        toolbar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {

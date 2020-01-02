@@ -72,10 +72,12 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
         mAdapter = ProjectChildAdapter(null)
         rvProject.adapter = mAdapter
 
-        if (SettingManager.getListAnimationType() != 0) {
-            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-        } else {
-            mAdapter.closeLoadAnimation()
+        SettingManager.getListAnimationType().let {
+            if (it != 0) {
+                mAdapter.openLoadAnimation(it)
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
     }
 
@@ -186,10 +188,12 @@ class ProjectChildFragment : BaseMvpLazyFragment<ProjectChildContract.View, Proj
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun handleMessage(event: MessageEvent<Any>) {
         if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
-            if (SettingManager.getListAnimationType() != 0) {
-                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-            } else {
-                mAdapter.closeLoadAnimation()
+            SettingManager.getListAnimationType().let {
+                if (it != 0) {
+                    mAdapter.openLoadAnimation(it)
+                } else {
+                    mAdapter.closeLoadAnimation()
+                }
             }
         }
     }

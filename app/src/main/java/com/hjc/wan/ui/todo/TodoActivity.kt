@@ -62,11 +62,15 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
         mAdapter = TodoAdapter(null)
         rvTodo.adapter = mAdapter
 
-        if (SettingManager.getListAnimationType() != 0) {
-            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-        } else {
-            mAdapter.closeLoadAnimation()
+        SettingManager.getListAnimationType().let {
+            if (it != 0) {
+                mAdapter.openLoadAnimation(it)
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
+
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -147,12 +151,6 @@ class TodoActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoCo
             getPresenter()?.deleteTodo(event.data)
         } else if (event.code == EventCode.DONE_TODO) {
             getPresenter()?.finishTodo(event.data)
-        } else if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
-            if (SettingManager.getListAnimationType() != 0) {
-                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-            } else {
-                mAdapter.closeLoadAnimation()
-            }
         }
     }
 

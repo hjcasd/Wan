@@ -199,7 +199,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/shape_btn_login"
+                android:background="@drawable/shape_btn_logout"
                 android:text="退出登录"
                 android:textColor="@color/white" />
 

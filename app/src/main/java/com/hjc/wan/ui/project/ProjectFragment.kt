@@ -8,13 +8,17 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ConvertUtils
+import com.hjc.baselib.event.EventManager
+import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpFragment
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.model.ClassifyBean
 import com.hjc.wan.ui.adapter.MyViewPagerAdapter
 import com.hjc.wan.ui.project.child.ProjectChildFragment
 import com.hjc.wan.ui.project.contract.ProjectContract
 import com.hjc.wan.ui.project.presenter.ProjectPresenter
+import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.indicator.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_project.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -23,6 +27,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 
@@ -53,8 +59,15 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
         return R.layout.fragment_project
     }
 
+    override fun initView() {
+        super.initView()
+
+        magicIndicator.setBackgroundColor(SettingManager.getThemeColor())
+    }
+
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        EventManager.register(this)
 
         getPresenter()?.loadProjectTitles()
     }
@@ -100,6 +113,18 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
         }
         magicIndicator.navigator = commonNavigator
         ViewPagerHelper.bind(magicIndicator, viewPager)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<Any>) {
+        if (event.code == EventCode.CHANGE_THEME) {
+            magicIndicator.setBackgroundColor(SettingManager.getThemeColor())
+        }
     }
 
 }

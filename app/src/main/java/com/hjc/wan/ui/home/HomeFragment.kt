@@ -85,6 +85,8 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         } else {
             mAdapter.closeLoadAnimation()
         }
+
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -220,11 +222,15 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun handleMessage(event: MessageEvent<Any>) {
         if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
-            if (SettingManager.getListAnimationType() != 0) {
-                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-            } else {
-                mAdapter.closeLoadAnimation()
+            SettingManager.getListAnimationType().let {
+                if (it != 0) {
+                    mAdapter.openLoadAnimation(it)
+                } else {
+                    mAdapter.closeLoadAnimation()
+                }
             }
+        } else if (event.code == EventCode.CHANGE_THEME) {
+            titleBar.setBackgroundColor(SettingManager.getThemeColor())
         }
     }
 

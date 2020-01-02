@@ -5,6 +5,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.hjc.wan.R
 import com.hjc.wan.model.IntegralHistoryBean
+import com.hjc.wan.utils.helper.SettingManager
 
 class IntegralHistoryAdapter(data: MutableList<IntegralHistoryBean>?) :
     BaseQuickAdapter<IntegralHistoryBean, BaseViewHolder>(R.layout.item_rv_integral_history, data) {
@@ -15,6 +16,8 @@ class IntegralHistoryAdapter(data: MutableList<IntegralHistoryBean>?) :
                 it.desc.indexOf("积分"),
                 it.desc.length
             ) else ""
+
+            helper.setTextColor(R.id.tv_score, SettingManager.getThemeColor())
 
             helper.setText(R.id.tv_desc, it.reason + descStr)
             helper.setText(R.id.tv_time, TimeUtils.millis2String(it.date))

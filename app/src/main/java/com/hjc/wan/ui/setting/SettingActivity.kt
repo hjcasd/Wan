@@ -1,6 +1,7 @@
 package com.hjc.wan.ui.setting
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
@@ -21,6 +22,7 @@ import com.hjc.wan.utils.helper.CacheManager
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_setting.*
+
 
 /**
  * @Author: HJC
@@ -44,6 +46,18 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
         return R.layout.activity_setting
     }
 
+    override fun initView() {
+        super.initView()
+
+        SettingManager.getThemeColor().let {
+            colorView.setViewColor(it)
+            titleBar.setBackgroundColor(it)
+
+            val drawable = btnLogout.background as GradientDrawable
+            drawable.setColor(it)
+        }
+    }
+
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
@@ -52,11 +66,7 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
         val type = SettingManager.getListAnimationType()
         tvAnimation.text = resources.getStringArray(R.array.setting_modes)[type]
-
-        val themeColor = SettingManager.getThemeColor()
-        colorView.setViewColor(themeColor)
     }
-
 
     override fun addListeners() {
         super.addListeners()
@@ -85,14 +95,13 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
                 changeTheme()
             }
             R.id.llVersion -> {
-                ToastUtils.showShort("已经是最新版本了")
+                getPresenter()?.checkVersion()
             }
             R.id.llProject -> {
                 RouterManager.jumpToWeb("Wan", "https://github.com/hjcasd/Wan")
             }
             R.id.btnLogout -> {
-                ToastUtils.showShort("退出登录")
-                getPresenter()?.logout()
+                logout()
             }
         }
     }
@@ -150,8 +159,26 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
             ) { _, color ->
                 SettingManager.setThemeColor(color)
                 this@SettingActivity.colorView.setViewColor(color)
+                this@SettingActivity.titleBar.setBackgroundColor(color)
+
+                val drawable = this@SettingActivity.btnLogout.background as GradientDrawable
+                drawable.setColor(color)
+
+                EventManager.sendEvent(MessageEvent(EventCode.CHANGE_THEME, null))
             }
             positiveButton(R.string.confirm)
+            negativeButton(R.string.cancel)
+        }
+    }
+
+    private fun logout() {
+        MaterialDialog(this).show {
+            cornerRadius(10f)
+            title(R.string.title)
+            message(text = "确定退出登录吗")
+            positiveButton(text = "确定") {
+                getPresenter()?.logout()
+            }
             negativeButton(R.string.cancel)
         }
     }

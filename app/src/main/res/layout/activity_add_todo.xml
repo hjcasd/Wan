@@ -137,7 +137,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/shape_btn_login"
+                android:background="@drawable/shape_btn_logout"
                 android:text="提交"
                 android:textColor="@color/white" />
 

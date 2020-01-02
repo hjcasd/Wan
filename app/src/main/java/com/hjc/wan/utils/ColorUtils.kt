@@ -20,7 +20,7 @@ object ColorUtils {
         Color.parseColor("#29B6F6"),
         Color.parseColor("#26C6DA"),
         Color.parseColor("#26A69A"),
-        Color.parseColor("#66BB6A"),
+        Color.parseColor("#58ae6b"),
         Color.parseColor("#9CCC65"),
         Color.parseColor("#D4E157"),
         Color.parseColor("#FFEE58"),
@@ -106,7 +106,7 @@ object ColorUtils {
             Color.parseColor("#004D40")
         ),
         intArrayOf(
-            Color.parseColor("#66BB6A"),
+            Color.parseColor("#58ae6b"),
             Color.parseColor("#4CAF50"),
             Color.parseColor("#43A047"),
             Color.parseColor("#388E3C"),

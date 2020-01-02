@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.hjc.baselib.event.EventManager
-import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.widget.bar.OnViewClickListener
 import com.hjc.wan.R
 import com.hjc.wan.base.BaseMvpActivity
-import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.IntegralBean
@@ -23,8 +20,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_integral_rank.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
 
 /**
@@ -62,16 +57,20 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
         mAdapter = IntegralRankAdapter(null)
         rvIntegralRank.adapter = mAdapter
 
-        if (SettingManager.getListAnimationType() != 0) {
-            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-        } else {
-            mAdapter.closeLoadAnimation()
+        SettingManager.getListAnimationType().let {
+            if (it != 0) {
+                mAdapter.openLoadAnimation(it)
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
+
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        fabHistory.backgroundTintList = SettingManager.getStateList()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
-        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData(mPage)
@@ -156,23 +155,6 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
         stateView.showNoNetwork()
         smartRefreshLayout.finishRefresh()
         smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
-            if (SettingManager.getListAnimationType() != 0) {
-                mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-            } else {
-                mAdapter.closeLoadAnimation()
-            }
-        }
     }
 
 }
