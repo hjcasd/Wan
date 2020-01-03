@@ -2,7 +2,7 @@ package com.hjc.wan.ui.setting.presenter
 
 import android.annotation.SuppressLint
 import com.blankj.utilcode.util.ToastUtils
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.helper.RxSchedulers

@@ -11,8 +11,8 @@ import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.hjc.baselib.activity.BaseMvpTitleActivity
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.TodoBean
 import com.hjc.wan.ui.todo.adapter.PriorityAdapter
@@ -29,7 +29,7 @@ import java.util.*
  * @Description: 添加待办清单页面
  */
 @Route(path = RoutePath.URL_ADD_TO_DO)
-class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(),
+class AddTodoActivity : BaseMvpTitleActivity<AddTodoContract.View, AddTodoPresenter>(),
     AddTodoContract.View {
 
     @Autowired(name = "params")
@@ -59,11 +59,14 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
     override fun initView() {
         super.initView()
 
-        SettingManager.getThemeColor().let {
-            titleBar.setBackgroundColor(it)
-            val drawable = btnSubmit.background as GradientDrawable
-            drawable.setColor(it)
-        }
+        val drawable = btnSubmit.background as GradientDrawable
+        drawable.setColor(SettingManager.getThemeColor())
+    }
+
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -97,12 +100,11 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         tvTime.setOnClickListener(this)
         llPriority.setOnClickListener(this)
         btnSubmit.setOnClickListener(this)
-
-        titleBar.setOnViewLeftClickListener { finish() }
     }
 
     override fun onSingleClick(v: View?) {
         super.onSingleClick(v)
+
         when (v?.id) {
             R.id.tvTime -> {
                 showDatePicker()
@@ -132,7 +134,8 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         val view = View.inflate(this, R.layout.dialog_priority, null)
         dialog.setContentView(view)
 
-        val rvPriority: androidx.recyclerview.widget.RecyclerView = view.findViewById(R.id.rv_priority)
+        val rvPriority: androidx.recyclerview.widget.RecyclerView =
+            view.findViewById(R.id.rv_priority)
         val manager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rvPriority.layoutManager = manager
 

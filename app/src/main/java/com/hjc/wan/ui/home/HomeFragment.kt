@@ -1,15 +1,14 @@
 package com.hjc.wan.ui.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hjc.baselib.event.EventManager
+import com.blankj.utilcode.util.ToastUtils
 import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.fragment.BaseMvpFragment
+import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpFragment
 import com.hjc.wan.constant.EventCode
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
 import com.hjc.wan.ui.home.adapter.HomeAdapter
@@ -23,12 +22,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.youth.banner.Banner
 import com.youth.banner.BannerConfig
 import com.youth.banner.Transformer
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_home.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.android.synthetic.main.fragment_common.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * @Author: HJC
@@ -63,7 +58,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_home
+        return R.layout.fragment_common
     }
 
     override fun initView() {
@@ -73,10 +68,10 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         banner = headerView.findViewById<View>(R.id.banner) as Banner?
 
         val manager = LinearLayoutManager(mContext)
-        rvHome.layoutManager = manager
+        rvCommon.layoutManager = manager
 
         mAdapter = HomeAdapter(null)
-        rvHome.adapter = mAdapter
+        rvCommon.adapter = mAdapter
 
         mAdapter.addHeaderView(headerView)
 
@@ -85,13 +80,32 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         } else {
             mAdapter.closeLoadAnimation()
         }
+    }
 
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.setTitle("首页")
+        titleBar.setLeftImage(0)
+        titleBar.setRightImage(R.mipmap.icon_add)
         titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setOnBarRightClickListener(object : OnBarRightClickListener{
+
+            override fun rightClick(view: View?) {
+                ToastUtils.showShort("搜索")
+            }
+        })
+    }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+
+        smartRefreshLayout.setEnableRefresh(true)
+        smartRefreshLayout.setEnableLoadMore(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
-        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadBannerData()
@@ -162,7 +176,6 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         }
     }
 
-
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
         mAdapter.notifyDataSetChanged()
@@ -173,55 +186,8 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         mAdapter.notifyDataSetChanged()
     }
 
-
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishLoadMore()
-                smartRefreshLayout.finishRefresh()
-                smartRefreshLayout.setEnableLoadMore(true)
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun onDestroyView() {
-        banner?.stopAutoPlay()
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun confirm(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+    override fun handleMessage(event: MessageEvent<*>?) {
+        if (event?.code == EventCode.CHANGE_LIST_ANIMATION) {
             SettingManager.getListAnimationType().let {
                 if (it != 0) {
                     mAdapter.openLoadAnimation(it)
@@ -229,9 +195,13 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
                     mAdapter.closeLoadAnimation()
                 }
             }
-        } else if (event.code == EventCode.CHANGE_THEME) {
+        } else if (event?.code == EventCode.CHANGE_THEME) {
             titleBar.setBackgroundColor(SettingManager.getThemeColor())
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        banner?.stopAutoPlay()
+    }
 }

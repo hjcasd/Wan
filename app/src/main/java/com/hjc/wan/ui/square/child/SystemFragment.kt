@@ -1,23 +1,17 @@
 package com.hjc.wan.ui.square.child
 
-import android.annotation.SuppressLint
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.fragment.BaseMvpLazyFragment
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpLazyFragment
 import com.hjc.wan.constant.EventCode
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.SystemBean
 import com.hjc.wan.ui.square.adapter.SystemAdapter
 import com.hjc.wan.ui.square.contract.SystemContract
 import com.hjc.wan.ui.square.presenter.SystemPresenter
 import com.hjc.wan.utils.helper.SettingManager
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_system.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.fragment_common.*
 
 /**
  * @Author: HJC
@@ -45,17 +39,17 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_system
+        return R.layout.fragment_common
     }
 
     override fun initView() {
         super.initView()
 
         val manager = LinearLayoutManager(mContext)
-        rvSystem.layoutManager = manager
+        rvCommon.layoutManager = manager
 
         mAdapter = SystemAdapter(null)
-        rvSystem.adapter = mAdapter
+        rvCommon.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -66,9 +60,22 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
         }
     }
 
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.visibility = View.GONE
+    }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+
+        smartRefreshLayout.setEnableRefresh(true)
+        smartRefreshLayout.setEnableLoadMore(true)
+    }
+
+
     override fun initData() {
         super.initData()
-        EventManager.register(this)
 
         showLoading()
         getPresenter()?.loadListData()
@@ -84,44 +91,8 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
         smartRefreshLayout.setOnRefreshListener { getPresenter()?.loadListData() }
     }
 
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishRefresh()
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_LIST_ANIMATION) {
+    override fun handleMessage(event: MessageEvent<*>?) {
+        if (event?.code == EventCode.CHANGE_LIST_ANIMATION) {
             SettingManager.getListAnimationType().let {
                 if (it != 0) {
                     mAdapter.openLoadAnimation(it)

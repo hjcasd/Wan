@@ -6,10 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ToastUtils
-import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpFragment
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.IntegralBean
@@ -18,8 +17,6 @@ import com.hjc.wan.ui.mine.presenter.MinePresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.fragment_mine.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
@@ -48,19 +45,32 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         return R.layout.fragment_mine
     }
 
+
     override fun initView() {
         super.initView()
 
         SettingManager.getThemeColor().let {
             accountCardView.setCardBackgroundColor(it)
-            titleBar.setBackgroundColor(it)
             tvIntegral.setTextColor(it)
         }
     }
 
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.setTitle("个人中心")
+        titleBar.setLeftImage(0)
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+    }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+
+        smartRefreshLayout.setEnableRefresh(true)
+    }
+
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
-        EventManager.register(this)
 
         getPresenter()?.loadIntegralData(true)
     }
@@ -69,6 +79,7 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     @SuppressLint("SetTextI18n")
     override fun showIntegral(result: IntegralBean) {
         smartRefreshLayout.finishRefresh()
+
         tvName.text = result.username
         tvInfo.text = "id ： ${result.userId}　排名 ： ${result.rank}"
         tvIntegral.text = result.coinCount.toString()
@@ -126,14 +137,8 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_THEME) {
+    override fun handleMessage(event: MessageEvent<*>?) {
+        if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
                 accountCardView.setCardBackgroundColor(it)
                 titleBar.setBackgroundColor(it)
@@ -141,5 +146,4 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
             }
         }
     }
-
 }

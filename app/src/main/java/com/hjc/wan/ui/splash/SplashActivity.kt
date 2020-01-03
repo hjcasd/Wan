@@ -1,9 +1,10 @@
 package com.hjc.wan.ui.splash
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.app.ActivityOptionsCompat
+import com.hjc.baselib.activity.BaseMvpTitleActivity
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.splash.contract.SplashContract
 import com.hjc.wan.ui.splash.presenter.SplashPresenter
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
  * @Date: 2019/11/11 14:03
  * @Description: 启动页
  */
-class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
+class SplashActivity : BaseMvpTitleActivity<SplashContract.View, SplashPresenter>(),
     SplashContract.View {
 
 
@@ -29,6 +30,12 @@ class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
 
     override fun getLayoutId(): Int {
         return R.layout.activity_splash
+    }
+
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.visibility = View.GONE
     }
 
     override fun initData(savedInstanceState: Bundle?) {

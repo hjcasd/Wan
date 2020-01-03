@@ -1,6 +1,6 @@
 package com.hjc.wan.ui.setting.contract
 
-import com.hjc.wan.base.IBaseView
+import com.hjc.baselib.base.IBaseView
 
 interface SettingContract {
 

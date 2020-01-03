@@ -3,8 +3,9 @@ package com.hjc.wan.ui.collect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.gyf.immersionbar.ImmersionBar
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.collect.adapter.CollectAdapter
 import com.hjc.wan.ui.collect.child.CollectArticleFragment
@@ -23,6 +24,7 @@ import java.util.*
 class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(),
     CollectContract.View {
 
+
     override fun createPresenter(): CollectPresenter {
         return CollectPresenter()
     }
@@ -36,11 +38,20 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
         return R.layout.activity_collect
     }
 
+
     override fun initView() {
         super.initView()
+
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .titleBar(toolbar)
+            .fitsSystemWindows(true)
+            .init()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -54,7 +65,6 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
 
         toolbar.setNavigationOnClickListener { finish() }
     }
-
 
     override fun showFragment() {
         val titles = mutableListOf("文章", "网址")

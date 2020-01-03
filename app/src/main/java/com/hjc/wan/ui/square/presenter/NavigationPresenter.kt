@@ -1,6 +1,6 @@
 package com.hjc.wan.ui.square.presenter
 
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver

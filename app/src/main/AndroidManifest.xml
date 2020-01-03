@@ -53,8 +53,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.login.RegisterActivity"
@@ -86,7 +85,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.todo.TodoActivity"
+            android:name=".ui.todo.TodoListActivity"
             android:screenOrientation="portrait" />
 
         <activity

@@ -1,10 +1,9 @@
 package com.hjc.wan.ui.collect.child
 
-import android.annotation.SuppressLint
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hjc.baselib.fragment.BaseMvpLazyFragment
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpLazyFragment
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.CollectArticleBean
 import com.hjc.wan.ui.collect.adapter.CollectArticleAdapter
 import com.hjc.wan.ui.collect.contract.CollectArticleContract
@@ -13,9 +12,7 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_collect_article.*
-import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.fragment_common.*
 
 /**
  * @Author: HJC
@@ -48,16 +45,16 @@ class CollectArticleFragment :
 
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_collect_article
+        return R.layout.fragment_common
     }
 
     override fun initView() {
         super.initView()
         val manager = LinearLayoutManager(mContext)
-        rvCollectArticle.layoutManager = manager
+        rvCommon.layoutManager = manager
 
         mAdapter = CollectArticleAdapter(null)
-        rvCollectArticle.adapter = mAdapter
+        rvCommon.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -67,6 +64,18 @@ class CollectArticleFragment :
             }
         }
     }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+        smartRefreshLayout.setEnableRefresh(true)
+        smartRefreshLayout.setEnableLoadMore(true)
+    }
+
+    override fun initTitleBar() {
+        super.initTitleBar()
+        titleBar.visibility = View.GONE
+    }
+
 
     override fun initData() {
         super.initData()
@@ -102,13 +111,13 @@ class CollectArticleFragment :
 
         mAdapter.apply {
             setOnItemClickListener { _, _, position ->
-                val bean =  mAdapter.data[position]
+                val bean = mAdapter.data[position]
 
                 RouterManager.jumpToWeb(bean.title, bean.link)
             }
 
             setOnItemChildClickListener { _, _, position ->
-                val bean =  mAdapter.data[position]
+                val bean = mAdapter.data[position]
 
                 getPresenter()?.unCollectArticle(bean, position)
             }
@@ -117,41 +126,6 @@ class CollectArticleFragment :
 
     override fun showUnCollectList(position: Int) {
         mAdapter.remove(position)
-    }
-
-
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishLoadMore()
-                smartRefreshLayout.finishRefresh()
-                smartRefreshLayout.setEnableLoadMore(true)
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
     }
 
 }

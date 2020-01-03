@@ -1,6 +1,6 @@
 package com.hjc.wan.ui.square.presenter
 
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
@@ -8,7 +8,7 @@ import com.hjc.wan.model.SystemBean
 import com.hjc.wan.ui.square.child.SystemFragment
 import com.hjc.wan.ui.square.contract.SystemContract
 
-class SystemPresenter :BasePresenter<SystemContract.View>(), SystemContract.Presenter{
+class SystemPresenter : BasePresenter<SystemContract.View>(), SystemContract.Presenter{
 
     override fun loadListData() {
         val fragment = getView() as SystemFragment

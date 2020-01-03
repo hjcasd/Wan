@@ -61,7 +61,7 @@ object SettingManager {
      * 获取主题色
      */
     fun getThemeColor(): Int {
-        return SPUtils.getInstance().getInt(KEY_COLOR,  ColorUtils.getColor(R.color.colorPrimary))
+        return SPUtils.getInstance().getInt(KEY_COLOR,  ColorUtils.getColor(R.color.app_color))
     }
 
     /**

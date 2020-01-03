@@ -1,20 +1,20 @@
 package com.hjc.wan.ui.todo.presenter
 
 import com.blankj.utilcode.util.ToastUtils
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
 import com.hjc.wan.http.observer.CommonObserver
 import com.hjc.wan.http.observer.ProgressObserver
 import com.hjc.wan.model.TodoBean
-import com.hjc.wan.ui.todo.TodoActivity
+import com.hjc.wan.ui.todo.TodoListActivity
 import com.hjc.wan.ui.todo.contract.TodoContract
 
 class TodoPresenter : BasePresenter<TodoContract.View>(), TodoContract.Presenter {
 
     override fun loadListData(page: Int) {
-        val activity = getView() as TodoActivity
+        val activity = getView() as TodoListActivity
 
         RetrofitClient.getApi()
             .getTodoData(page)
@@ -51,7 +51,7 @@ class TodoPresenter : BasePresenter<TodoContract.View>(), TodoContract.Presenter
     }
 
     override fun deleteTodo(id: Int) {
-        val activity = getView() as TodoActivity
+        val activity = getView() as TodoListActivity
 
         RetrofitClient.getApi()
             .deleteTodo(id)
@@ -67,7 +67,7 @@ class TodoPresenter : BasePresenter<TodoContract.View>(), TodoContract.Presenter
     }
 
     override fun finishTodo(id: Int) {
-        val activity = getView() as TodoActivity
+        val activity = getView() as TodoListActivity
 
         RetrofitClient.getApi()
             .doneTodo(id, 1)

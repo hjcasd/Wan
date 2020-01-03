@@ -3,7 +3,7 @@ package com.hjc.wan.ui.main.presenter
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.baselib.utils.permission.PermissionCallBack
 import com.hjc.baselib.utils.permission.PermissionManager
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.ui.main.MainActivity
 import com.hjc.wan.ui.main.contract.MainContract
 import com.yanzhenjie.permission.runtime.Permission

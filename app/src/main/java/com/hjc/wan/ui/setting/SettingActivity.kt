@@ -9,11 +9,11 @@ import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ToastUtils
+import com.hjc.baselib.activity.BaseMvpTitleActivity
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.utils.helper.ActivityManager
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.setting.contract.SettingContract
@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.activity_setting.*
  * @Description: 设置页面
  */
 @Route(path = RoutePath.URL_SETTING)
-class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(),
+class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresenter>(),
     SettingContract.View {
 
     override fun createPresenter(): SettingPresenter {
@@ -53,11 +53,17 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
         SettingManager.getThemeColor().let {
             colorView.setViewColor(it)
-            titleBar.setBackgroundColor(it)
 
             val drawable = btnLogout.background as GradientDrawable
             drawable.setColor(it)
         }
+    }
+
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.setTitle("设置")
+        titleBar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -79,8 +85,6 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
         llVersion.setOnClickListener(this)
         llProject.setOnClickListener(this)
         btnLogout.setOnClickListener(this)
-
-        titleBar.setOnViewLeftClickListener { finish() }
     }
 
     override fun onSingleClick(v: View?) {

@@ -4,14 +4,14 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ConvertUtils
-import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpFragment
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.ui.adapter.MyViewPagerAdapter
 import com.hjc.wan.ui.square.child.NavigationFragment
@@ -28,8 +28,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 /**
@@ -66,9 +64,14 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         flIndicator.setBackgroundColor(SettingManager.getThemeColor())
     }
 
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.visibility = View.GONE
+    }
+
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
-        EventManager.register(this)
 
         getPresenter()?.loadSquareTitles()
     }
@@ -121,17 +124,10 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         ViewPagerHelper.bind(magicIndicator, viewPager)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventManager.unregister(this)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun handleMessage(event: MessageEvent<Any>) {
-        if (event.code == EventCode.CHANGE_THEME) {
+    override fun handleMessage(event: MessageEvent<*>?) {
+        if (event?.code == EventCode.CHANGE_THEME) {
             flIndicator.setBackgroundColor(SettingManager.getThemeColor())
         }
     }
-
 
 }

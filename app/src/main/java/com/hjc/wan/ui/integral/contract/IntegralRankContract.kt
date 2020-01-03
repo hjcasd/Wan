@@ -1,6 +1,6 @@
 package com.hjc.wan.ui.integral.contract
 
-import com.hjc.wan.base.IBaseView
+import com.hjc.baselib.base.IBaseView
 import com.hjc.wan.model.IntegralBean
 
 interface IntegralRankContract {

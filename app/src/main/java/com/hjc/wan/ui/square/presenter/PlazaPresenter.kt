@@ -1,7 +1,7 @@
 package com.hjc.wan.ui.square.presenter
 
 import com.blankj.utilcode.util.ToastUtils
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper
@@ -11,7 +11,7 @@ import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.square.child.PlazaFragment
 import com.hjc.wan.ui.square.contract.PlazaContract
 
-class PlazaPresenter :BasePresenter<PlazaContract.View>(), PlazaContract.Presenter{
+class PlazaPresenter : BasePresenter<PlazaContract.View>(), PlazaContract.Presenter{
 
     override fun loadListData(page: Int) {
         val fragment = getView() as PlazaFragment

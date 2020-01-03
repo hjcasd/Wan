@@ -1,14 +1,12 @@
 package com.hjc.wan.ui.square.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.hjc.baselib.activity.BaseMvpListActivity
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.square.adapter.SystemTagAdapter
 import com.hjc.wan.ui.square.contract.SystemTagContract
@@ -17,9 +15,7 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_system_tag.*
-import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.activity_common.*
 
 /**
  * @Author: HJC
@@ -27,7 +23,7 @@ import java.util.concurrent.TimeUnit
  * @Description: 体系tag下的文章列表页面
  */
 @Route(path = RoutePath.URL_SYSTEM_TAG)
-class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPresenter>(),
+class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagPresenter>(),
     SystemTagContract.View {
 
     private lateinit var mAdapter: SystemTagAdapter
@@ -50,16 +46,16 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
 
 
     override fun getLayoutId(): Int {
-        return R.layout.activity_system_tag
+        return R.layout.activity_common
     }
 
     override fun initView() {
         super.initView()
         val manager = LinearLayoutManager(this)
-        rvTag.layoutManager = manager
+        rvCommon.layoutManager = manager
 
         mAdapter = SystemTagAdapter(null)
-        rvTag.adapter = mAdapter
+        rvCommon.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -68,8 +64,19 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
                 mAdapter.closeLoadAnimation()
             }
         }
+    }
+
+    override fun initTitleBar() {
+        super.initTitleBar()
 
         titleBar.setBackgroundColor(SettingManager.getThemeColor())
+    }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+
+        smartRefreshLayout.setEnableRefresh(true)
+        smartRefreshLayout.setEnableLoadMore(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -98,8 +105,6 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
 
     override fun addListeners() {
         super.addListeners()
-
-        titleBar.setOnViewLeftClickListener { finish() }
 
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
@@ -132,7 +137,6 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
         }
     }
 
-
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
         mAdapter.notifyDataSetChanged()
@@ -141,41 +145,6 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
     override fun showUnCollectList(bean: ArticleBean) {
         bean.collect = false
         mAdapter.notifyDataSetChanged()
-    }
-
-
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishLoadMore()
-                smartRefreshLayout.finishRefresh()
-                smartRefreshLayout.setEnableLoadMore(true)
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
     }
 
 }

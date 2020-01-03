@@ -1,7 +1,7 @@
 package com.hjc.wan.ui.integral.presenter
 
 import com.blankj.utilcode.util.ToastUtils
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.http.bean.BasePageResponse
 import com.hjc.wan.http.helper.RxHelper

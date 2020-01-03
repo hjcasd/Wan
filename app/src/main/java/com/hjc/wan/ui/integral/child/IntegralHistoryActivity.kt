@@ -1,13 +1,11 @@
 package com.hjc.wan.ui.integral.child
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.hjc.baselib.activity.BaseMvpListActivity
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.IntegralHistoryBean
 import com.hjc.wan.ui.integral.adapter.IntegralHistoryAdapter
 import com.hjc.wan.ui.integral.contract.IntegralHistoryContract
@@ -15,9 +13,7 @@ import com.hjc.wan.ui.integral.presenter.IntegralHistoryPresenter
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.activity_integral_history.*
-import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.activity_common.*
 
 /**
  * @Author: HJC
@@ -26,7 +22,7 @@ import java.util.concurrent.TimeUnit
  */
 @Route(path = RoutePath.URL_INTEGRAL_HISTORY)
 class IntegralHistoryActivity :
-    BaseMvpActivity<IntegralHistoryContract.View, IntegralHistoryPresenter>(),
+    BaseMvpListActivity<IntegralHistoryContract.View, IntegralHistoryPresenter>(),
     IntegralHistoryContract.View {
 
     private lateinit var mAdapter: IntegralHistoryAdapter
@@ -43,17 +39,17 @@ class IntegralHistoryActivity :
 
 
     override fun getLayoutId(): Int {
-        return R.layout.activity_integral_history
+        return R.layout.activity_common
     }
 
     override fun initView() {
         super.initView()
 
         val manager = LinearLayoutManager(this)
-        rvIntegralHistory.layoutManager = manager
+        rvCommon.layoutManager = manager
 
         mAdapter = IntegralHistoryAdapter(null)
-        rvIntegralHistory.adapter = mAdapter
+        rvCommon.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -62,8 +58,20 @@ class IntegralHistoryActivity :
                 mAdapter.closeLoadAnimation()
             }
         }
+    }
 
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.setTitle("积分记录")
         titleBar.setBackgroundColor(SettingManager.getThemeColor())
+    }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+
+        smartRefreshLayout.setEnableRefresh(true)
+        smartRefreshLayout.setEnableLoadMore(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -84,8 +92,6 @@ class IntegralHistoryActivity :
     override fun addListeners() {
         super.addListeners()
 
-        titleBar.setOnViewLeftClickListener { finish() }
-
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
@@ -100,40 +106,4 @@ class IntegralHistoryActivity :
 
         })
     }
-
-
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishLoadMore()
-                smartRefreshLayout.finishRefresh()
-                smartRefreshLayout.setEnableLoadMore(true)
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.setEnableLoadMore(false)
-    }
-
 }

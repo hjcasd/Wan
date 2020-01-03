@@ -1,6 +1,6 @@
 package com.hjc.wan.ui.square.presenter
 
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.ui.square.contract.SquareContract
 
 class SquarePresenter : BasePresenter<SquareContract.View>(), SquareContract.Presenter {

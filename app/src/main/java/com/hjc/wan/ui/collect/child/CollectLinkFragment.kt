@@ -1,18 +1,15 @@
 package com.hjc.wan.ui.collect.child
 
-import android.annotation.SuppressLint
+import android.view.View
+import com.hjc.baselib.fragment.BaseMvpLazyFragment
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpLazyFragment
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.CollectLinkBean
 import com.hjc.wan.ui.collect.adapter.CollectLinkAdapter
 import com.hjc.wan.ui.collect.contract.CollectLinkContract
 import com.hjc.wan.ui.collect.presenter.CollectLinkPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
-import io.reactivex.Observable
-import kotlinx.android.synthetic.main.fragment_collect_link.*
-import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.fragment_common.*
 
 /**
  * @Author: HJC
@@ -43,16 +40,16 @@ class CollectLinkFragment :
 
 
     override fun getLayoutId(): Int {
-        return R.layout.fragment_collect_link
+        return R.layout.fragment_common
     }
 
     override fun initView() {
         super.initView()
         val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
-        rvCollectLink.layoutManager = manager
+        rvCommon.layoutManager = manager
 
         mAdapter = CollectLinkAdapter(null)
-        rvCollectLink.adapter = mAdapter
+        rvCommon.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -62,6 +59,17 @@ class CollectLinkFragment :
             }
         }
     }
+
+    override fun initSmartRefreshLayout() {
+        super.initSmartRefreshLayout()
+        smartRefreshLayout.setEnableRefresh(true)
+    }
+
+    override fun initTitleBar() {
+        super.initTitleBar()
+        titleBar.visibility = View.GONE
+    }
+
 
     override fun initData() {
         super.initData()
@@ -83,41 +91,10 @@ class CollectLinkFragment :
 
         mAdapter.apply {
             setOnItemClickListener { _, _, position ->
-                val bean =  mAdapter.data[position]
+                val bean = mAdapter.data[position]
 
                 RouterManager.jumpToWeb(bean.name, bean.link)
             }
         }
     }
-
-
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishRefresh()
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
-    }
-
 }

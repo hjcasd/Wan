@@ -18,7 +18,7 @@
             app:expandedTitleTextAppearance="@style/collapsing_title_style_expanded"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/app_color"
-            app:toolbarId="@+id/tool_bar">
+            app:toolbarId="@+id/toolbar">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -62,13 +62,13 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.hjc.baselib.widget.FixedViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </androidx.viewpager.widget.ViewPager>
+    </com.hjc.baselib.widget.FixedViewPager>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

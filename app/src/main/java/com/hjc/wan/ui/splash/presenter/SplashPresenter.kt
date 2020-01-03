@@ -1,7 +1,7 @@
 package com.hjc.wan.ui.splash.presenter
 
 import android.annotation.SuppressLint
-import com.hjc.wan.base.BasePresenter
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.ui.splash.contract.SplashContract
 import com.hjc.wan.utils.helper.AccountManager

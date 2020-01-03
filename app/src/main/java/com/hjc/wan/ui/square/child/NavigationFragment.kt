@@ -1,19 +1,16 @@
 package com.hjc.wan.ui.square.child
 
-import android.annotation.SuppressLint
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hjc.baselib.fragment.BaseMvpLazyFragment
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpLazyFragment
-import com.hjc.wan.http.helper.RxSchedulers
 import com.hjc.wan.model.NavigationBean
 import com.hjc.wan.ui.square.adapter.NavigationContentAdapter
 import com.hjc.wan.ui.square.adapter.NavigationMenuAdapter
 import com.hjc.wan.ui.square.contract.NavigationContract
 import com.hjc.wan.ui.square.presenter.NavigationPresenter
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_navigation.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * @Author: HJC
@@ -63,6 +60,12 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
         rvNavigationContent.adapter = mNavigationContentAdapter
     }
 
+    override fun initTitleBar() {
+        super.initTitleBar()
+
+        titleBar.visibility= View.GONE
+    }
+
     override fun initData() {
         super.initData()
 
@@ -104,35 +107,6 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
                 }
             }
         })
-    }
-
-    @SuppressLint("CheckResult")
-    override fun showContent() {
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .compose(RxSchedulers.ioToMain())
-            .subscribe {
-                stateView.showContent()
-                smartRefreshLayout.finishRefresh()
-            }
-    }
-
-    override fun showLoading() {
-        stateView.showLoading()
-    }
-
-    override fun showError() {
-        stateView.showError()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun showEmpty() {
-        stateView.showEmpty()
-        smartRefreshLayout.finishRefresh()
-    }
-
-    override fun showNoNetwork() {
-        stateView.showNoNetwork()
-        smartRefreshLayout.finishRefresh()
     }
 
 }

@@ -1,9 +1,11 @@
 package com.hjc.wan.ui.main
 
 import android.os.Bundle
+import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpFragmentActivity
+import com.hjc.baselib.activity.BaseFragmentActivity
+import com.hjc.baselib.activity.BaseMvpFragmentActivity
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.home.HomeFragment
 import com.hjc.wan.ui.main.contract.MainContract
@@ -29,6 +31,7 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
     private lateinit var mPublicFragment: PublicFragment
     private lateinit var mMineFragment: MineFragment
 
+
     override fun createPresenter(): MainPresenter {
         return MainPresenter()
     }
@@ -37,6 +40,7 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
         return this
     }
 
+
     override fun getLayoutId(): Int {
         return R.layout.activity_main
     }
@@ -44,6 +48,7 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
     override fun getFragmentContentId(): Int {
         return R.id.flContent
     }
+
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)

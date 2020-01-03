@@ -57,8 +57,8 @@ class OperateDialog : BaseDialog() {
         tvFinish.setOnClickListener(this)
     }
 
-    override fun onSingleClick(v: View) {
-        when (v.id) {
+    override fun onSingleClick(v: View?) {
+        when (v?.id) {
             R.id.tvDelete -> {
                 EventManager.sendEvent(MessageEvent(EventCode.DELETE_TODO, mId))
             }

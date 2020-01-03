@@ -38,7 +38,7 @@ class LoadingDialog : BaseDialog() {
 
     }
 
-    override fun onSingleClick(v: View) {
+    override fun onSingleClick(v: View?) {
 
     }
 

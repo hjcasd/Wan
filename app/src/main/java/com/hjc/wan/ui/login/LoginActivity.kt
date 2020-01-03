@@ -4,8 +4,9 @@ import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.gyf.immersionbar.ImmersionBar
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.wan.R
-import com.hjc.wan.base.BaseMvpActivity
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.login.contract.LoginContract
 import com.hjc.wan.ui.login.presenter.LoginPresenter
@@ -30,6 +31,22 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
 
     override fun getLayoutId(): Int {
         return R.layout.activity_login
+    }
+
+
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(R.color.colorPrimary)
+            .keyboardEnable(true)
+            .setOnKeyboardListener { isPopup, _ ->
+                if (isPopup){
+                    loginLayout.setKeyBoardShow(true)
+                }else{
+                    loginLayout.setKeyBoardShow(false)
+                }
+            }
+            .fitsSystemWindows(true)
+            .init()
     }
 
     override fun addListeners() {

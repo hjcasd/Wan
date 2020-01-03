@@ -19,7 +19,7 @@
     </FrameLayout>
 
 
-    <androidx.viewpager.widget.ViewPager
+    <com.hjc.baselib.widget.FixedViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

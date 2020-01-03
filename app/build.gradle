@@ -98,8 +98,8 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     //图片处理框架
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    kapt 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
 
     //Json
@@ -112,12 +112,7 @@ dependencies {
     //列表适配器
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
 
-    //刷新
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
-
     //路由
-    api 'com.alibaba:arouter-api:1.4.1'
     kapt 'com.alibaba:arouter-compiler:1.2.2'
 
     //Banner

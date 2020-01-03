@@ -1,6 +1,6 @@
 package com.hjc.wan.ui.home.contract
 
-import com.hjc.wan.base.IBaseView
+import com.hjc.baselib.base.IBaseView
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
 
