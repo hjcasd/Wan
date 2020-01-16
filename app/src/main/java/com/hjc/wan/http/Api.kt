@@ -215,4 +215,17 @@ interface Api {
     @POST("/lg/todo/done/{id}/json")
     @FormUrlEncoded
     fun doneTodo(@Path("id") id: Int, @Field("status") status: Int): Observable<BaseResponse<Any>>
+
+
+    /**
+     * 获取热门搜索数据
+     */
+    @GET("/hotkey/json")
+    fun getHotKey(): Observable<BaseResponse<MutableList<SearchBean>>>
+
+    /**
+     * 根据关键词搜索数据
+     */
+    @POST("/article/query/{page}/json")
+    fun search(@Path("page") pageNo: Int, @Query("k") searchKey: String): Observable<BaseResponse<BasePageResponse<MutableList<ArticleBean>>>>
 }

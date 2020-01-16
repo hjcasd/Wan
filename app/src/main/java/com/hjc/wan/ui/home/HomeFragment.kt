@@ -3,12 +3,12 @@ package com.hjc.wan.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ToastUtils
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
+import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
 import com.hjc.wan.ui.home.adapter.HomeAdapter
@@ -92,7 +92,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         titleBar.setOnBarRightClickListener(object : OnBarRightClickListener{
 
             override fun rightClick(view: View?) {
-                ToastUtils.showShort("搜索")
+                RouterManager.jump(RoutePath.URL_SEARCH)
             }
         })
     }

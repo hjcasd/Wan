@@ -33,4 +33,7 @@ object RoutePath {
 
     // 设置页面
     const val URL_SETTING = "/wan/mine/setting"
+
+    // 搜索页面
+    const val URL_SEARCH = "/wan/search"
 }

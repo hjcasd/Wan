@@ -57,8 +57,8 @@
 
         <activity
             android:name=".ui.login.RegisterActivity"
-            android:theme="@style/LoginTheme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name="com.hjc.wan.ui.main.MainActivity"
@@ -94,6 +94,10 @@
 
         <activity
             android:name=".ui.setting.SettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.search.SearchActivity"
             android:screenOrientation="portrait" />
 
 
