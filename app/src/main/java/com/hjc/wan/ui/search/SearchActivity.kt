@@ -14,6 +14,8 @@ import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.SearchBean
+import com.hjc.wan.model.db.History
+import com.hjc.wan.model.db.HistoryDataBase
 import com.hjc.wan.ui.home.adapter.HomeAdapter
 import com.hjc.wan.ui.search.contract.SearchContract
 import com.hjc.wan.ui.search.presenter.SearchPresenter
@@ -69,6 +71,7 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         super.initData(savedInstanceState)
 
         getPresenter()?.getHotKey()
+        getPresenter()?.getHistory()
     }
 
     override fun showHotTag(result: MutableList<SearchBean>) {
@@ -82,10 +85,12 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                 tvTag.text = bean.name
                 flHot.addView(tvTag)
 
-                tvTag.setOnClickListener { v: View? ->
+                tvTag.setOnClickListener {
                     etSearch.setText(tvTag.text.toString())
                     etSearch.requestFocus()
                     etSearch.setSelection(etSearch.text.toString().length)
+
+                    mPage = 0
                     getPresenter()?.search(mPage, tvTag.text.toString(), true)
                 }
             }
@@ -105,6 +110,29 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         } else {
             mAdapter.addData(result)
         }
+    }
+
+    override fun showHistory(result: List<History>) {
+        clHistory.visibility = View.VISIBLE
+        flHistory.removeAllViews()
+
+        for (history in result) {
+            val view = View.inflate(this@SearchActivity, R.layout.view_navigation_tag, null)
+            val tvTag = view.findViewById<TextView>(R.id.tv_tag)
+            tvTag.text = history.name
+            flHistory.addView(tvTag)
+
+            tvTag.setOnClickListener {
+                etSearch.setText(tvTag.text.toString())
+                etSearch.requestFocus()
+                etSearch.setSelection(etSearch.text.toString().length)
+                getPresenter()?.search(mPage, tvTag.text.toString(), true)
+            }
+        }
+    }
+
+    override fun hideHistory() {
+        clHistory.visibility = View.GONE
     }
 
     override fun showCollectList(bean: ArticleBean) {
@@ -142,6 +170,7 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
 
             override fun onSearchClear() {
                 clHistory.visibility = View.VISIBLE
+                getPresenter()?.getHistory()
                 clHot.visibility = View.VISIBLE
                 smartRefreshLayout.visibility = View.GONE
             }
@@ -194,7 +223,8 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                     title(R.string.title)
                     message(text = "确认清除全部历史记录吗？")
                     positiveButton(text = "确定") {
-
+                        HistoryDataBase.getInstance(this@SearchActivity).getHistoryDao().deleteAll()
+                        this@SearchActivity.clHistory.visibility = View.GONE
                     }
                     negativeButton(R.string.cancel)
                 }
