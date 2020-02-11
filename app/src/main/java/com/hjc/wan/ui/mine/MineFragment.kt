@@ -5,7 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
@@ -55,12 +57,20 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         }
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initTitleBar() {
         super.initTitleBar()
 
+        titleBar.visibility = View.VISIBLE
         titleBar.setTitle("个人中心")
         titleBar.setLeftImage(0)
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun initSmartRefreshLayout() {
@@ -141,8 +151,12 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
                 accountCardView.setCardBackgroundColor(it)
-                titleBar.setBackgroundColor(it)
+                titleBar.setBgColor(it)
                 tvIntegral.setTextColor(it)
+
+                ImmersionBar.with(this)
+                    .statusBarColor(ColorUtils.int2RgbString(it))
+                    .init()
             }
         }
     }

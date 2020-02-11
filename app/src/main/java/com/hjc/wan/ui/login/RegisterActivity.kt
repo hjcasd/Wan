@@ -2,8 +2,10 @@ package com.hjc.wan.ui.login
 
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpTitleActivity
 import com.hjc.baselib.utils.helper.ActivityManager
 import com.hjc.wan.R
@@ -12,6 +14,7 @@ import com.hjc.wan.ui.login.contract.RegisterContract
 import com.hjc.wan.ui.login.presenter.RegisterPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.etPassword
 import kotlinx.android.synthetic.main.activity_login.etUsername
 import kotlinx.android.synthetic.main.activity_register.*
@@ -37,11 +40,25 @@ class RegisterActivity : BaseMvpTitleActivity<RegisterContract.View, RegisterPre
         return R.layout.activity_register
     }
 
+
+    override fun initView() {
+        super.initView()
+
+        llRegister.setBackgroundColor(SettingManager.getThemeColor())
+    }
+
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initTitleBar() {
         super.initTitleBar()
 
         titleBar.setTitle("账号注册")
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun addListeners() {

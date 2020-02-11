@@ -7,8 +7,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpListActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
@@ -56,6 +58,13 @@ class WebActivity : BaseMvpListActivity<WebContract.View, WebPresenter>(), WebCo
         tvTitle.isSelected = true
 
         toolbar.setBackgroundColor(SettingManager.getThemeColor())
+    }
+
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
     }
 
     override fun initTitleBar() {

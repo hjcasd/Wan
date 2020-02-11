@@ -3,6 +3,8 @@ package com.hjc.wan.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ColorUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
@@ -82,13 +84,21 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         }
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initTitleBar() {
         super.initTitleBar()
 
+        titleBar.visibility = View.VISIBLE
         titleBar.setTitle("首页")
         titleBar.setLeftImage(0)
         titleBar.setRightImage(R.mipmap.icon_add)
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
         titleBar.setOnBarRightClickListener(object : OnBarRightClickListener{
 
             override fun rightClick(view: View?) {
@@ -196,7 +206,13 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
                 }
             }
         } else if (event?.code == EventCode.CHANGE_THEME) {
-            titleBar.setBackgroundColor(SettingManager.getThemeColor())
+            SettingManager.getThemeColor().let {
+                titleBar.setBgColor(it)
+
+                ImmersionBar.with(this)
+                    .statusBarColor(ColorUtils.int2RgbString(it))
+                    .init()
+            }
         }
     }
 

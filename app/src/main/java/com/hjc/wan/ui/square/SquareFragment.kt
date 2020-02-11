@@ -8,7 +8,9 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ConvertUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
@@ -21,7 +23,10 @@ import com.hjc.wan.ui.square.contract.SquareContract
 import com.hjc.wan.ui.square.presenter.SquarePresenter
 import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.indicator.ScaleTransitionPagerTitleView
+import kotlinx.android.synthetic.main.fragment_indicator.*
 import kotlinx.android.synthetic.main.fragment_square.*
+import kotlinx.android.synthetic.main.fragment_square.magicIndicator
+import kotlinx.android.synthetic.main.fragment_square.viewPager
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -64,10 +69,11 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         flIndicator.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility = View.GONE
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -126,7 +132,13 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
 
     override fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
-            flIndicator.setBackgroundColor(SettingManager.getThemeColor())
+            SettingManager.getThemeColor().let {
+                flIndicator.setBackgroundColor(it)
+
+                ImmersionBar.with(this)
+                    .statusBarColor(ColorUtils.int2RgbString(it))
+                    .init()
+            }
         }
     }
 

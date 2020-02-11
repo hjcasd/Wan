@@ -8,7 +8,9 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.colorChooser
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpTitleActivity
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
@@ -18,7 +20,7 @@ import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.setting.contract.SettingContract
 import com.hjc.wan.ui.setting.presenter.SettingPresenter
-import com.hjc.wan.utils.ColorUtils
+import com.hjc.wan.utils.helper.ColorHelper
 import com.hjc.wan.utils.helper.AccountManager
 import com.hjc.wan.utils.helper.CacheManager
 import com.hjc.wan.utils.helper.RouterManager
@@ -59,11 +61,18 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
         }
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initTitleBar() {
         super.initTitleBar()
 
         titleBar.setTitle("设置")
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -159,17 +168,11 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
             cornerRadius(10f)
             title(R.string.choose_theme_color)
             colorChooser(
-                ColorUtils.ACCENT_COLORS,
+                ColorHelper.ACCENT_COLORS,
                 initialSelection = SettingManager.getThemeColor(),
-                subColors = ColorUtils.PRIMARY_SUB_COLORS
+                subColors = ColorHelper.PRIMARY_SUB_COLORS
             ) { _, color ->
                 SettingManager.setThemeColor(color)
-                this@SettingActivity.colorView.setViewColor(color)
-                this@SettingActivity.titleBar.setBackgroundColor(color)
-
-                val drawable = this@SettingActivity.btnLogout.background as GradientDrawable
-                drawable.setColor(color)
-
                 EventManager.sendEvent(MessageEvent(EventCode.CHANGE_THEME, null))
             }
             positiveButton(R.string.confirm)
@@ -193,6 +196,21 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
         AccountManager.clear()
         ActivityManager.finishAllActivities()
         RouterManager.jump(RoutePath.URL_LOGIN)
+    }
+
+    override fun handleMessage(event: MessageEvent<*>?) {
+        if (event?.code == EventCode.CHANGE_THEME) {
+            SettingManager.getThemeColor().let {
+                colorView.setViewColor(it)
+                titleBar.setBgColor(it)
+                val drawable = btnLogout.background as GradientDrawable
+                drawable.setColor(it)
+
+                ImmersionBar.with(this)
+                    .statusBarColor(ColorUtils.int2RgbString(it))
+                    .init()
+            }
+        }
     }
 
 }

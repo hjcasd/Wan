@@ -10,7 +10,6 @@
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
         app:leftImage="@mipmap/icon_back"
         app:titleText="测试" />
 

@@ -9,6 +9,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/colToolbar"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             app:collapsedTitleGravity="left"

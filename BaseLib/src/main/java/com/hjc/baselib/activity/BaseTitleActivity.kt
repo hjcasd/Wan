@@ -122,6 +122,7 @@ abstract class BaseTitleActivity : RxAppCompatActivity(), View.OnClickListener {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun receiveEvent(event: MessageEvent<*>?) {
+        handleMessage(event)
     }
 
     /**

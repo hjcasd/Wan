@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpListActivity
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
@@ -64,12 +66,19 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
         }
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initTitleBar() {
         super.initTitleBar()
 
         titleBar.setTitle("待办清单")
         titleBar.setRightImage(R.mipmap.icon_add)
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
         titleBar.setOnBarRightClickListener(object : OnBarRightClickListener {
 
             override fun rightClick(view: View?) {

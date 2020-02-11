@@ -6,9 +6,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
@@ -64,8 +66,16 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         } else {
             mAdapter.closeLoadAnimation()
         }
+
+        clSearch.setBackgroundColor(SettingManager.getThemeColor())
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)

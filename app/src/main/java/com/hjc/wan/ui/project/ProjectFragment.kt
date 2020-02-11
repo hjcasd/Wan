@@ -8,7 +8,9 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ConvertUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
@@ -63,10 +65,11 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
         magicIndicator.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility = View.GONE
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -120,7 +123,13 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
 
     override fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
-            magicIndicator.setBackgroundColor(SettingManager.getThemeColor())
+            SettingManager.getThemeColor().let {
+                magicIndicator.setBackgroundColor(it)
+
+                ImmersionBar.with(this)
+                    .statusBarColor(ColorUtils.int2RgbString(it))
+                    .init()
+            }
         }
     }
 }

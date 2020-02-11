@@ -2,6 +2,7 @@ package com.hjc.wan.ui.login
 
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
@@ -11,6 +12,7 @@ import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.login.contract.LoginContract
 import com.hjc.wan.ui.login.presenter.LoginPresenter
 import com.hjc.wan.utils.helper.RouterManager
+import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_login.*
 
 /**
@@ -33,10 +35,15 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
         return R.layout.activity_login
     }
 
+    override fun initView() {
+        super.initView()
+
+        loginLayout.setBackgroundColor(SettingManager.getThemeColor())
+    }
 
     override fun initImmersionBar() {
         ImmersionBar.with(this)
-            .statusBarColor(R.color.colorPrimary)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
             .keyboardEnable(true)
             .setOnKeyboardListener { isPopup, _ ->
                 if (isPopup){

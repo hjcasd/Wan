@@ -3,6 +3,8 @@ package com.hjc.wan.ui.integral.child
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpListActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
@@ -60,11 +62,18 @@ class IntegralHistoryActivity :
         }
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initTitleBar() {
         super.initTitleBar()
 
         titleBar.setTitle("积分记录")
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun initSmartRefreshLayout() {

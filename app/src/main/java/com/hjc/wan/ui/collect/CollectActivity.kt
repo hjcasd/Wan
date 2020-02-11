@@ -12,6 +12,7 @@ import com.hjc.wan.ui.collect.child.CollectArticleFragment
 import com.hjc.wan.ui.collect.child.CollectLinkFragment
 import com.hjc.wan.ui.collect.contract.CollectContract
 import com.hjc.wan.ui.collect.presenter.CollectPresenter
+import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_collect.*
 import java.util.*
 
@@ -45,6 +46,11 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
+
+        colToolbar.run {
+            setContentScrimColor(SettingManager.getThemeColor())
+            setStatusBarScrimColor(SettingManager.getThemeColor())
+        }
     }
 
     override fun initImmersionBar() {

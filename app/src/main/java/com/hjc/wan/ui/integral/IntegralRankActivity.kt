@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.blankj.utilcode.util.ColorUtils
+import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpListActivity
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
@@ -64,6 +66,13 @@ class IntegralRankActivity : BaseMvpListActivity<IntegralRankContract.View, Inte
         fabHistory.backgroundTintList = SettingManager.getStateList()
     }
 
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+            .init()
+    }
+
     override fun initSmartRefreshLayout() {
         super.initSmartRefreshLayout()
 
@@ -76,7 +85,7 @@ class IntegralRankActivity : BaseMvpListActivity<IntegralRankContract.View, Inte
 
         titleBar.setTitle("积分排行")
         titleBar.setRightImage(R.mipmap.icon_rule)
-        titleBar.setBackgroundColor(SettingManager.getThemeColor())
+        titleBar.setBgColor(SettingManager.getThemeColor())
         titleBar.setOnBarRightClickListener(object : OnBarRightClickListener {
 
             override fun rightClick(view: View?) {

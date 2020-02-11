@@ -1,4 +1,4 @@
-package com.hjc.wan.utils
+package com.hjc.wan.utils.helper
 
 import android.graphics.Color
 
@@ -7,7 +7,7 @@ import android.graphics.Color
  * @Date: 2019/12/31 14:23
  * @Description: 颜色工具类
  */
-object ColorUtils {
+object ColorHelper {
 
     //自定义颜色，过滤掉与白色相近的颜色
     var ACCENT_COLORS = intArrayOf(

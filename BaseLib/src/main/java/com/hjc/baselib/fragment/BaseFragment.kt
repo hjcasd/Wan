@@ -148,6 +148,7 @@ abstract class BaseFragment : RxFragment(), View.OnClickListener, IBaseView {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun receiveEvent(event: MessageEvent<*>?) {
+        handleMessage(event)
     }
 
     /**

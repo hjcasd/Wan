@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.hjc.baselib.R
 
 /**
@@ -30,6 +31,7 @@ class TitleBar @JvmOverloads constructor(
     private var mRightImage = 0
     private var isShowLine = false
 
+    private lateinit var clRoot: ConstraintLayout
     private lateinit var tvTitle: TextView
     private lateinit var ivLeftImg: ImageView
     private lateinit var ivRightImg: ImageView
@@ -58,6 +60,8 @@ class TitleBar @JvmOverloads constructor(
 
     private fun initView() {
         LayoutInflater.from(mContext).inflate(R.layout.layout_title_bar, this)
+
+        clRoot = findViewById(R.id.cl_root)
         ivLeftImg = findViewById(R.id.iv_left_img)
         tvTitle = findViewById(R.id.tv_title)
         ivRightImg = findViewById(R.id.iv_right_img)
@@ -137,6 +141,10 @@ class TitleBar @JvmOverloads constructor(
         } else {
             ivRightImg.visibility = View.GONE
         }
+    }
+
+    fun setBgColor(color: Int){
+        clRoot.setBackgroundColor(color)
     }
 
     private fun sp2px(spValue: Float): Int {

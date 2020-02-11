@@ -25,7 +25,6 @@ abstract class BaseActivity : RxAppCompatActivity(), View.OnClickListener {
 
     private lateinit var mBinder: Unbinder
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
