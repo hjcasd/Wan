@@ -38,6 +38,7 @@ class SplashActivity : BaseMvpTitleActivity<SplashContract.View, SplashPresenter
             .fullScreen(true)
             .navigationBarEnable(true)
             .init()
+
     }
 
     override fun initTitleBar() {
