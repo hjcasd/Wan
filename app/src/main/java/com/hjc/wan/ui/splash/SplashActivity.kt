@@ -3,7 +3,6 @@ package com.hjc.wan.ui.splash
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
-import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.activity.BaseMvpTitleActivity
 import com.hjc.wan.R
@@ -11,7 +10,6 @@ import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.splash.contract.SplashContract
 import com.hjc.wan.ui.splash.presenter.SplashPresenter
 import com.hjc.wan.utils.helper.RouterManager
-import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.activity_splash.*
 
 /**
@@ -33,6 +31,13 @@ class SplashActivity : BaseMvpTitleActivity<SplashContract.View, SplashPresenter
 
     override fun getLayoutId(): Int {
         return R.layout.activity_splash
+    }
+
+    override fun initImmersionBar() {
+        ImmersionBar.with(this)
+            .fullScreen(true)
+            .navigationBarEnable(true)
+            .init()
     }
 
     override fun initTitleBar() {
