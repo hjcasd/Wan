@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
-import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
@@ -15,7 +14,7 @@ import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
-import com.hjc.wan.ui.adapter.MyViewPagerAdapter
+import com.hjc.wan.adapter.MyViewPagerAdapter
 import com.hjc.wan.ui.square.child.NavigationFragment
 import com.hjc.wan.ui.square.child.PlazaFragment
 import com.hjc.wan.ui.square.child.SystemFragment
@@ -23,7 +22,6 @@ import com.hjc.wan.ui.square.contract.SquareContract
 import com.hjc.wan.ui.square.presenter.SquarePresenter
 import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.indicator.ScaleTransitionPagerTitleView
-import kotlinx.android.synthetic.main.fragment_indicator.*
 import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.fragment_square.magicIndicator
 import kotlinx.android.synthetic.main.fragment_square.viewPager

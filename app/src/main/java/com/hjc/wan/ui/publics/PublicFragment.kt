@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
-import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
@@ -16,7 +15,7 @@ import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.model.ClassifyBean
-import com.hjc.wan.ui.adapter.MyViewPagerAdapter
+import com.hjc.wan.adapter.MyViewPagerAdapter
 import com.hjc.wan.ui.publics.child.PublicChildFragment
 import com.hjc.wan.ui.publics.contract.PublicContract
 import com.hjc.wan.ui.publics.presenter.PublicPresenter

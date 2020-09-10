@@ -3,9 +3,8 @@ package com.hjc.wan.utils.helper
 import android.content.Context
 import android.os.Environment
 import android.webkit.CookieManager
-import android.webkit.CookieSyncManager
+import android.webkit.WebView
 import com.blankj.utilcode.util.FileUtils
-import com.tencent.smtt.sdk.WebView
 import java.math.BigDecimal
 
 
@@ -19,9 +18,9 @@ object CacheManager {
     }
 
     private fun getCacheDirSize(context: Context): Long {
-        var cacheSize = FileUtils.getDirLength(context.cacheDir)
+        var cacheSize = FileUtils.getLength(context.cacheDir)
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            cacheSize += FileUtils.getDirLength(context.externalCacheDir)
+            cacheSize += FileUtils.getLength(context.externalCacheDir)
         }
         return cacheSize
     }
@@ -32,36 +31,33 @@ object CacheManager {
     fun clearTotalCache(context: Context) {
         try {
             clearDirCache(context)
-//            clearWebViewCache(context)
+            clearWebViewCache(context)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun clearDirCache(context: Context) {
-        FileUtils.deleteDir(context.cacheDir)
+        FileUtils.delete(context.cacheDir)
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
             context.externalCacheDir?.let {
-                FileUtils.deleteDir(it)
+                FileUtils.delete(it)
             }
         }
     }
 
     private fun clearWebViewCache(context: Context) {
         //安卓自带浏览器内核
-        CookieSyncManager.createInstance(context)
         val cookieManager = CookieManager.getInstance()
         cookieManager.removeAllCookies(null)
         //X5浏览器内核
-        CookieSyncManager.createInstance(context)
-        val x5cookieManager = CookieManager.getInstance()
+        val x5cookieManager = com.tencent.smtt.sdk.CookieManager.getInstance()
         x5cookieManager.removeAllCookies(null)
-        //删除浏览器相关数据库
         //删除浏览器相关数据库
         context.deleteDatabase("webview.db")
         context.deleteDatabase("webviewCache.db")
         WebView(context).clearCache(true)
-        WebView(context).clearCache(true)
+        com.tencent.smtt.sdk.WebView(context).clearCache(true)
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.hjc.wan.ui.adapter
+package com.hjc.wan.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
