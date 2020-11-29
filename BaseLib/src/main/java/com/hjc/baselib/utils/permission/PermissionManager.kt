@@ -39,7 +39,7 @@ class PermissionManager {
         }
         AndPermission.with(mContext)
             .runtime()
-            .permission(*permissions)
+            .permission(permissions)
             .rationale(RuntimeRationale())
             .onGranted { data: List<String?>? -> callBack.onGranted() }
             .onDenied { data: List<String?>? -> callBack.onDenied() }
@@ -58,7 +58,7 @@ class PermissionManager {
         }
         AndPermission.with(mActivity)
             .runtime()
-            .permission(*permissions)
+            .permission(permissions)
             .rationale(RuntimeRationale())
             .onGranted { data: List<String?>? -> callBack.onGranted() }
             .onDenied { data: List<String?>? -> callBack.onDenied() }
@@ -77,7 +77,7 @@ class PermissionManager {
         }
         AndPermission.with(mFragment)
             .runtime()
-            .permission(*permissions)
+            .permission(permissions)
             .rationale(RuntimeRationale())
             .onGranted { data: List<String?>? -> callBack.onGranted() }
             .onDenied { data: List<String?>? -> callBack.onDenied() }
