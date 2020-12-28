@@ -25,7 +25,6 @@ import java.util.*
 class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(),
     CollectContract.View {
 
-
     override fun createPresenter(): CollectPresenter {
         return CollectPresenter()
     }
@@ -38,7 +37,6 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
     override fun getLayoutId(): Int {
         return R.layout.activity_collect
     }
-
 
     override fun initView() {
         super.initView()
