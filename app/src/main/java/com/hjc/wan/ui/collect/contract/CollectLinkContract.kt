@@ -7,9 +7,10 @@ interface CollectLinkContract {
 
     interface View : IBaseView {
         fun showList(result : MutableList<CollectLinkBean>)
+        fun refreshComplete()
     }
 
     interface Presenter {
-        fun loadListData()
+        fun loadListData(isFirst: Boolean)
     }
 }

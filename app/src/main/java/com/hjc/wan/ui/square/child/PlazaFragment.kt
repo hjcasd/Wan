@@ -15,6 +15,8 @@ import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_common.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
@@ -52,7 +54,9 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     override fun initView() {
         super.initView()
 
-        val manager =LinearLayoutManager(mContext)
+        initLoadSir(smartRefreshLayout)
+
+        val manager = LinearLayoutManager(mContext)
         rvCommon.layoutManager = manager
 
         mAdapter = PlazaAdapter(null)
@@ -67,24 +71,10 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         }
     }
 
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility= View.GONE
-    }
-
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
-    }
-
     override fun initData() {
         super.initData()
 
-        showLoading()
-        getPresenter()?.loadListData(mPage)
+        getPresenter()?.loadListData(mPage, true)
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
@@ -96,18 +86,16 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter()?.loadListData(mPage)
+                getPresenter()?.loadListData(mPage, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter()?.loadListData(mPage)
+                getPresenter()?.loadListData(mPage, false)
             }
 
         })
@@ -129,6 +117,15 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         }
     }
 
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        mPage = 0
+        getPresenter()?.loadListData(mPage, true)
+    }
 
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
@@ -140,7 +137,13 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         mAdapter.notifyDataSetChanged()
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_LIST_ANIMATION) {
             SettingManager.getListAnimationType().let {
                 if (it != 0) {

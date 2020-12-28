@@ -7,9 +7,10 @@ interface SystemContract {
 
     interface View : IBaseView {
         fun showList(result: MutableList<SystemBean>)
+        fun refreshComplete()
     }
 
     interface Presenter {
-        fun loadListData()
+        fun loadListData(isFirst: Boolean)
     }
 }

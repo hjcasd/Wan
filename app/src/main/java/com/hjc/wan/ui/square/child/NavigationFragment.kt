@@ -49,6 +49,8 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     override fun initView() {
         super.initView()
 
+        initLoadSir(rlRoot)
+
         val manager = LinearLayoutManager(mContext)
         rvNavigationMenu.layoutManager = manager
         mNavigationMenuAdapter = NavigationMenuAdapter(null)
@@ -60,16 +62,9 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
         rvNavigationContent.adapter = mNavigationContentAdapter
     }
 
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility= View.GONE
-    }
-
     override fun initData() {
         super.initData()
 
-        showLoading()
         getPresenter()?.loadListData()
     }
 
@@ -85,8 +80,6 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         //点击侧边栏菜单,滑动到指定位置
         mNavigationMenuAdapter.setOnSelectListener(object : NavigationMenuAdapter.OnSelectListener{
             override fun onSelected(position: Int) {
@@ -107,6 +100,15 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
                 }
             }
         })
+    }
+
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        getPresenter()?.loadListData()
     }
 
 }

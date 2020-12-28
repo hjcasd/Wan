@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpTitleActivity
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.splash.contract.SplashContract
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
  * @Date: 2019/11/11 14:03
  * @Description: 启动页
  */
-class SplashActivity : BaseMvpTitleActivity<SplashContract.View, SplashPresenter>(),
+class SplashActivity : BaseMvpActivity<SplashContract.View, SplashPresenter>(),
     SplashContract.View {
 
 
@@ -33,24 +33,24 @@ class SplashActivity : BaseMvpTitleActivity<SplashContract.View, SplashPresenter
         return R.layout.activity_splash
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
             .fullScreen(true)
             .navigationBarEnable(true)
-            .init()
-
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility = View.GONE
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter()?.startCountdown()
+        getPresenter().startCountdown()
+    }
+
+    override fun addListeners() {
+
+    }
+
+    override fun onSingleClick(v: View?) {
+
     }
 
     override fun toLogin() {

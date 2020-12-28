@@ -7,23 +7,33 @@ package com.hjc.baselib.base
  */
 interface IBaseView {
 
-    fun showLoading(){
+    /**
+     * 显示loading
+     */
+    fun startLoading()
 
-    }
+    /**
+     * 显示内容
+     */
+    fun dismissLoading()
 
-    fun showContent(){
+    /**
+     * 显示内容
+     */
+    fun showContent()
 
-    }
+    /**
+     * 显示loading
+     */
+    fun showLoading()
 
-    fun showError(){
+    /**
+     * 显示空页面
+     */
+    fun showEmpty()
 
-    }
-
-    fun showEmpty(){
-
-    }
-
-    fun showNoNetwork(){
-
-    }
+    /**
+     * 加载失败
+     */
+    fun showError()
 }

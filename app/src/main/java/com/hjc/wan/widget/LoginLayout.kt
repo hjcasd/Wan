@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_login.view.*
  */
 class LoginLayout(context: Context, attributes: AttributeSet) : LinearLayout(context, attributes) {
 
-
     fun setKeyBoardShow(isShow: Boolean) {
         if (isShow) {
             post {

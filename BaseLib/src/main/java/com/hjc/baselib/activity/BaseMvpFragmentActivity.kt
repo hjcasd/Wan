@@ -14,10 +14,7 @@ abstract class BaseMvpFragmentActivity<V : IBaseView, P : BasePresenter<V>?> : B
     private var mPresenter: P? = null
     private lateinit var mView: V
 
-
     override  fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         mPresenter = createPresenter()
         mView = createView()
         mPresenter?.attachView(mView)

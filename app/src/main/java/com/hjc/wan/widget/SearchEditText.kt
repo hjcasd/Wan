@@ -1,143 +1,1 @@
-package com.hjc.wan.widget;
-
-
-import android.content.Context;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-
-import androidx.appcompat.widget.AppCompatEditText;
-
-/**
- * @Author: HJC
- * @Date: 2019/1/7 11:31
- * @Description: 搜索EditText
- */
-public class SearchEditText extends AppCompatEditText implements TextWatcher, View.OnFocusChangeListener, View.OnKeyListener {
-    private Drawable mClearDrawable;           //保存 EditText右侧的删除按钮
-    private boolean hasFocus;                  //保存控件是否获取到焦点
-
-    private OnSearchClickListener listener;
-
-    public SearchEditText(Context context) {
-        super(context);
-        init();
-    }
-
-    public SearchEditText(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public SearchEditText(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-        //获取右侧清除图标
-        mClearDrawable = getCompoundDrawables()[2];
-        setClearIconVisible(false);
-
-        setOnFocusChangeListener(this);
-        setOnKeyListener(this);
-        addTextChangedListener(this);
-    }
-
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (hasFocus) {
-            setClearIconVisible(s.length() > 0);
-        }
-        if (s.length() == 0) {
-            if (listener != null) {
-                listener.onSearchClear();
-            }
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        this.hasFocus = hasFocus;
-        if (hasFocus) {
-            setClearIconVisible(getText().length() > 0);
-        } else {
-            setClearIconVisible(false);
-        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            if (getCompoundDrawables()[2] != null) { //清除按钮存在时
-                Rect rect = getCompoundDrawables()[2].getBounds();
-                int height = rect.height(); //按钮高
-                int distance = (getHeight() - height) / 2; //按钮距离上边缘（下边缘）的距离
-                boolean isInnerWidth = x > (getWidth() - getTotalPaddingRight()) && x < (getWidth() - getPaddingRight());
-                boolean isInnerHeight = y > distance && y < (distance + height);
-                if (isInnerWidth && isInnerHeight) {
-                    this.setText("");
-                    if (listener != null) {
-                        listener.onSearchClear();
-                    }
-                }
-            }
-        }
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && listener != null) {
-            //隐藏软键盘
-            InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm.isActive()) {
-                imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
-            }
-            if (event.getAction() == KeyEvent.ACTION_UP) {
-                listener.onSearchClick(v);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 设置是否显示隐藏图标
-     *
-     * @param visible 是否显示
-     */
-    private void setClearIconVisible(boolean visible) {
-        Drawable right = visible ? mClearDrawable : null;
-        setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1], right, getCompoundDrawables()[3]);
-    }
-
-    public interface OnSearchClickListener {
-        void onSearchClick(View view);
-
-        void onSearchClear();
-    }
-
-    public void setOnSearchClickListener(OnSearchClickListener listener) {
-        this.listener = listener;
-    }
-}
-
+package com.hjc.wan.widgetimport android.annotation.SuppressLintimport android.content.Contextimport android.graphics.drawable.Drawableimport android.text.Editableimport android.text.TextWatcherimport android.util.AttributeSetimport android.view.KeyEventimport android.view.MotionEventimport android.view.Viewimport android.view.inputmethod.InputMethodManagerimport androidx.appcompat.widget.AppCompatEditText/** * @Author: HJC * @Date: 2019/1/7 11:31 * @Description: 搜索EditText */class SearchEditText : AppCompatEditText, TextWatcher, View.OnFocusChangeListener,    View.OnKeyListener {    private var mClearDrawable: Drawable? = null //保存 EditText右侧的删除按钮    private var hasFocus = false //保存控件是否获取到焦点    private var listener: OnSearchClickListener? = null    constructor(context: Context) : super(context) {        init()    }    constructor(context: Context, attrs: AttributeSet?) : super(        context, attrs    ) {        init()    }    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(        context, attrs, defStyleAttr    ) {        init()    }    private fun init() {        //获取右侧清除图标        mClearDrawable = compoundDrawables[2]        setClearIconVisible(false)        onFocusChangeListener = this        setOnKeyListener(this)        addTextChangedListener(this)    }    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {        if (hasFocus) {            setClearIconVisible(s.isNotEmpty())        }        if (s.isEmpty()) {            if (listener != null) {                listener!!.onSearchClear()            }        }    }    override fun afterTextChanged(s: Editable) {}    override fun onFocusChange(v: View, hasFocus: Boolean) {        this.hasFocus = hasFocus        if (hasFocus) {            setClearIconVisible(text!!.isNotEmpty())        } else {            setClearIconVisible(false)        }    }    @SuppressLint("ClickableViewAccessibility")    override fun onTouchEvent(event: MotionEvent): Boolean {        if (event.action == MotionEvent.ACTION_UP) {            val x = event.x.toInt()            val y = event.y.toInt()            if (compoundDrawables[2] != null) { //清除按钮存在时                val rect = compoundDrawables[2].bounds                val height = rect.height() //按钮高                val distance = (getHeight() - height) / 2 //按钮距离上边缘（下边缘）的距离                val isInnerWidth = x > width - totalPaddingRight && x < width - paddingRight                val isInnerHeight = y > distance && y < distance + height                if (isInnerWidth && isInnerHeight) {                    this.setText("")                    if (listener != null) {                        listener!!.onSearchClear()                    }                }            }        }        return super.onTouchEvent(event)    }    override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {        if (keyCode == KeyEvent.KEYCODE_ENTER && listener != null) {            //隐藏软键盘            val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager            if (imm.isActive) {                imm.hideSoftInputFromWindow(v.applicationWindowToken, 0)            }            if (event.action == KeyEvent.ACTION_UP) {                listener!!.onSearchClick(v)            }        }        return false    }    /**     * 设置是否显示隐藏图标     *     * @param visible 是否显示     */    private fun setClearIconVisible(visible: Boolean) {        val right = if (visible) mClearDrawable else null        setCompoundDrawables(            compoundDrawables[0],            compoundDrawables[1],            right,            compoundDrawables[3]        )    }    interface OnSearchClickListener {        fun onSearchClick(view: View?)        fun onSearchClear()    }    fun setOnSearchClickListener(listener: OnSearchClickListener?) {        this.listener = listener    }}

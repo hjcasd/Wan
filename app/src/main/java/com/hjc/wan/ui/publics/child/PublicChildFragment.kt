@@ -16,6 +16,8 @@ import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_common.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
@@ -59,6 +61,8 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
     override fun initView() {
         super.initView()
 
+        initLoadSir(smartRefreshLayout)
+
         val manager = LinearLayoutManager(mContext)
         rvCommon.layoutManager = manager
 
@@ -74,25 +78,11 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
         }
     }
 
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility= View.GONE
-    }
-
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
-    }
-
     override fun initData() {
         super.initData()
         cid = arguments?.getInt("cid") ?: 0
 
-        showLoading()
-        getPresenter()?.loadListData(mPage, cid)
+        getPresenter()?.loadListData(mPage, cid, true)
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
@@ -104,18 +94,16 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 1
-                getPresenter()?.loadListData(mPage, cid)
+                getPresenter()?.loadListData(mPage, cid, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter()?.loadListData(mPage, cid)
+                getPresenter()?.loadListData(mPage, cid, false)
             }
 
         })
@@ -137,6 +125,16 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
         }
     }
 
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        mPage = 1
+        getPresenter()?.loadListData(mPage, cid, true)
+    }
+
     override fun showCollectList(bean: ArticleBean) {
         bean.collect = true
         mAdapter.notifyDataSetChanged()
@@ -147,7 +145,13 @@ class PublicChildFragment : BaseMvpLazyFragment<PublicChildContract.View, Public
         mAdapter.notifyDataSetChanged()
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_LIST_ANIMATION) {
             SettingManager.getListAnimationType().let {
                 if (it != 0) {

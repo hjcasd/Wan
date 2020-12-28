@@ -6,10 +6,11 @@ import com.hjc.wan.model.IntegralHistoryBean
 interface IntegralHistoryContract {
 
     interface View : IBaseView {
-        fun showList(result : MutableList<IntegralHistoryBean>)
+        fun showList(result: MutableList<IntegralHistoryBean>)
+        fun refreshComplete()
     }
 
     interface Presenter {
-        fun loadListData(page: Int)
+        fun loadListData(page: Int, isFirst: Boolean)
     }
 }

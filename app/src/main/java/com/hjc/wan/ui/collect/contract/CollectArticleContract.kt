@@ -8,10 +8,11 @@ interface CollectArticleContract {
     interface View : IBaseView {
         fun showList(result : MutableList<CollectArticleBean>)
         fun showUnCollectList(position : Int)
+        fun refreshComplete()
     }
 
     interface Presenter {
-        fun loadListData(page: Int)
+        fun loadListData(page: Int, isFirst: Boolean)
         fun unCollectArticle(bean : CollectArticleBean, position : Int)
     }
 }

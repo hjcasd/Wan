@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpListActivity
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.web.contract.WebContract
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_web.*
  * @Description: 含有WebView的Activity基类
  */
 @Route(path = RoutePath.URL_WEB)
-class WebActivity : BaseMvpListActivity<WebContract.View, WebPresenter>(), WebContract.View {
+class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContract.View {
     @JvmField
     @Autowired(name = "title")
     var mTitle: String = ""
@@ -48,6 +48,12 @@ class WebActivity : BaseMvpListActivity<WebContract.View, WebPresenter>(), WebCo
         return R.layout.activity_web
     }
 
+    override fun getImmersionBar(): ImmersionBar? {
+        return  ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+    }
+
     override fun initView() {
         super.initView()
 
@@ -60,19 +66,6 @@ class WebActivity : BaseMvpListActivity<WebContract.View, WebPresenter>(), WebCo
         toolbar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility = View.GONE
-    }
-
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
@@ -80,6 +73,14 @@ class WebActivity : BaseMvpListActivity<WebContract.View, WebPresenter>(), WebCo
             tvTitle.text = mTitle
             webView.loadUrl(mUrl)
         }
+    }
+
+    override fun addListeners() {
+
+    }
+
+    override fun onSingleClick(v: View?) {
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -98,7 +99,7 @@ class WebActivity : BaseMvpListActivity<WebContract.View, WebPresenter>(), WebCo
 
             // 添加到收藏
             R.id.item_collect -> {
-                getPresenter()?.collectLink(mTitle, mUrl)
+                getPresenter().collectLink(mTitle, mUrl)
             }
 
             // 分享

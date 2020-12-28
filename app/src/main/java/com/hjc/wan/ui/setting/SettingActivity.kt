@@ -11,21 +11,20 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpTitleActivity
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
-import com.hjc.baselib.utils.helper.ActivityManager
+import com.hjc.baselib.utils.helper.ActivityHelper
+import com.hjc.baselib.widget.bar.OnBarLeftClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.setting.contract.SettingContract
 import com.hjc.wan.ui.setting.presenter.SettingPresenter
-import com.hjc.wan.utils.helper.ColorHelper
-import com.hjc.wan.utils.helper.AccountManager
-import com.hjc.wan.utils.helper.CacheManager
-import com.hjc.wan.utils.helper.RouterManager
-import com.hjc.wan.utils.helper.SettingManager
+import com.hjc.wan.utils.helper.*
 import kotlinx.android.synthetic.main.activity_setting.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 /**
@@ -34,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_setting.*
  * @Description: 设置页面
  */
 @Route(path = RoutePath.URL_SETTING)
-class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresenter>(),
+class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(),
     SettingContract.View {
 
     override fun createPresenter(): SettingPresenter {
@@ -50,6 +49,12 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
         return R.layout.activity_setting
     }
 
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+    }
+
     override fun initView() {
         super.initView()
 
@@ -59,19 +64,7 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
             val drawable = btnLogout.background as GradientDrawable
             drawable.setColor(it)
         }
-    }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.setTitle("设置")
         titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
@@ -86,19 +79,23 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         llClearCache.setOnClickListener(this)
         llAnimation.setOnClickListener(this)
         rlTheme.setOnClickListener(this)
         llVersion.setOnClickListener(this)
         llProject.setOnClickListener(this)
         btnLogout.setOnClickListener(this)
+
+        titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+
+            override fun leftClick(view: View) {
+                finish()
+            }
+
+        })
     }
 
     override fun onSingleClick(v: View?) {
-        super.onSingleClick(v)
-
         when (v?.id) {
             R.id.llClearCache -> {
                 clearCache()
@@ -110,7 +107,7 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
                 changeTheme()
             }
             R.id.llVersion -> {
-                getPresenter()?.checkVersion()
+                getPresenter().checkVersion()
             }
             R.id.llProject -> {
                 RouterManager.jumpToWeb("Wan", "https://github.com/hjcasd/Wan")
@@ -186,7 +183,7 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
             title(R.string.title)
             message(text = "确定退出登录吗")
             positiveButton(text = "确定") {
-                getPresenter()?.logout()
+                getPresenter().logout()
             }
             negativeButton(R.string.cancel)
         }
@@ -194,11 +191,12 @@ class SettingActivity : BaseMvpTitleActivity<SettingContract.View, SettingPresen
 
     override fun toLogin() {
         AccountManager.clear()
-        ActivityManager.finishAllActivities()
+        ActivityHelper.finishAllActivities()
         RouterManager.jump(RoutePath.URL_LOGIN)
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
                 colorView.setViewColor(it)

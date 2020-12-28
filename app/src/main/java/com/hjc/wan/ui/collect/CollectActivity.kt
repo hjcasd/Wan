@@ -1,6 +1,7 @@
 package com.hjc.wan.ui.collect
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.gyf.immersionbar.ImmersionBar
@@ -53,23 +54,24 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
         }
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
             .titleBar(toolbar)
             .fitsSystemWindows(true)
-            .init()
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter()?.loadChild()
+        getPresenter().loadChild()
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         toolbar.setNavigationOnClickListener { finish() }
+    }
+
+    override fun onSingleClick(v: View?) {
+
     }
 
     override fun showFragment() {

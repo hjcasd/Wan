@@ -1,45 +1,38 @@
-package com.hjc.webviewlib;
+package com.hjc.webviewlib
 
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-
-import com.tencent.smtt.sdk.TbsReaderView;
-
-import java.io.File;
+import android.content.Context
+import android.os.Bundle
+import android.os.Environment
+import android.text.TextUtils
+import android.util.AttributeSet
+import android.util.Log
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import com.tencent.smtt.sdk.TbsReaderView
+import java.io.File
 
 /**
  * @Author: HJC
  * @Date: 2019/11/6 14:14
  * @Description: 文件阅读器
  */
-public class FileReaderView extends FrameLayout implements TbsReaderView.ReaderCallback {
+class FileReaderView constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : FrameLayout(
+    context, attrs, defStyleAttr
+), TbsReaderView.ReaderCallback {
 
-    private TbsReaderView mTbsReaderView;
-    private Context context;
+    private var mTbsReaderView: TbsReaderView?
 
-    public FileReaderView(Context context) {
-        this(context, null, 0);
+    init {
+        mTbsReaderView = getTbsReaderView(context)
+        this.addView(mTbsReaderView, LinearLayout.LayoutParams(-1, -1))
     }
 
-    public FileReaderView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public FileReaderView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.context = context;
-        mTbsReaderView = getTbsReaderView(context);
-        this.addView(mTbsReaderView, new LinearLayout.LayoutParams(-1, -1));
-    }
-
-    private TbsReaderView getTbsReaderView(Context context) {
-        return new TbsReaderView(context, this);
+    private fun getTbsReaderView(context: Context): TbsReaderView {
+        return TbsReaderView(context, this)
     }
 
     /**
@@ -48,53 +41,52 @@ public class FileReaderView extends FrameLayout implements TbsReaderView.ReaderC
      *
      * @param filePath 文件路径
      */
-    public void show(String filePath) {
+    fun show(filePath: String) {
         if (!TextUtils.isEmpty(filePath)) {
-            String tempPath = Environment.getExternalStorageDirectory() + File.separator + "TbsReaderTemp";
+            val tempPath = Environment.getExternalStorageDirectory()
+                .toString() + File.separator + "TbsReaderTemp"
             //加载文件
-            Bundle localBundle = new Bundle();
-            localBundle.putString("filePath", filePath);
-            localBundle.putString("tempPath", tempPath);
-            if (this.mTbsReaderView == null) {
-                this.mTbsReaderView = getTbsReaderView(context);
+            val localBundle = Bundle()
+            localBundle.putString("filePath", filePath)
+            localBundle.putString("tempPath", tempPath)
+            if (mTbsReaderView == null) {
+                mTbsReaderView = getTbsReaderView(context)
             }
-            boolean bool = mTbsReaderView.preOpen(getFileType(filePath), false);
+            val bool = mTbsReaderView!!.preOpen(getFileType(filePath), false)
             if (bool) {
-                this.mTbsReaderView.openFile(localBundle);
+                mTbsReaderView!!.openFile(localBundle)
             }
         } else {
-            Log.e("FileReaderView", "文件路径无效！");
+            Log.e("FileReaderView", "文件路径无效！")
         }
     }
 
-    @Override
-    public void onCallBackAction(Integer integer, Object o, Object o1) {
-
-    }
+    override fun onCallBackAction(integer: Int, o: Any, o1: Any) {}
 
     /**
      * 务必在onDestroy方法中调用此方法，否则第二次打开无法浏览
      */
-    public void stop() {
+    fun stop() {
         if (mTbsReaderView != null) {
-            mTbsReaderView.onStop();
+            mTbsReaderView!!.onStop()
         }
     }
 
     /***
      * 获取文件类型
      */
-    private String getFileType(String paramString) {
-        String str = "";
+    private fun getFileType(paramString: String): String {
+        var str = ""
         if (TextUtils.isEmpty(paramString)) {
-            return str;
+            return str
         }
-        int i = paramString.lastIndexOf('.');
+        val i = paramString.lastIndexOf('.')
         if (i <= -1) {
-            return str;
+            return str
         }
-        str = paramString.substring(i + 1);
-        return str;
+        str = paramString.substring(i + 1)
+        return str
     }
+
 
 }

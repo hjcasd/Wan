@@ -3,9 +3,8 @@ package com.hjc.wan.ui.main
 import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.hjc.wan.R
-import com.hjc.baselib.activity.BaseFragmentActivity
 import com.hjc.baselib.activity.BaseMvpFragmentActivity
+import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.home.HomeFragment
 import com.hjc.wan.ui.main.contract.MainContract
@@ -65,8 +64,6 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         rgTab.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbHome -> showFragment(mHomeFragment)
@@ -80,5 +77,34 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
                 R.id.rbMine -> showFragment(mMineFragment)
             }
         }
+    }
+
+    override fun onSingleClick(v: View?) {
+
+    }
+
+
+    override fun dismissLoading() {
+
+    }
+
+    override fun showContent() {
+
+    }
+
+    override fun showLoading() {
+
+    }
+
+    override fun startLoading() {
+
+    }
+
+    override fun showEmpty() {
+
+    }
+
+    override fun showError() {
+
     }
 }

@@ -1,9 +1,9 @@
 package com.hjc.wan.ui.square.presenter
 
-import com.hjc.baselib.base.BasePresenter
+import com.hjc.wan.common.KotlinPresenter
 import com.hjc.wan.ui.square.contract.SquareContract
 
-class SquarePresenter : BasePresenter<SquareContract.View>(), SquareContract.Presenter {
+class SquarePresenter : KotlinPresenter<SquareContract.View>(), SquareContract.Presenter {
 
     override fun loadSquareTitles() {
         val titleList = mutableListOf<String>()

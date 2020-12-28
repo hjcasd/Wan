@@ -10,4 +10,10 @@
 
     <solid android:color="@color/app_color" />
 
+    <padding
+        android:bottom="5dp"
+        android:left="10dp"
+        android:right="10dp"
+        android:top="5dp" />
+
 </shape>

@@ -7,6 +7,13 @@
     android:background="@color/app_color"
     android:orientation="vertical">
 
+    <com.hjc.baselib.widget.bar.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftImage="@mipmap/icon_back"
+        app:titleText="账号注册" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_username"
         android:layout_width="match_parent"

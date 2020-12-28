@@ -2,7 +2,7 @@ package com.hjc.wan.widget.dialog
 
 import android.os.Bundle
 import android.view.View
-import com.hjc.baselib.dialog.BaseDialog
+import com.hjc.baselib.dialog.BaseFragmentDialog
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.wan.R
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.dialog_operate.*
  * @Date: 2019/1/7 11:28
  * @Description: 待办清单操作弹框
  */
-class OperateDialog : BaseDialog() {
+class OperateDialog : BaseFragmentDialog() {
 
     private var mId: Int = 0
     private var mIsDone: Boolean = false

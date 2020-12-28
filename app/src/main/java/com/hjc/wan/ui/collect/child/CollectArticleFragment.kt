@@ -27,7 +27,6 @@ class CollectArticleFragment :
 
     private var mPage: Int = 0
 
-
     companion object {
 
         fun newInstance(): CollectArticleFragment {
@@ -43,13 +42,15 @@ class CollectArticleFragment :
         return this
     }
 
-
     override fun getLayoutId(): Int {
         return R.layout.fragment_common
     }
 
     override fun initView() {
         super.initView()
+
+        initLoadSir(smartRefreshLayout)
+
         val manager = LinearLayoutManager(mContext)
         rvCommon.layoutManager = manager
 
@@ -65,23 +66,10 @@ class CollectArticleFragment :
         }
     }
 
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-        titleBar.visibility = View.GONE
-    }
-
-
     override fun initData() {
         super.initData()
 
-        showLoading()
-        getPresenter()?.loadListData(mPage)
+        getPresenter()?.loadListData(mPage, true)
     }
 
     override fun showList(result: MutableList<CollectArticleBean>) {
@@ -93,18 +81,16 @@ class CollectArticleFragment :
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter()?.loadListData(mPage)
+                getPresenter()?.loadListData(mPage, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter()?.loadListData(mPage)
+                getPresenter()?.loadListData(mPage, false)
             }
 
         })
@@ -124,8 +110,23 @@ class CollectArticleFragment :
         }
     }
 
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        mPage = 0
+        getPresenter()?.loadListData(mPage, true)
+    }
+
     override fun showUnCollectList(position: Int) {
         mAdapter.remove(position)
+    }
+
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
     }
 
 }

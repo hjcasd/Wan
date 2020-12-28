@@ -6,10 +6,11 @@ import com.hjc.wan.model.IntegralBean
 interface IntegralRankContract {
 
     interface View : IBaseView {
-        fun showList(result : MutableList<IntegralBean>)
+        fun showList(result: MutableList<IntegralBean>)
+        fun refreshComplete()
     }
 
     interface Presenter {
-        fun loadListData(page: Int)
+        fun loadListData(page: Int, isFirst: Boolean)
     }
 }

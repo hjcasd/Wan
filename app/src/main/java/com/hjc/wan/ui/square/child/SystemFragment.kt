@@ -12,6 +12,8 @@ import com.hjc.wan.ui.square.contract.SystemContract
 import com.hjc.wan.ui.square.presenter.SystemPresenter
 import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.fragment_common.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
@@ -45,6 +47,9 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     override fun initView() {
         super.initView()
 
+        initLoadSir(smartRefreshLayout)
+        smartRefreshLayout.setEnableLoadMore(false)
+
         val manager = LinearLayoutManager(mContext)
         rvCommon.layoutManager = manager
 
@@ -60,38 +65,34 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
         }
     }
 
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility = View.GONE
-    }
-
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
-    }
-
-
     override fun initData() {
         super.initData()
-
-        showLoading()
-        getPresenter()?.loadListData()
+        getPresenter()?.loadListData(true)
     }
 
     override fun showList(result: MutableList<SystemBean>) {
         mAdapter.setNewData(result)
     }
 
-    override fun addListeners() {
-        super.addListeners()
-
-        smartRefreshLayout.setOnRefreshListener { getPresenter()?.loadListData() }
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    override fun addListeners() {
+        smartRefreshLayout.setOnRefreshListener { getPresenter()?.loadListData(false) }
+    }
+
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        getPresenter()?.loadListData(true)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_LIST_ANIMATION) {
             SettingManager.getListAnimationType().let {
                 if (it != 0) {

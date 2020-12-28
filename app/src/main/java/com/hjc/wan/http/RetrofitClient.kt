@@ -1,9 +1,14 @@
 package com.hjc.wan.http
 
+import com.hjc.wan.BuildConfig
 import com.hjc.wan.http.config.HttpConfig
+import com.hjc.wan.http.interceptor.AddCookiesInterceptor
+import com.hjc.wan.http.interceptor.LogInterceptor
+import com.hjc.wan.http.interceptor.ReceivedCookiesInterceptor
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 /**
  * @Author: HJC
@@ -11,23 +16,34 @@ import retrofit2.converter.gson.GsonConverterFactory
  * @Description: Retrofit封装
  */
 object RetrofitClient {
-    private val mApi: Api
+    private var mRetrofit: Retrofit
 
     init {
-        val builder = HttpClient.getBuilder()
-
-        val retrofit = Retrofit.Builder()
+        mRetrofit = Retrofit.Builder()
             .baseUrl(HttpConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(builder.build())
+//            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .client(getBuilder().build())
             .build()
-
-        mApi = retrofit.create(Api::class.java)
     }
 
     fun getApi(): Api {
-        return mApi
+        return mRetrofit.create(Api::class.java)
+    }
+
+    private fun getBuilder(): OkHttpClient.Builder {
+        val builder: OkHttpClient.Builder = OkHttpClient.Builder()
+        builder.connectTimeout(HttpConfig.HTTP_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .readTimeout(HttpConfig.HTTP_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .writeTimeout(HttpConfig.HTTP_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .addInterceptor(ReceivedCookiesInterceptor())
+            .addInterceptor(AddCookiesInterceptor())
+
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(LogInterceptor())
+        }
+        return builder
     }
 
 }

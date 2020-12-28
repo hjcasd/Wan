@@ -1,2 +1,3 @@
-include ':app', ':BaseLib', ':WebViewLib'
+include ':BaseLib'
+include ':app', ':WebViewLib'
 rootProject.name='Wan'

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
@@ -13,9 +14,9 @@ import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
+import com.hjc.wan.adapter.MyViewPagerAdapter
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.model.ClassifyBean
-import com.hjc.wan.adapter.MyViewPagerAdapter
 import com.hjc.wan.ui.project.child.ProjectChildFragment
 import com.hjc.wan.ui.project.contract.ProjectContract
 import com.hjc.wan.ui.project.presenter.ProjectPresenter
@@ -28,6 +29,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 
@@ -58,23 +61,30 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
         return R.layout.fragment_indicator
     }
 
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+    }
+
     override fun initView() {
         super.initView()
 
         magicIndicator.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
         getPresenter()?.loadProjectTitles()
+    }
+
+    override fun addListeners() {
+
+    }
+
+    override fun onSingleClick(v: View?) {
+
     }
 
     override fun showIndicator(classifyList: MutableList<ClassifyBean>) {
@@ -120,7 +130,8 @@ class ProjectFragment : BaseMvpFragment<ProjectContract.View, ProjectPresenter>(
         ViewPagerHelper.bind(magicIndicator, viewPager)
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
                 magicIndicator.setBackgroundColor(it)

@@ -8,6 +8,7 @@ import android.view.View
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
+import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
@@ -19,6 +20,8 @@ import com.hjc.wan.ui.mine.presenter.MinePresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import kotlinx.android.synthetic.main.fragment_mine.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
@@ -55,32 +58,19 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
             accountCardView.setCardBackgroundColor(it)
             tvIntegral.setTextColor(it)
         }
-    }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.visibility = View.VISIBLE
-        titleBar.setTitle("个人中心")
-        titleBar.setLeftImage(0)
         titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
+        EventManager.register(this)
 
         getPresenter()?.loadIntegralData(true)
     }
@@ -96,8 +86,6 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         llIntegral.setOnClickListener(this)
         llCollect.setOnClickListener(this)
         llTodo.setOnClickListener(this)
@@ -112,7 +100,6 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     }
 
     override fun onSingleClick(v: View?) {
-        super.onSingleClick(v)
         when (v?.id) {
             R.id.llIntegral -> {
                 RouterManager.jump(RoutePath.URL_INTEGRAL_RANK)
@@ -147,7 +134,8 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
         }
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
                 accountCardView.setCardBackgroundColor(it)

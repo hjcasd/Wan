@@ -1,6 +1,7 @@
 package com.hjc.wan.ui.collect.child
 
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hjc.baselib.fragment.BaseMvpLazyFragment
 import com.hjc.wan.R
 import com.hjc.wan.model.CollectLinkBean
@@ -45,11 +46,17 @@ class CollectLinkFragment :
 
     override fun initView() {
         super.initView()
-        val manager = androidx.recyclerview.widget.LinearLayoutManager(mContext)
+
+        initLoadSir(smartRefreshLayout)
+        smartRefreshLayout.setEnableLoadMore(false)
+
+        val manager = LinearLayoutManager(mContext)
         rvCommon.layoutManager = manager
 
         mAdapter = CollectLinkAdapter(null)
         rvCommon.adapter = mAdapter
+
+        smartRefreshLayout.setEnableLoadMore(false)
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -60,41 +67,40 @@ class CollectLinkFragment :
         }
     }
 
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-        smartRefreshLayout.setEnableRefresh(true)
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-        titleBar.visibility = View.GONE
-    }
-
-
     override fun initData() {
         super.initData()
 
-        showLoading()
-        getPresenter()?.loadListData()
+        getPresenter()?.loadListData(true)
     }
 
     override fun showList(result: MutableList<CollectLinkBean>) {
         mAdapter.setNewData(result)
     }
 
-    override fun addListeners() {
-        super.addListeners()
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
+    }
 
+    override fun addListeners() {
         smartRefreshLayout.setOnRefreshListener {
-            getPresenter()?.loadListData()
+            getPresenter()?.loadListData(false)
         }
 
         mAdapter.apply {
             setOnItemClickListener { _, _, position ->
                 val bean = mAdapter.data[position]
-
                 RouterManager.jumpToWeb(bean.name, bean.link)
             }
         }
+    }
+
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        getPresenter()?.loadListData(true)
     }
 }

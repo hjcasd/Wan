@@ -15,7 +15,7 @@ interface SearchContract {
 
         fun showCollectList(bean : ArticleBean)
         fun showUnCollectList(bean : ArticleBean)
-        fun finishLoadMore()
+        fun refreshComplete()
     }
 
     interface Presenter {

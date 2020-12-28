@@ -41,8 +41,8 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
         loginLayout.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
             .keyboardEnable(true)
             .setOnKeyboardListener { isPopup, _ ->
@@ -53,7 +53,6 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
                 }
             }
             .fitsSystemWindows(true)
-            .init()
     }
 
     override fun addListeners() {

@@ -102,7 +102,7 @@
             android:id="@+id/tvRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:padding="10dp"
             android:text="还没有账号，去注册账号?"
             android:textColor="@color/white"
             android:textSize="12sp"

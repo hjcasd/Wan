@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
@@ -13,8 +14,8 @@ import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.fragment.BaseMvpFragment
 import com.hjc.wan.R
-import com.hjc.wan.constant.EventCode
 import com.hjc.wan.adapter.MyViewPagerAdapter
+import com.hjc.wan.constant.EventCode
 import com.hjc.wan.ui.square.child.NavigationFragment
 import com.hjc.wan.ui.square.child.PlazaFragment
 import com.hjc.wan.ui.square.child.SystemFragment
@@ -23,14 +24,14 @@ import com.hjc.wan.ui.square.presenter.SquarePresenter
 import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.indicator.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_square.*
-import kotlinx.android.synthetic.main.fragment_square.magicIndicator
-import kotlinx.android.synthetic.main.fragment_square.viewPager
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 /**
@@ -61,23 +62,30 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         return R.layout.fragment_square
     }
 
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+    }
+
     override fun initView() {
         super.initView()
 
         flIndicator.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
         getPresenter()?.loadSquareTitles()
+    }
+
+    override fun addListeners() {
+
+    }
+
+    override fun onSingleClick(v: View?) {
+
     }
 
     override fun showIndicator(titleList: MutableList<String>) {
@@ -128,7 +136,8 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         ViewPagerHelper.bind(magicIndicator, viewPager)
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
                 flIndicator.setBackgroundColor(it)

@@ -6,15 +6,15 @@ import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpTitleActivity
-import com.hjc.baselib.utils.helper.ActivityManager
+import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.utils.helper.ActivityHelper
+import com.hjc.baselib.widget.bar.OnBarLeftClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.ui.login.contract.RegisterContract
 import com.hjc.wan.ui.login.presenter.RegisterPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.etPassword
 import kotlinx.android.synthetic.main.activity_login.etUsername
 import kotlinx.android.synthetic.main.activity_register.*
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_register.*
  * @Description: 注册页面
  */
 @Route(path = RoutePath.URL_REGISTER)
-class RegisterActivity : BaseMvpTitleActivity<RegisterContract.View, RegisterPresenter>(),
+class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresenter>(),
     RegisterContract.View {
 
     override fun createPresenter(): RegisterPresenter {
@@ -44,32 +44,28 @@ class RegisterActivity : BaseMvpTitleActivity<RegisterContract.View, RegisterPre
     override fun initView() {
         super.initView()
 
+        titleBar.setBgColor(SettingManager.getThemeColor())
         llRegister.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
             .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.setTitle("账号注册")
-        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         btnRegister.setOnClickListener(this)
+
+        titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+
+            override fun leftClick(view: View) {
+                finish()
+            }
+        })
     }
 
     override fun onSingleClick(v: View?) {
-        super.onSingleClick(v)
-
         when (v?.id) {
             R.id.btnRegister -> {
                 preRegister()
@@ -115,12 +111,12 @@ class RegisterActivity : BaseMvpTitleActivity<RegisterContract.View, RegisterPre
             return
         }
 
-        getPresenter()?.register(username, password)
+        getPresenter().register(username, password)
     }
 
 
     override fun toLogin() {
-        ActivityManager.finishAllActivities()
+        ActivityHelper.finishAllActivities()
         RouterManager.jump(RoutePath.URL_LOGIN)
     }
 

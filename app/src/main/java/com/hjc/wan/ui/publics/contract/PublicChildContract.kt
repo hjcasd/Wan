@@ -9,10 +9,11 @@ interface PublicChildContract {
         fun showList(result: MutableList<ArticleBean>)
         fun showCollectList(bean : ArticleBean)
         fun showUnCollectList(bean : ArticleBean)
+        fun refreshComplete()
     }
 
     interface Presenter {
-        fun loadListData(page: Int, cid: Int)
+        fun loadListData(page: Int, cid: Int, isFirst: Boolean)
         fun collectArticle(bean : ArticleBean)
         fun unCollectArticle(bean : ArticleBean)
     }

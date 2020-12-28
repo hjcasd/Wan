@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpListActivity
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.widget.bar.OnBarClickListener
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
@@ -22,7 +23,9 @@ import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.dialog.OperateDialog
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.activity_common.*
+import kotlinx.android.synthetic.main.activity_todo_list.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
@@ -30,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_common.*
  * @Description: 待办清单页面
  */
 @Route(path = RoutePath.URL_TO_DO)
-class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>(), TodoContract.View {
+class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoContract.View {
 
     private lateinit var mAdapter: TodoAdapter
 
@@ -45,11 +48,19 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.activity_common
+        return R.layout.activity_todo_list
+    }
+
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
     }
 
     override fun initView() {
         super.initView()
+
+        initLoadSir(smartRefreshLayout)
 
         val manager = LinearLayoutManager(this)
         rvCommon.layoutManager = manager
@@ -64,43 +75,13 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
                 mAdapter.closeLoadAnimation()
             }
         }
-    }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.setTitle("待办清单")
-        titleBar.setRightImage(R.mipmap.icon_add)
         titleBar.setBgColor(SettingManager.getThemeColor())
-        titleBar.setOnBarRightClickListener(object : OnBarRightClickListener {
-
-            override fun rightClick(view: View?) {
-                val bundle = Bundle()
-                bundle.putInt("from", 0)
-                RouterManager.jumpWithCode(this@TodoListActivity, RoutePath.URL_ADD_TO_DO, bundle, 100)
-            }
-        })
-    }
-
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
-
-        showLoading()
-        getPresenter()?.loadListData(mPage)
+        getPresenter().loadListData(mPage, true)
     }
 
     override fun showList(result: MutableList<TodoBean>) {
@@ -113,21 +94,43 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
 
     override fun refreshList() {
         mPage = 1
-        getPresenter()?.loadListData(mPage)
+        getPresenter().loadListData(mPage, false)
+    }
+
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        super.addListeners()
+        titleBar.setOnBarClickListener(object : OnBarClickListener {
+
+            override fun leftClick(view: View) {
+                finish()
+            }
+
+            override fun rightClick(view: View) {
+                val bundle = Bundle()
+                bundle.putInt("from", 0)
+                RouterManager.jumpWithCode(
+                    this@TodoListActivity,
+                    RoutePath.URL_ADD_TO_DO,
+                    bundle,
+                    100
+                )
+            }
+        })
 
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
-                refreshList()
+                mPage = 1
+                getPresenter().loadListData(mPage, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter()?.loadListData(mPage)
+                getPresenter().loadListData(mPage, false)
             }
 
         })
@@ -139,11 +142,16 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
                 val bundle = Bundle()
                 bundle.putInt("from", 1)
                 bundle.putSerializable("bean", bean)
-                RouterManager.jumpWithCode(this@TodoListActivity, RoutePath.URL_ADD_TO_DO, bundle, 100)
+                RouterManager.jumpWithCode(
+                    this@TodoListActivity,
+                    RoutePath.URL_ADD_TO_DO,
+                    bundle,
+                    100
+                )
             }
 
             setOnItemChildClickListener { _, _, position ->
-                val bean =  mAdapter.data[position]
+                val bean = mAdapter.data[position]
 
                 OperateDialog.newInstance(bean.id, bean.isDone())
                     .setAnimStyle(R.style.dialog_anim_bottom)
@@ -152,11 +160,22 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
         }
     }
 
-    override fun handleMessage(event: MessageEvent<*>?) {
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        mPage = 1
+        getPresenter().loadListData(mPage, true)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.DELETE_TODO) {
-            getPresenter()?.deleteTodo(event.data as Int)
+            getPresenter().deleteTodo(event.data as Int)
         } else if (event?.code == EventCode.DONE_TODO) {
-            getPresenter()?.finishTodo(event.data as Int)
+            getPresenter().finishTodo(event.data as Int)
         }
     }
 
@@ -165,7 +184,8 @@ class TodoListActivity : BaseMvpListActivity<TodoContract.View, TodoPresenter>()
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 100 && resultCode == 1000) {
-            refreshList()
+            mPage = 1
+            getPresenter().loadListData(mPage, false)
         }
     }
 

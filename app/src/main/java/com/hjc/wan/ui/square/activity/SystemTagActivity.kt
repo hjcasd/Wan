@@ -1,12 +1,13 @@
 package com.hjc.wan.ui.square.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpListActivity
+import com.hjc.baselib.activity.BaseMvpActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
 import com.hjc.wan.model.ArticleBean
@@ -17,7 +18,8 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.activity_common.*
+import kotlinx.android.synthetic.main.activity_common.rvCommon
+import kotlinx.android.synthetic.main.activity_system_tag.*
 
 /**
  * @Author: HJC
@@ -25,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_common.*
  * @Description: 体系tag下的文章列表页面
  */
 @Route(path = RoutePath.URL_SYSTEM_TAG)
-class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagPresenter>(),
+class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPresenter>(),
     SystemTagContract.View {
 
     private lateinit var mAdapter: SystemTagAdapter
@@ -46,9 +48,14 @@ class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagP
         return this
     }
 
-
     override fun getLayoutId(): Int {
-        return R.layout.activity_common
+        return R.layout.activity_system_tag
+    }
+
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
     }
 
     override fun initView() {
@@ -66,26 +73,8 @@ class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagP
                 mAdapter.closeLoadAnimation()
             }
         }
-    }
-
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
 
         titleBar.setBgColor(SettingManager.getThemeColor())
-    }
-
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
@@ -98,8 +87,7 @@ class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagP
             titleBar.setTitle(title)
             mCid = cid
 
-            showLoading()
-            getPresenter()?.loadListData(mPage, mCid)
+            getPresenter().loadListData(mPage, mCid, true)
         }
     }
 
@@ -113,18 +101,16 @@ class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagP
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
-                getPresenter()?.loadListData(mPage, mCid)
+                getPresenter().loadListData(mPage, mCid, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter()?.loadListData(mPage, mCid)
+                getPresenter().loadListData(mPage, mCid, false)
             }
 
         })
@@ -138,12 +124,22 @@ class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagP
             setOnItemChildClickListener { _, _, position ->
                 val bean = mAdapter.data[position]
                 if (!bean.collect) {
-                    getPresenter()?.collectArticle(bean)
+                    getPresenter().collectArticle(bean)
                 } else {
-                    getPresenter()?.unCollectArticle(bean)
+                    getPresenter().unCollectArticle(bean)
                 }
             }
         }
+    }
+
+    override fun onSingleClick(v: View?) {
+
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        mPage = 0
+        getPresenter().loadListData(mPage, mCid, true)
     }
 
     override fun showCollectList(bean: ArticleBean) {
@@ -154,6 +150,11 @@ class SystemTagActivity : BaseMvpListActivity<SystemTagContract.View, SystemTagP
     override fun showUnCollectList(bean: ArticleBean) {
         bean.collect = false
         mAdapter.notifyDataSetChanged()
+    }
+
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
     }
 
 }

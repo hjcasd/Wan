@@ -8,6 +8,7 @@ interface AddTodoContract {
         fun showDatePicker()
         fun showPriorityDialog()
         fun preSubmit()
+        fun setResult()
     }
 
     interface Presenter {

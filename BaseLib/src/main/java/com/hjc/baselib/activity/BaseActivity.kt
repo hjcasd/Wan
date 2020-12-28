@@ -2,100 +2,61 @@ package com.hjc.baselib.activity
 
 import android.os.Bundle
 import android.view.View
-import butterknife.ButterKnife
-import butterknife.Unbinder
+import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.R
-import com.hjc.baselib.event.EventManager
-import com.hjc.baselib.event.MessageEvent
+import com.hjc.baselib.base.IBaseView
+import com.hjc.baselib.dialog.LoadingDialog
 import com.hjc.baselib.utils.ClickUtils
-import com.hjc.baselib.utils.helper.ActivityManager
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: HJC
  * @Date: 2020/1/3 11:45
  * @Description:  Activity基类
  */
-abstract class BaseActivity : RxAppCompatActivity(), View.OnClickListener {
+abstract class BaseActivity : AppCompatActivity(), View.OnClickListener, IBaseView {
 
-    private lateinit var mBinder: Unbinder
+    private var mLoadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
 
+        ARouter.getInstance().inject(this)
         initView()
         initData(savedInstanceState)
         addListeners()
     }
-
 
     /**
      * 获取布局的ID
      */
     abstract fun getLayoutId(): Int
 
+    /**
+     * 初始化沉浸式
+     */
+    protected open fun getImmersionBar(): ImmersionBar? {
+        return null
+    }
 
     /**
      * 初始化View
      */
     protected open fun initView() {
-        mBinder = ButterKnife.bind(this)
-        if (isImmersionBarEnabled()) {
-            initImmersionBar()
-        }
+        getImmersionBar()?.init()
     }
-
-    /**
-     * 是否使用沉浸式
-     */
-    protected open fun isImmersionBarEnabled(): Boolean {
-        return true
-    }
-
-    /**
-     * 初始化沉浸式
-     */
-    protected open fun initImmersionBar() { //使用该属性,必须指定状态栏颜色
-        ImmersionBar.with(this)
-            .statusBarColor(R.color.colorPrimary)
-            .fitsSystemWindows(true)
-            .init()
-    }
-
 
     /**
      * 初始化数据
      */
-    protected open fun initData(savedInstanceState: Bundle?) {
-        ARouter.getInstance().inject(this)
-        ActivityManager.addActivity(this)
-        EventManager.register(this)
-    }
-
-
-    /**
-     * EventBus接收
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun receiveEvent(event: MessageEvent<*>?) {
-    }
-
-    /**
-     * EventBus处理
-     */
-    protected open fun handleMessage(event: MessageEvent<*>?) {}
-
+    abstract fun initData(savedInstanceState: Bundle?)
 
     /**
      * 设置监听器
      */
-    protected open fun addListeners(){}
+    abstract fun addListeners()
 
     override fun onClick(v: View?) { //避免快速点击
         if (ClickUtils.isFastClick()) {
@@ -108,11 +69,19 @@ abstract class BaseActivity : RxAppCompatActivity(), View.OnClickListener {
     /**
      * 设置点击事件
      */
-    protected open fun onSingleClick(v: View?){}
+    abstract fun onSingleClick(v: View?)
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mBinder.unbind()
-        EventManager.unregister(this)
+    override fun startLoading() {
+        mLoadingDialog = LoadingDialog.newInstance()
+        mLoadingDialog?.showDialog(supportFragmentManager)
+    }
+
+    override fun dismissLoading() {
+        mLoadingDialog?.let {
+            val dialog = it.dialog
+            if (dialog != null && dialog.isShowing) {
+                it.dismiss()
+            }
+        }
     }
 }

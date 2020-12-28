@@ -52,6 +52,12 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         return R.layout.activity_search
     }
 
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
+            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
+            .fitsSystemWindows(true)
+    }
+
     override fun initView() {
         super.initView()
 
@@ -70,18 +76,11 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         clSearch.setBackgroundColor(SettingManager.getThemeColor())
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
-            .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
-            .fitsSystemWindows(true)
-            .init()
-    }
-
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        getPresenter()?.getHotKey()
-        getPresenter()?.getHistory()
+        getPresenter().getHotKey()
+        getPresenter().getHistory()
     }
 
     override fun showHotTag(result: MutableList<SearchBean>) {
@@ -101,7 +100,7 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                     etSearch.setSelection(etSearch.text.toString().length)
 
                     mPage = 0
-                    getPresenter()?.search(mPage, tvTag.text.toString(), true)
+                    getPresenter().search(mPage, tvTag.text.toString(), true)
                 }
             }
         } else {
@@ -136,7 +135,7 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                 etSearch.setText(tvTag.text.toString())
                 etSearch.requestFocus()
                 etSearch.setSelection(etSearch.text.toString().length)
-                getPresenter()?.search(mPage, tvTag.text.toString(), true)
+                getPresenter().search(mPage, tvTag.text.toString(), true)
             }
         }
     }
@@ -155,13 +154,11 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         mAdapter.notifyDataSetChanged()
     }
 
-    override fun finishLoadMore() {
+    override fun refreshComplete() {
         smartRefreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        super.addListeners()
-
         ivBack.setOnClickListener(this)
         tvSearch.setOnClickListener(this)
         ivClearHistory.setOnClickListener(this)
@@ -175,12 +172,12 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                     return
                 }
                 mPage = 0
-                getPresenter()?.search(mPage, keyword, true)
+                getPresenter().search(mPage, keyword, true)
             }
 
             override fun onSearchClear() {
                 clHistory.visibility = View.VISIBLE
-                getPresenter()?.getHistory()
+                getPresenter().getHistory()
                 clHot.visibility = View.VISIBLE
                 smartRefreshLayout.visibility = View.GONE
             }
@@ -188,7 +185,7 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
 
         smartRefreshLayout.setOnLoadMoreListener {
             mPage++
-            getPresenter()?.search(mPage, etSearch.text.toString(), false)
+            getPresenter().search(mPage, etSearch.text.toString(), false)
         }
 
         mAdapter.apply {
@@ -200,17 +197,15 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
             setOnItemChildClickListener { _, _, position ->
                 val bean = mAdapter.data[position]
                 if (!bean.collect) {
-                    getPresenter()?.collectArticle(bean)
+                    getPresenter().collectArticle(bean)
                 } else {
-                    getPresenter()?.unCollectArticle(bean)
+                    getPresenter().unCollectArticle(bean)
                 }
             }
         }
     }
 
     override fun onSingleClick(v: View?) {
-        super.onSingleClick(v)
-
         when (v?.id) {
             R.id.ivBack -> {
                 KeyboardUtils.hideSoftInput(this)
@@ -224,7 +219,7 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                     return
                 }
                 mPage = 0
-                getPresenter()?.search(mPage, keyword, true)
+                getPresenter().search(mPage, keyword, true)
             }
 
             R.id.ivClearHistory -> {

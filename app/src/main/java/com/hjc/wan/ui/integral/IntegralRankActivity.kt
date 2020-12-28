@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpListActivity
+import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.widget.bar.OnBarClickListener
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_integral_rank.*
  * @Description: 积分排行页面
  */
 @Route(path = RoutePath.URL_INTEGRAL_RANK)
-class IntegralRankActivity : BaseMvpListActivity<IntegralRankContract.View, IntegralRankPresenter>(),
+class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, IntegralRankPresenter>(),
     IntegralRankContract.View {
 
     private lateinit var mAdapter: IntegralRankAdapter
@@ -49,6 +50,8 @@ class IntegralRankActivity : BaseMvpListActivity<IntegralRankContract.View, Inte
     override fun initView() {
         super.initView()
 
+        initLoadSir(smartRefreshLayout)
+
         val manager = LinearLayoutManager(this)
         rvIntegralRank.layoutManager = manager
 
@@ -63,42 +66,21 @@ class IntegralRankActivity : BaseMvpListActivity<IntegralRankContract.View, Inte
             }
         }
 
+        titleBar.setBgColor(SettingManager.getThemeColor())
+
         fabHistory.backgroundTintList = SettingManager.getStateList()
     }
 
-    override fun initImmersionBar() {
-        ImmersionBar.with(this)
+    override fun getImmersionBar(): ImmersionBar? {
+        return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
             .fitsSystemWindows(true)
-            .init()
-    }
-
-    override fun initSmartRefreshLayout() {
-        super.initSmartRefreshLayout()
-
-        smartRefreshLayout.setEnableRefresh(true)
-        smartRefreshLayout.setEnableLoadMore(true)
-    }
-
-    override fun initTitleBar() {
-        super.initTitleBar()
-
-        titleBar.setTitle("积分排行")
-        titleBar.setRightImage(R.mipmap.icon_rule)
-        titleBar.setBgColor(SettingManager.getThemeColor())
-        titleBar.setOnBarRightClickListener(object : OnBarRightClickListener {
-
-            override fun rightClick(view: View?) {
-                RouterManager.jumpToWeb("积分规则", "https://www.wanandroid.com/blog/show/2653")
-            }
-        })
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         super.initData(savedInstanceState)
 
-        showLoading()
-        getPresenter()?.loadListData(mPage)
+        getPresenter().loadListData(mPage, true)
     }
 
     override fun showList(result: MutableList<IntegralBean>) {
@@ -109,29 +91,49 @@ class IntegralRankActivity : BaseMvpListActivity<IntegralRankContract.View, Inte
         }
     }
 
+    override fun refreshComplete() {
+        smartRefreshLayout.finishRefresh()
+        smartRefreshLayout.finishLoadMore()
+    }
+
     override fun addListeners() {
-        super.addListeners()
         fabHistory.setOnClickListener(this)
+
+        titleBar.setOnBarClickListener(object : OnBarClickListener {
+
+            override fun leftClick(view: View) {
+                finish()
+            }
+
+            override fun rightClick(view: View) {
+                RouterManager.jumpToWeb("积分规则", "https://www.wanandroid.com/blog/show/2653")
+            }
+        })
 
         smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 1
-                getPresenter()?.loadListData(mPage)
+                getPresenter().loadListData(mPage, false)
             }
 
             override fun onLoadMore(refreshLayout: RefreshLayout) {
                 mPage++
-                getPresenter()?.loadListData(mPage)
+                getPresenter().loadListData(mPage, false)
             }
 
         })
     }
 
     override fun onSingleClick(v: View?) {
-        super.onSingleClick(v)
         when (v?.id) {
             R.id.fabHistory -> RouterManager.jump(RoutePath.URL_INTEGRAL_HISTORY)
         }
+    }
+
+    override fun onRetryBtnClick(v: View?) {
+        super.onRetryBtnClick(v)
+        mPage = 1
+        getPresenter().loadListData(mPage, true)
     }
 }

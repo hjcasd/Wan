@@ -1,5 +1,6 @@
 package com.hjc.wan.http.exception
 
+import com.blankj.utilcode.util.LogUtils
 import org.json.JSONException
 import retrofit2.HttpException
 
@@ -14,42 +15,41 @@ import java.text.ParseException
  */
 object ExceptionUtils {
     fun handleException(e: Throwable): String {
-        var error = "未知错误"
-        if (e is UnknownHostException) {
-            error = "网络不可用"
-        } else if (e is SocketTimeoutException) {
-            error = "请求网络超时"
-        } else if (e is HttpException) {
-            error = convertHttpCode(e)
-        } else if (e is ParseException || e is JSONException) {
-            error = "数据解析错误"
-        } else if (e is ApiException) {
-            error = convertServerCode(e)
+        LogUtils.e("error: $e")
+        return when (e) {
+            is UnknownHostException -> "网络不可用"
+
+            is SocketTimeoutException -> "请求网络超时"
+
+            is HttpException -> convertHttpCode(e)
+
+            is JSONException, is ParseException -> "数据解析错误"
+
+            is ApiException -> convertServerCode(e)
+
+            else -> "未知错误"
         }
-        return error
     }
 
-    private fun convertHttpCode(httpException: HttpException): String {
-        val msg: String
-        if (httpException.code() in 500..599) {
-            msg = "服务器处理请求出错"
-        } else if (httpException.code() in 400..499) {
-            msg = "服务器无法处理请求"
-        } else if (httpException.code() in 300..399) {
-            msg = "请求被重定向到其他页面"
-        } else {
-            msg = httpException.message()
+    private fun convertHttpCode(e: HttpException): String {
+        return when (e.code()) {
+            in 500..599 -> "服务器处理请求出错"
+
+            in 400..499 -> "服务器无法处理请求"
+
+            in 300..399 -> "请求被重定向到其他页面"
+
+            else -> e.message()
         }
-        return msg
     }
 
-    private fun convertServerCode(apiException: ApiException): String {
-        var msg = "未知请求错误"
-        if (apiException.code == ServerCode.CODE_FAIL){
-            msg = "请求失败"
-        }else if(apiException.code == ServerCode.CODE_UN_LOGIN){
-            msg = "请先登录"
+    private fun convertServerCode(e: ApiException): String {
+        return when (e.code) {
+            ServerCode.CODE_FAIL -> e.message.toString()
+
+            ServerCode.CODE_UN_LOGIN -> "登录失效,请重新登录"
+
+            else -> "未知请求"
         }
-        return msg
     }
 }

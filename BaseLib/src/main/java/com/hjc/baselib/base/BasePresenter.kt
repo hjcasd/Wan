@@ -22,12 +22,15 @@ abstract class BasePresenter<V : IBaseView> {
         return mViewRef.get()
     }
 
+    fun isViewAttached(): Boolean {
+        return mViewRef.get() != null
+    }
+
     /**
      * 解绑
      * 在onDestroy方法中调用，防止内存泄漏
      */
-    fun detachView() {
+    open fun detachView() {
         mViewRef.clear()
     }
-
 }

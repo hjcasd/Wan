@@ -39,6 +39,7 @@ class TitleBar @JvmOverloads constructor(
 
     private var mLeftClickListener: OnBarLeftClickListener? = null
     private var mRightClickListener: OnBarRightClickListener? = null
+    private var mClickListener: OnBarClickListener? = null
 
     init {
         initTypeArray(attrs)
@@ -100,10 +101,16 @@ class TitleBar @JvmOverloads constructor(
             if (mLeftClickListener != null) {
                 mLeftClickListener!!.leftClick(v)
             }
+            if (mClickListener != null) {
+                mClickListener!!.leftClick(v)
+            }
         }
         ivRightImg.setOnClickListener { v ->
             if (mRightClickListener != null) {
                 mRightClickListener!!.rightClick(v)
+            }
+            if (mClickListener != null) {
+                mClickListener!!.rightClick(v)
             }
         }
     }
@@ -143,7 +150,7 @@ class TitleBar @JvmOverloads constructor(
         }
     }
 
-    fun setBgColor(color: Int){
+    fun setBgColor(color: Int) {
         clRoot.setBackgroundColor(color)
     }
 
@@ -157,14 +164,17 @@ class TitleBar @JvmOverloads constructor(
         return (pxValue / fontScale + 0.5f).toInt()
     }
 
+    fun setOnBarClickListener(listener: OnBarClickListener?) {
+        mClickListener = listener
+    }
+
 
     fun setOnBarLeftClickListener(listener: OnBarLeftClickListener?) {
         mLeftClickListener = listener
     }
 
-    fun setOnBarRightClickListener(listener: OnBarRightClickListener?) {
+    fun setOnBarRightClickListener(listener: OnBarRightClickListener) {
         mRightClickListener = listener
     }
-
 
 }
