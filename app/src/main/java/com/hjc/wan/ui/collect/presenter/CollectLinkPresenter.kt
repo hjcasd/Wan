@@ -21,7 +21,10 @@ class CollectLinkPresenter : KotlinPresenter<CollectLinkContract.View>(),
                     getView()?.showEmpty()
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
 }

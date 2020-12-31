@@ -1,19 +1,20 @@
 package com.hjc.wan.ui.login
 
+import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityLoginBinding
 import com.hjc.wan.ui.login.contract.LoginContract
 import com.hjc.wan.ui.login.presenter.LoginPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.activity_login.*
 
 /**
  * @Author: HJC
@@ -21,7 +22,8 @@ import kotlinx.android.synthetic.main.activity_login.*
  * @Description: 登录页面
  */
 @Route(path = RoutePath.URL_LOGIN)
-class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), LoginContract.View {
+class LoginActivity : BaseActivity<ActivityLoginBinding, LoginContract.View, LoginPresenter>(),
+    LoginContract.View {
 
     override fun createPresenter(): LoginPresenter {
         return LoginPresenter()
@@ -31,14 +33,10 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_login
-    }
-
     override fun initView() {
         super.initView()
 
-        loginLayout.setBackgroundColor(SettingManager.getThemeColor())
+        mBinding.loginLayout.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun getImmersionBar(): ImmersionBar? {
@@ -46,26 +44,30 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
             .keyboardEnable(true)
             .setOnKeyboardListener { isPopup, _ ->
-                if (isPopup){
-                    loginLayout.setKeyBoardShow(true)
-                }else{
-                    loginLayout.setKeyBoardShow(false)
+                if (isPopup) {
+                    mBinding.loginLayout.setKeyBoardShow(mBinding.llBg, mBinding.rlTop, true)
+                } else {
+                    mBinding.loginLayout.setKeyBoardShow(mBinding.llBg, mBinding.rlTop, false)
                 }
             }
             .fitsSystemWindows(true)
     }
 
+    override fun initData(savedInstanceState: Bundle?) {
+
+    }
+
     override fun addListeners() {
-        btnLogin.setOnClickListener(this)
-        tvRegister.setOnClickListener(this)
+        mBinding.btnLogin.setOnClickListener(this)
+        mBinding.tvRegister.setOnClickListener(this)
     }
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.btnLogin -> {
+            R.id.btn_login -> {
                 preLogin()
             }
-            R.id.tvRegister -> {
+            R.id.tv_register -> {
                 RouterManager.jump(RoutePath.URL_REGISTER)
             }
         }
@@ -75,8 +77,8 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
      * 登录准备
      */
     private fun preLogin() {
-        val username = etUsername.text.toString().trim()
-        val password = etPassword.text.toString().trim()
+        val username = mBinding.etUsername.text.toString().trim()
+        val password = mBinding.etPassword.text.toString().trim()
 
         if (StringUtils.isEmpty(username)) {
             ToastUtils.showShort("请输入账号")
@@ -96,7 +98,7 @@ class LoginActivity : BaseMvpActivity<LoginContract.View, LoginPresenter>(), Log
             return
         }
 
-        getPresenter()?.login(username, password)
+        getPresenter().login(username, password)
     }
 
     override fun toMain() {

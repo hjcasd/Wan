@@ -7,10 +7,14 @@ import android.view.*
 import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.viewbinding.ViewBinding
 import com.blankj.utilcode.util.ToastUtils
 import com.hjc.baselib.utils.ClickUtils
+import java.lang.reflect.ParameterizedType
 
-abstract class BaseFragmentDialog : DialogFragment(), View.OnClickListener {
+abstract class BaseFragmentDialog<VB : ViewBinding> : DialogFragment(), View.OnClickListener {
+
+    protected lateinit var mBinding: VB
 
     protected lateinit var mContext: Context
 
@@ -34,12 +38,17 @@ abstract class BaseFragmentDialog : DialogFragment(), View.OnClickListener {
         setStyle(STYLE_NO_TITLE, getStyleRes())
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(getLayoutId(), container, false)
+        val type = javaClass.genericSuperclass
+        val clazz = (type as ParameterizedType).actualTypeArguments[0] as Class<VB>
+        val method = clazz.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        mBinding = method.invoke(null, layoutInflater, container, false) as VB
+        return mBinding.root
     }
 
     override fun onViewCreated(
@@ -92,7 +101,7 @@ abstract class BaseFragmentDialog : DialogFragment(), View.OnClickListener {
     /**
      * 设置Dialog位置
      */
-    fun setGravity(gravity: Int): BaseFragmentDialog {
+    fun setGravity(gravity: Int): BaseFragmentDialog<*> {
         mGravity = gravity
         return this
     }
@@ -100,7 +109,7 @@ abstract class BaseFragmentDialog : DialogFragment(), View.OnClickListener {
     /**
      * 设置动画类型
      */
-    fun setAnimStyle(@StyleRes animStyle: Int): BaseFragmentDialog {
+    fun setAnimStyle(@StyleRes animStyle: Int): BaseFragmentDialog<*> {
         mAnimStyle = animStyle
         return this
     }
@@ -116,11 +125,6 @@ abstract class BaseFragmentDialog : DialogFragment(), View.OnClickListener {
      * 获取Dialog的Theme
      */
     abstract fun getStyleRes(): Int
-
-    /**
-     * 获取布局的ID
-     */
-    abstract fun getLayoutId(): Int
 
     /**
      * 初始化数据

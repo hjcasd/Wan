@@ -25,9 +25,9 @@ object CommonUtils {
             //获取剪贴板管理器：
             val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             // 创建普通字符型ClipData
-            val mClipData = ClipData.newPlainText("Label", text)
+            val clipData = ClipData.newPlainText("Label", text)
             // 将ClipData内容放到系统剪贴板里。
-            cm.primaryClip = mClipData
+            cm.setPrimaryClip(clipData)
         }
     }
 

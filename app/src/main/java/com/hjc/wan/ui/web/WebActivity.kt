@@ -11,14 +11,14 @@ import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityWebBinding
 import com.hjc.wan.ui.web.contract.WebContract
 import com.hjc.wan.ui.web.presenter.WebPresenter
 import com.hjc.wan.utils.CommonUtils
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.activity_web.*
 
 /**
  * @Author: HJC
@@ -26,7 +26,8 @@ import kotlinx.android.synthetic.main.activity_web.*
  * @Description: 含有WebView的Activity基类
  */
 @Route(path = RoutePath.URL_WEB)
-class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContract.View {
+class WebActivity : BaseActivity<ActivityWebBinding, WebContract.View, WebPresenter>(),
+    WebContract.View {
     @JvmField
     @Autowired(name = "title")
     var mTitle: String = ""
@@ -43,13 +44,8 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_web
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
-        return  ImmersionBar.with(this)
+        return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
             .fitsSystemWindows(true)
     }
@@ -57,21 +53,19 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
     override fun initView() {
         super.initView()
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(mBinding.toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.overflowIcon = ContextCompat.getDrawable(this, R.mipmap.icon_more)
-        tvTitle.isSelected = true
+        mBinding.toolbar.overflowIcon = ContextCompat.getDrawable(this, R.mipmap.icon_more)
+        mBinding.tvTitle.isSelected = true
 
-        toolbar.setBackgroundColor(SettingManager.getThemeColor())
+        mBinding.toolbar.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         if (!StringUtils.isEmpty(mTitle) && !StringUtils.isEmpty(mUrl)) {
-            tvTitle.text = mTitle
-            webView.loadUrl(mUrl)
+            mBinding.tvTitle.text = mTitle
+            mBinding.webView.loadUrl(mUrl)
         }
     }
 
@@ -90,22 +84,19 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> onBackPressed()
+
+            // 关闭页面
+            R.id.item_close -> finish()
 
             // 刷新页面
-            R.id.item_refresh -> if (webView != null) {
-                webView.reload()
-            }
+            R.id.item_refresh -> mBinding.webView.reload()
 
             // 添加到收藏
-            R.id.item_collect -> {
-                getPresenter().collectLink(mTitle, mUrl)
-            }
+            R.id.item_collect -> getPresenter().collectLink(mTitle, mUrl)
 
             // 分享
-            R.id.item_share -> {
-                CommonUtils.share(this, mUrl)
-            }
+            R.id.item_share -> CommonUtils.share(this, mUrl)
 
             // 复制链接
             R.id.item_copy -> {
@@ -114,10 +105,7 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
             }
 
             // 打开链接
-            R.id.item_open -> {
-                CommonUtils.openLink(this, mUrl)
-            }
-
+            R.id.item_open -> CommonUtils.openLink(this, mUrl)
 
             else -> {
             }
@@ -126,8 +114,8 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebPresenter>(), WebContra
     }
 
     override fun onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack()
+        if (mBinding.webView.canGoBack()) {
+            mBinding.webView.goBack()
         } else {
             finish()
         }

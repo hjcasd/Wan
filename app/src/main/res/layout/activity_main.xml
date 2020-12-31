@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/flContent"
+        android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -13,7 +13,7 @@
     </FrameLayout>
 
     <RadioGroup
-        android:id="@+id/rgTab"
+        android:id="@+id/rg_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -21,37 +21,37 @@
         android:padding="5dp">
 
         <RadioButton
-            android:id="@+id/rbHome"
+            android:id="@+id/rb_home"
             style="@style/MenuTabStyle"
             android:checked="true"
             android:drawableTop="@drawable/selector_rb_tab1"
-            android:text="@string/tab_home" />
+            android:text="@string/app_tab_home" />
 
         <RadioButton
-            android:id="@+id/rbProject"
+            android:id="@+id/rb_project"
             style="@style/MenuTabStyle"
             android:drawableTop="@drawable/selector_rb_tab2"
-            android:text="@string/tab_project" />
+            android:text="@string/app_tab_project" />
 
 
         <RadioButton
-            android:id="@+id/rbSquare"
+            android:id="@+id/rb_square"
             style="@style/MenuTabStyle"
             android:drawableTop="@drawable/selector_rb_tab3"
-            android:text="@string/tab_square" />
+            android:text="@string/app_tab_square" />
 
         <RadioButton
-            android:id="@+id/rbPublic"
+            android:id="@+id/rb_public"
             style="@style/MenuTabStyle"
             android:drawableTop="@drawable/selector_rb_tab4"
-            android:text="@string/tab_public" />
+            android:text="@string/app_tab_public" />
 
 
         <RadioButton
-            android:id="@+id/rbMine"
+            android:id="@+id/rb_mine"
             style="@style/MenuTabStyle"
             android:drawableTop="@drawable/selector_rb_tab5"
-            android:text="@string/tab_mine" />
+            android:text="@string/app_tab_mine" />
 
     </RadioGroup>
 

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_f4f5f6"
+    android:background="@color/app_gray_f4f5f6"
     android:orientation="vertical">
 
     <com.hjc.baselib.widget.bar.TitleBar
-        android:id="@+id/titleBar"
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:leftImage="@mipmap/icon_back"
-        app:titleText="设置" />
+        app:titleText="@string/app_setting_title" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/llClearCache"
+                android:id="@+id/ll_clear_cache"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -38,25 +39,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="清除缓存"
-                    android:textColor="@color/black"
+                    android:text="@string/app_setting_tip1"
+                    android:textColor="@color/app_black"
                     android:textSize="14sp" />
 
 
                 <TextView
-                    android:id="@+id/tvCache"
+                    android:id="@+id/tv_cache"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="0.0B"
-                    android:textColor="@color/black_666"
+                    android:text="@string/app_setting_content1"
+                    android:textColor="@color/app_black_666"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:id="@+id/llAnimation"
+                android:id="@+id/ll_animation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -69,25 +70,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="列表动画"
-                    android:textColor="@color/black"
+                    android:text="@string/app_setting_tip2"
+                    android:textColor="@color/app_black"
                     android:textSize="14sp" />
 
 
                 <TextView
-                    android:id="@+id/tvAnimation"
+                    android:id="@+id/tv_animation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="无"
-                    android:textColor="@color/black_666"
+                    android:text="@string/app_setting_content2"
+                    android:textColor="@color/app_black_666"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
 
             <RelativeLayout
-                android:id="@+id/rlTheme"
+                android:id="@+id/rl_theme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -99,34 +100,33 @@
 
                 <TextView
                     android:id="@+id/tv_theme_tip"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="主题颜色"
-                    android:textColor="@color/black"
+                    android:text="@string/app_setting_tip3"
+                    android:textColor="@color/app_black"
                     android:textSize="14sp" />
-
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_theme_tip"
                     android:layout_marginTop="5dp"
-                    android:text="设置app的主题颜色"
-                    android:textColor="@color/black_666"
+                    android:text="@string/app_setting_content3"
+                    android:textColor="@color/app_black_666"
                     android:textSize="12sp" />
 
                 <com.hjc.wan.widget.CircleColorView
-                    android:id="@+id/colorView"
+                    android:id="@+id/color_view"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true" />
 
             </RelativeLayout>
 
 
             <LinearLayout
-                android:id="@+id/llVersion"
+                android:id="@+id/ll_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -139,25 +139,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="当前版本"
-                    android:textColor="@color/black"
+                    android:text="@string/app_setting_tip4"
+                    android:textColor="@color/app_black"
                     android:textSize="14sp" />
 
 
                 <TextView
-                    android:id="@+id/tvVersion"
+                    android:id="@+id/tv_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="1.0.0"
-                    android:textColor="@color/black_666"
+                    android:text="@string/app_setting_content4"
+                    android:textColor="@color/app_black_666"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:id="@+id/llProject"
+                android:id="@+id/ll_project"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -171,32 +171,32 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="项目源码"
-                    android:textColor="@color/black"
+                    android:text="@string/app_setting_tip5"
+                    android:textColor="@color/app_black"
                     android:textSize="14sp" />
 
 
                 <TextView
-                    android:id="@+id/tvProject"
+                    android:id="@+id/tv_project"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="https://github.com/hjcasd/Wan"
-                    android:textColor="@color/black_666"
+                    android:text="@string/app_setting_content5"
+                    android:textColor="@color/app_black_666"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
 
             <Button
-                android:id="@+id/btnLogout"
+                android:id="@+id/btn_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_btn_logout"
-                android:text="退出登录"
+                android:text="@string/app_setting_logout"
                 android:textColor="@color/white" />
 
 

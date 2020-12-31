@@ -12,8 +12,8 @@
         android:paddingTop="8dp"
         android:paddingRight="15dp"
         android:paddingBottom="8dp"
-        android:text="请选择优先级"
-        android:textColor="@color/black_666"
+        android:text="@string/priority_choose"
+        android:textColor="@color/app_black_666"
         android:textSize="16sp" />
 
     <androidx.recyclerview.widget.RecyclerView

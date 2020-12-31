@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.baselib.widget.bar.OnBarClickListener
-import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityIntegralRankBinding
 import com.hjc.wan.model.IntegralBean
 import com.hjc.wan.ui.integral.adapter.IntegralRankAdapter
 import com.hjc.wan.ui.integral.contract.IntegralRankContract
@@ -19,7 +19,6 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.activity_integral_rank.*
 
 /**
  * @Author: HJC
@@ -27,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_integral_rank.*
  * @Description: 积分排行页面
  */
 @Route(path = RoutePath.URL_INTEGRAL_RANK)
-class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, IntegralRankPresenter>(),
+class IntegralRankActivity : BaseActivity<ActivityIntegralRankBinding, IntegralRankContract.View, IntegralRankPresenter>(),
     IntegralRankContract.View {
 
     private lateinit var mAdapter: IntegralRankAdapter
@@ -42,21 +41,16 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_integral_rank
-    }
-
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
+        initLoadSir(mBinding.refreshLayout)
 
         val manager = LinearLayoutManager(this)
-        rvIntegralRank.layoutManager = manager
+        mBinding.rvRank.layoutManager = manager
 
         mAdapter = IntegralRankAdapter(null)
-        rvIntegralRank.adapter = mAdapter
+        mBinding.rvRank.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -66,9 +60,8 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
             }
         }
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
-
-        fabHistory.backgroundTintList = SettingManager.getStateList()
+        mBinding.titleBar.setBgColor(SettingManager.getThemeColor())
+        mBinding.fabHistory.backgroundTintList = SettingManager.getStateList()
     }
 
     override fun getImmersionBar(): ImmersionBar? {
@@ -78,8 +71,6 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         getPresenter().loadListData(mPage, true)
     }
 
@@ -92,14 +83,14 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        fabHistory.setOnClickListener(this)
+        mBinding.fabHistory.setOnClickListener(this)
 
-        titleBar.setOnBarClickListener(object : OnBarClickListener {
+        mBinding.titleBar.setOnBarClickListener(object : OnBarClickListener {
 
             override fun leftClick(view: View) {
                 finish()
@@ -110,7 +101,7 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
             }
         })
 
-        smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        mBinding.refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 1
@@ -127,7 +118,7 @@ class IntegralRankActivity : BaseMvpActivity<IntegralRankContract.View, Integral
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.fabHistory -> RouterManager.jump(RoutePath.URL_INTEGRAL_HISTORY)
+            R.id.fab_history -> RouterManager.jump(RoutePath.URL_INTEGRAL_HISTORY)
         }
     }
 

@@ -11,9 +11,10 @@ import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivitySearchBinding
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.SearchBean
 import com.hjc.wan.model.db.History
@@ -24,7 +25,6 @@ import com.hjc.wan.ui.search.presenter.SearchPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.SearchEditText
-import kotlinx.android.synthetic.main.activity_search.*
 
 /**
  * @Author: HJC
@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.activity_search.*
  * @Description: 搜索历史记录页面
  */
 @Route(path = RoutePath.URL_SEARCH)
-class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
+class SearchActivity : BaseActivity<ActivitySearchBinding, SearchContract.View, SearchPresenter>(),
     SearchContract.View {
 
     private lateinit var mAdapter: HomeAdapter
@@ -47,11 +47,6 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_search
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
@@ -62,57 +57,57 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
         super.initView()
 
         val manager = LinearLayoutManager(this)
-        rvList.layoutManager = manager
+        mBinding.rvList.layoutManager = manager
 
         mAdapter = HomeAdapter(null)
-        rvList.adapter = mAdapter
+        mBinding.rvList.adapter = mAdapter
 
-        if (SettingManager.getListAnimationType() != 0) {
-            mAdapter.openLoadAnimation(SettingManager.getListAnimationType())
-        } else {
-            mAdapter.closeLoadAnimation()
+        SettingManager.getListAnimationType().let {
+            if (it != 0) {
+                mAdapter.openLoadAnimation(it)
+            } else {
+                mAdapter.closeLoadAnimation()
+            }
         }
 
-        clSearch.setBackgroundColor(SettingManager.getThemeColor())
+        mBinding.clSearch.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         getPresenter().getHotKey()
         getPresenter().getHistory()
     }
 
     override fun showHotTag(result: MutableList<SearchBean>) {
         if (result.size > 0) {
-            clHot.visibility = View.VISIBLE
+            mBinding.clHot.visibility = View.VISIBLE
 
-            flHot.removeAllViews()
+            mBinding.flHot.removeAllViews()
             for (bean in result) {
                 val view = View.inflate(this@SearchActivity, R.layout.view_navigation_tag, null)
                 val tvTag = view.findViewById<TextView>(R.id.tv_tag)
                 tvTag.text = bean.name
-                flHot.addView(tvTag)
+                mBinding.flHot.addView(tvTag)
 
                 tvTag.setOnClickListener {
-                    etSearch.setText(tvTag.text.toString())
-                    etSearch.requestFocus()
-                    etSearch.setSelection(etSearch.text.toString().length)
+                    mBinding.etSearch.setText(tvTag.text.toString())
+                    mBinding.etSearch.requestFocus()
+                    mBinding.etSearch.setSelection( mBinding.etSearch.text.toString().length)
 
                     mPage = 0
                     getPresenter().search(mPage, tvTag.text.toString(), true)
                 }
             }
         } else {
-            clHot.visibility = View.GONE
+            mBinding.clHot.visibility = View.GONE
         }
     }
 
     override fun showList(result: MutableList<ArticleBean>) {
-        clHistory.visibility = View.GONE
-        clHot.visibility = View.GONE
-        smartRefreshLayout.visibility = View.VISIBLE
-        smartRefreshLayout.finishLoadMore()
+        mBinding.clHistory.visibility = View.GONE
+        mBinding.clHot.visibility = View.GONE
+        mBinding.refreshLayout.visibility = View.VISIBLE
+        mBinding.refreshLayout.finishLoadMore()
 
         if (mPage == 0) {
             mAdapter.setNewData(result)
@@ -122,26 +117,26 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
     }
 
     override fun showHistory(result: List<History>) {
-        clHistory.visibility = View.VISIBLE
-        flHistory.removeAllViews()
+        mBinding.clHistory.visibility = View.VISIBLE
+        mBinding.flHistory.removeAllViews()
 
         for (history in result) {
             val view = View.inflate(this@SearchActivity, R.layout.view_navigation_tag, null)
             val tvTag = view.findViewById<TextView>(R.id.tv_tag)
             tvTag.text = history.name
-            flHistory.addView(tvTag)
+            mBinding.flHistory.addView(tvTag)
 
             tvTag.setOnClickListener {
-                etSearch.setText(tvTag.text.toString())
-                etSearch.requestFocus()
-                etSearch.setSelection(etSearch.text.toString().length)
+                mBinding.etSearch.setText(tvTag.text.toString())
+                mBinding.etSearch.requestFocus()
+                mBinding.etSearch.setSelection( mBinding.etSearch.text.toString().length)
                 getPresenter().search(mPage, tvTag.text.toString(), true)
             }
         }
     }
 
     override fun hideHistory() {
-        clHistory.visibility = View.GONE
+        mBinding.clHistory.visibility = View.GONE
     }
 
     override fun showCollectList(bean: ArticleBean) {
@@ -155,18 +150,18 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        ivBack.setOnClickListener(this)
-        tvSearch.setOnClickListener(this)
-        ivClearHistory.setOnClickListener(this)
+        mBinding.ivBack.setOnClickListener(this)
+        mBinding.tvSearch.setOnClickListener(this)
+        mBinding.ivClearHistory.setOnClickListener(this)
 
-        etSearch.setOnSearchClickListener(object : SearchEditText.OnSearchClickListener {
+        mBinding.etSearch.setOnSearchClickListener(object : SearchEditText.OnSearchClickListener {
 
             override fun onSearchClick(view: View?) {
-                val keyword = etSearch.text.toString()
+                val keyword =  mBinding.etSearch.text.toString()
                 if (StringUtils.isEmpty(keyword)) {
                     ToastUtils.showShort("请输入搜索内容")
                     return
@@ -176,16 +171,16 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
             }
 
             override fun onSearchClear() {
-                clHistory.visibility = View.VISIBLE
+                mBinding.clHistory.visibility = View.VISIBLE
                 getPresenter().getHistory()
-                clHot.visibility = View.VISIBLE
-                smartRefreshLayout.visibility = View.GONE
+                mBinding.clHot.visibility = View.VISIBLE
+                mBinding.refreshLayout.visibility = View.GONE
             }
         })
 
-        smartRefreshLayout.setOnLoadMoreListener {
+        mBinding.refreshLayout.setOnLoadMoreListener {
             mPage++
-            getPresenter().search(mPage, etSearch.text.toString(), false)
+            getPresenter().search(mPage,  mBinding.etSearch.text.toString(), false)
         }
 
         mAdapter.apply {
@@ -207,13 +202,13 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.ivBack -> {
+            R.id.iv_back -> {
                 KeyboardUtils.hideSoftInput(this)
                 finish()
             }
 
-            R.id.tvSearch -> {
-                val keyword = etSearch.text.toString()
+            R.id.tv_search -> {
+                val keyword =  mBinding.etSearch.text.toString()
                 if (StringUtils.isEmpty(keyword)) {
                     ToastUtils.showShort("请输入搜索内容")
                     return
@@ -222,19 +217,18 @@ class SearchActivity : BaseMvpActivity<SearchContract.View, SearchPresenter>(),
                 getPresenter().search(mPage, keyword, true)
             }
 
-            R.id.ivClearHistory -> {
+            R.id.iv_clear_history -> {
                 MaterialDialog(this).show {
                     cornerRadius(10f)
-                    title(R.string.title)
+                    title(R.string.app_tip)
                     message(text = "确认清除全部历史记录吗？")
                     positiveButton(text = "确定") {
                         HistoryDataBase.getInstance(this@SearchActivity).getHistoryDao().deleteAll()
-                        this@SearchActivity.clHistory.visibility = View.GONE
+                        mBinding.clHistory.visibility = View.GONE
                     }
-                    negativeButton(R.string.cancel)
+                    negativeButton(R.string.app_cancel)
                 }
             }
-
         }
     }
 

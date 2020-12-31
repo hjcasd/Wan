@@ -3,13 +3,14 @@ package com.hjc.baselib.dialog
 import android.os.Bundle
 import android.view.View
 import com.hjc.baselib.R
+import com.hjc.baselib.databinding.DialogLoadingBinding
 
 /**
  * @Author: HJC
  * @Date: 2019/1/7 11:28
  * @Description: 加载框
  */
-class LoadingDialog : BaseFragmentDialog() {
+class LoadingDialog : BaseFragmentDialog<DialogLoadingBinding>(){
 
     companion object {
 
@@ -20,10 +21,6 @@ class LoadingDialog : BaseFragmentDialog() {
 
     override fun getStyleRes(): Int {
         return R.style.Dialog_Base
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.dialog_loading
     }
 
     override fun initData(savedInstanceState: Bundle?) {

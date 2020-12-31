@@ -29,7 +29,10 @@ class PublicChildPresenter : KotlinPresenter<PublicChildContract.View>(),
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
     /**

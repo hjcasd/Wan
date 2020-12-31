@@ -10,16 +10,16 @@ import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
-import com.hjc.baselib.fragment.BaseMvpFragment
+import com.hjc.baselib.fragment.BaseFragment
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.FragmentMineBinding
 import com.hjc.wan.model.IntegralBean
 import com.hjc.wan.ui.mine.contract.MineContract
 import com.hjc.wan.ui.mine.presenter.MinePresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.fragment_mine.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -28,7 +28,8 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2019/11/9 15:38
  * @Description: 我的页面
  */
-class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineContract.View {
+class MineFragment : BaseFragment<FragmentMineBinding, MineContract.View, MinePresenter>(),
+    MineContract.View {
 
     companion object {
 
@@ -46,20 +47,14 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     }
 
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_mine
-    }
-
-
     override fun initView() {
         super.initView()
 
         SettingManager.getThemeColor().let {
-            accountCardView.setCardBackgroundColor(it)
-            tvIntegral.setTextColor(it)
+            mBinding.cvAccount.setCardBackgroundColor(it)
+            mBinding.tvIntegral.setTextColor(it)
+            mBinding.titleBar.setBgColor(it)
         }
-
-        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun getImmersionBar(): ImmersionBar? {
@@ -69,52 +64,49 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
         EventManager.register(this)
-
         getPresenter()?.loadIntegralData(true)
     }
 
 
     @SuppressLint("SetTextI18n")
     override fun showIntegral(result: IntegralBean) {
-        smartRefreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishRefresh()
 
-        tvName.text = result.username
-        tvInfo.text = "id ： ${result.userId}　排名 ： ${result.rank}"
-        tvIntegral.text = result.coinCount.toString()
+        mBinding.tvName.text = result.username
+        mBinding.tvInfo.text = "id ： ${result.userId}　排名 ： ${result.rank}"
+        mBinding.tvIntegral.text = result.coinCount.toString()
+    }
+
+    override fun refreshComplete() {
+        mBinding.refreshLayout.finishRefresh()
     }
 
     override fun addListeners() {
-        llIntegral.setOnClickListener(this)
-        llCollect.setOnClickListener(this)
-        llTodo.setOnClickListener(this)
+        mBinding.llIntegral.setOnClickListener(this)
+        mBinding.llCollect.setOnClickListener(this)
+        mBinding.llTodo.setOnClickListener(this)
 
-        llOpen.setOnClickListener(this)
-        llJoin.setOnClickListener(this)
-        llSetting.setOnClickListener(this)
+        mBinding.llOpen.setOnClickListener(this)
+        mBinding.llJoin.setOnClickListener(this)
+        mBinding.llSetting.setOnClickListener(this)
 
-        smartRefreshLayout.setOnRefreshListener {
+        mBinding.refreshLayout.setOnRefreshListener {
             getPresenter()?.loadIntegralData(false)
         }
     }
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.llIntegral -> {
-                RouterManager.jump(RoutePath.URL_INTEGRAL_RANK)
-            }
-            R.id.llCollect -> {
-                RouterManager.jump(RoutePath.URL_COLLECT)
-            }
-            R.id.llTodo -> {
-                RouterManager.jump(RoutePath.URL_TO_DO)
-            }
+            R.id.ll_integral -> RouterManager.jump(RoutePath.URL_INTEGRAL_RANK)
 
-            R.id.llOpen -> {
-                RouterManager.jumpToWeb("玩Android网站", "https://www.wanandroid.com/")
-            }
-            R.id.llJoin -> {
+            R.id.ll_collect -> RouterManager.jump(RoutePath.URL_COLLECT)
+
+            R.id.ll_todo -> RouterManager.jump(RoutePath.URL_TO_DO)
+
+            R.id.ll_open -> RouterManager.jumpToWeb("玩Android网站", "https://www.wanandroid.com/")
+
+            R.id.ll_join -> {
                 val key = "arD6CZ5Bt8_ReDpb56-5n5cIY6sBqTtl"
                 val intent = Intent()
                 intent.data =
@@ -128,9 +120,9 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
                     ToastUtils.showShort("未安装手机QQ或安装的版本不支持")
                 }
             }
-            R.id.llSetting -> {
-                RouterManager.jump(RoutePath.URL_SETTING)
-            }
+
+            R.id.ll_setting -> RouterManager.jump(RoutePath.URL_SETTING)
+
         }
     }
 
@@ -138,14 +130,19 @@ class MineFragment : BaseMvpFragment<MineContract.View, MinePresenter>(), MineCo
     fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
-                accountCardView.setCardBackgroundColor(it)
-                titleBar.setBgColor(it)
-                tvIntegral.setTextColor(it)
+                mBinding.cvAccount.setCardBackgroundColor(it)
+                mBinding.titleBar.setBgColor(it)
+                mBinding.tvIntegral.setTextColor(it)
 
                 ImmersionBar.with(this)
                     .statusBarColor(ColorUtils.int2RgbString(it))
                     .init()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 }

@@ -5,22 +5,21 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/flIndicator"
+        android:id="@+id/fl_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_color">
 
         <net.lucode.hackware.magicindicator.MagicIndicator
-            android:id="@+id/magicIndicator"
+            android:id="@+id/magic_indicator"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_gravity="center" />
 
     </FrameLayout>
 
-
     <com.hjc.baselib.widget.FixedViewPager
-        android:id="@+id/viewPager"
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -15,16 +15,16 @@ import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.baselib.widget.bar.OnBarLeftClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityAddTodoBinding
 import com.hjc.wan.model.TodoBean
 import com.hjc.wan.ui.todo.adapter.PriorityAdapter
 import com.hjc.wan.ui.todo.contract.AddTodoContract
 import com.hjc.wan.ui.todo.presenter.AddTodoPresenter
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.activity_add_todo.*
 import java.util.*
 
 
@@ -34,7 +34,7 @@ import java.util.*
  * @Description: 添加待办清单页面
  */
 @Route(path = RoutePath.URL_ADD_TO_DO)
-class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(),
+class AddTodoActivity : BaseActivity<ActivityAddTodoBinding, AddTodoContract.View, AddTodoPresenter>(),
     AddTodoContract.View {
 
     @Autowired(name = "params")
@@ -57,10 +57,6 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_add_todo
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
@@ -70,44 +66,44 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
     override fun initView() {
         super.initView()
 
-        val drawable = btnSubmit.background as GradientDrawable
-        drawable.setColor(SettingManager.getThemeColor())
+        SettingManager.getThemeColor().let {
+            mBinding.titleBar.setBgColor(it)
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
+            val drawable = mBinding.btnSubmit.background as GradientDrawable
+            drawable.setColor(it)
+        }
     }
 
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         bundle?.let {
             mFrom = it.getInt("from")
             if (mFrom == 1) {
-                titleBar.setTitle("编辑待办事项")
+                mBinding.titleBar.setTitle("编辑待办事项")
 
                 val bean = it.getSerializable("bean") as TodoBean
                 mId = bean.id
-                etTitle.setText(bean.title)
-                etContent.setText(bean.content)
-                tvTime.text = bean.dateStr
+                mBinding.etTitle.setText(bean.title)
+                mBinding.etContent.setText(bean.content)
+                mBinding.tvTime.text = bean.dateStr
 
                 mPriority = bean.priority
-                tvPriority.text = mTitles[mPriority]
+                mBinding.tvPriority.text = mTitles[mPriority]
 
-                colorView.setViewColor(SettingManager.getColorByType(mPriority))
+                mBinding.colorView.setViewColor(SettingManager.getColorByType(mPriority))
             } else {
-                colorView.setViewColor(SettingManager.getColorByType(0))
-                titleBar.setTitle("添加待办事项")
+                mBinding.colorView.setViewColor(SettingManager.getColorByType(0))
+                mBinding.titleBar.setTitle("添加待办事项")
             }
         }
     }
 
     override fun addListeners() {
-        tvTime.setOnClickListener(this)
-        llPriority.setOnClickListener(this)
-        btnSubmit.setOnClickListener(this)
+        mBinding.tvTime.setOnClickListener(this)
+        mBinding.llPriority.setOnClickListener(this)
+        mBinding.btnSubmit.setOnClickListener(this)
 
-        titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+        mBinding.titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
 
             override fun leftClick(view: View) {
                 finish()
@@ -118,15 +114,15 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.tvTime -> {
+            R.id.tv_time -> {
                 showDatePicker()
             }
 
-            R.id.llPriority -> {
+            R.id.ll_priority -> {
                 showPriorityDialog()
             }
 
-            R.id.btnSubmit -> {
+            R.id.btn_submit -> {
                 preSubmit()
             }
         }
@@ -135,7 +131,7 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
     override fun showDatePicker() {
         MaterialDialog(this).show {
             datePicker(minDate = Calendar.getInstance()) { dialog, date ->
-                this@AddTodoActivity.tvTime.text = TimeUtils.date2String(date.time, "yyyy-MM-dd")
+                mBinding.tvTime.text = TimeUtils.date2String(date.time, "yyyy-MM-dd")
             }
         }
     }
@@ -154,9 +150,9 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
         rvPriority.adapter = adapter
 
         adapter.setOnItemClickListener { _, _, position ->
-            tvPriority.text = mTitles[position]
+            mBinding.tvPriority.text = mTitles[position]
             mPriority = position
-            colorView.setViewColor(SettingManager.getColorByType(mPriority))
+            mBinding.colorView.setViewColor(SettingManager.getColorByType(mPriority))
             dialog.dismiss()
         }
 
@@ -164,9 +160,9 @@ class AddTodoActivity : BaseMvpActivity<AddTodoContract.View, AddTodoPresenter>(
     }
 
     override fun preSubmit() {
-        val title = etTitle.text.toString().trim()
-        val content = etContent.text.toString().trim()
-        val time = tvTime.text.toString()
+        val title = mBinding.etTitle.text.toString().trim()
+        val content = mBinding.etContent.text.toString().trim()
+        val time = mBinding.tvTime.text.toString()
 
         if (StringUtils.isEmpty(title)) {
             ToastUtils.showShort("请输入标题")

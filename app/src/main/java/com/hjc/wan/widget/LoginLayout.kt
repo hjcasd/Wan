@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.activity_login.view.*
+import android.widget.RelativeLayout
 
 /**
  * @Author: HJC
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_login.view.*
  */
 class LoginLayout(context: Context, attributes: AttributeSet) : LinearLayout(context, attributes) {
 
-    fun setKeyBoardShow(isShow: Boolean) {
+    fun setKeyBoardShow(llBg: LinearLayout,rlTop: RelativeLayout, isShow: Boolean) {
         if (isShow) {
             post {
                 llBg.visibility = View.INVISIBLE

@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
+import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.widget.bar.OnBarClickListener
-import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityTodoListBinding
 import com.hjc.wan.model.TodoBean
 import com.hjc.wan.ui.todo.adapter.TodoAdapter
 import com.hjc.wan.ui.todo.contract.TodoContract
@@ -23,7 +24,6 @@ import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.dialog.OperateDialog
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.activity_todo_list.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -33,7 +33,9 @@ import org.greenrobot.eventbus.ThreadMode
  * @Description: 待办清单页面
  */
 @Route(path = RoutePath.URL_TO_DO)
-class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), TodoContract.View {
+class TodoListActivity :
+    BaseActivity<ActivityTodoListBinding, TodoContract.View, TodoPresenter>(),
+    TodoContract.View {
 
     private lateinit var mAdapter: TodoAdapter
 
@@ -47,10 +49,6 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_todo_list
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
@@ -60,13 +58,13 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
+        initLoadSir(mBinding.refreshLayout)
 
         val manager = LinearLayoutManager(this)
-        rvCommon.layoutManager = manager
+        mBinding.rvList.layoutManager = manager
 
         mAdapter = TodoAdapter(null)
-        rvCommon.adapter = mAdapter
+        mBinding.rvList.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -76,11 +74,11 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
             }
         }
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
+        mBinding.titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
+        EventManager.register(this)
         getPresenter().loadListData(mPage, true)
     }
 
@@ -98,12 +96,12 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        titleBar.setOnBarClickListener(object : OnBarClickListener {
+        mBinding.titleBar.setOnBarClickListener(object : OnBarClickListener {
 
             override fun leftClick(view: View) {
                 finish()
@@ -121,7 +119,8 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
             }
         })
 
-        smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        mBinding.refreshLayout.setOnRefreshLoadMoreListener(object :
+            OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 1
@@ -179,7 +178,6 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -187,6 +185,11 @@ class TodoListActivity : BaseMvpActivity<TodoContract.View, TodoPresenter>(), To
             mPage = 1
             getPresenter().loadListData(mPage, false)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 
 }

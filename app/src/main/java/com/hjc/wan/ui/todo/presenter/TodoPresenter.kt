@@ -27,7 +27,10 @@ class TodoPresenter : KotlinPresenter<TodoContract.View>(), TodoContract.Present
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
     override fun deleteTodo(id: Int) {

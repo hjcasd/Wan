@@ -31,7 +31,10 @@ class SystemTagPresenter : KotlinPresenter<SystemTagContract.View>(), SystemTagC
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
     /**

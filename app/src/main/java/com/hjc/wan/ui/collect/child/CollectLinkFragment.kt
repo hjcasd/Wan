@@ -2,15 +2,14 @@ package com.hjc.wan.ui.collect.child
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hjc.baselib.fragment.BaseMvpLazyFragment
-import com.hjc.wan.R
+import com.hjc.baselib.fragment.BaseLazyFragment
+import com.hjc.wan.databinding.FragmentCommonBinding
 import com.hjc.wan.model.CollectLinkBean
 import com.hjc.wan.ui.collect.adapter.CollectLinkAdapter
 import com.hjc.wan.ui.collect.contract.CollectLinkContract
 import com.hjc.wan.ui.collect.presenter.CollectLinkPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.fragment_common.*
 
 /**
  * @Author: HJC
@@ -18,11 +17,10 @@ import kotlinx.android.synthetic.main.fragment_common.*
  * @Description: 收藏网址页面
  */
 class CollectLinkFragment :
-    BaseMvpLazyFragment<CollectLinkContract.View, CollectLinkPresenter>(),
+    BaseLazyFragment<FragmentCommonBinding, CollectLinkContract.View, CollectLinkPresenter>(),
     CollectLinkContract.View {
 
     private lateinit var mAdapter: CollectLinkAdapter
-
 
     companion object {
 
@@ -39,24 +37,17 @@ class CollectLinkFragment :
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_common
-    }
-
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
-        smartRefreshLayout.setEnableLoadMore(false)
+        initLoadSir(mBinding.refreshLayout)
+        mBinding.refreshLayout.setEnableLoadMore(false)
 
         val manager = LinearLayoutManager(mContext)
-        rvCommon.layoutManager = manager
+        mBinding.rvList.layoutManager = manager
 
         mAdapter = CollectLinkAdapter(null)
-        rvCommon.adapter = mAdapter
-
-        smartRefreshLayout.setEnableLoadMore(false)
+        mBinding.rvList.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -68,8 +59,6 @@ class CollectLinkFragment :
     }
 
     override fun initData() {
-        super.initData()
-
         getPresenter()?.loadListData(true)
     }
 
@@ -78,12 +67,12 @@ class CollectLinkFragment :
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        smartRefreshLayout.setOnRefreshListener {
+        mBinding.refreshLayout.setOnRefreshListener {
             getPresenter()?.loadListData(false)
         }
 

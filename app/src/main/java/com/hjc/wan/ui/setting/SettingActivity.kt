@@ -11,7 +11,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
 import com.hjc.baselib.utils.helper.ActivityHelper
@@ -19,10 +19,10 @@ import com.hjc.baselib.widget.bar.OnBarLeftClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivitySettingBinding
 import com.hjc.wan.ui.setting.contract.SettingContract
 import com.hjc.wan.ui.setting.presenter.SettingPresenter
 import com.hjc.wan.utils.helper.*
-import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -33,7 +33,8 @@ import org.greenrobot.eventbus.ThreadMode
  * @Description: 设置页面
  */
 @Route(path = RoutePath.URL_SETTING)
-class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(),
+class SettingActivity :
+    BaseActivity<ActivitySettingBinding, SettingContract.View, SettingPresenter>(),
     SettingContract.View {
 
     override fun createPresenter(): SettingPresenter {
@@ -42,11 +43,6 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
     override fun createView(): SettingContract.View {
         return this
-    }
-
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_setting
     }
 
     override fun getImmersionBar(): ImmersionBar? {
@@ -59,34 +55,33 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
         super.initView()
 
         SettingManager.getThemeColor().let {
-            colorView.setViewColor(it)
+            mBinding.colorView.setViewColor(it)
+            mBinding.titleBar.setBgColor(it)
 
-            val drawable = btnLogout.background as GradientDrawable
+            val drawable = mBinding.btnLogout.background as GradientDrawable
             drawable.setColor(it)
         }
-
-        titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
+        EventManager.register(this)
 
         val totalCacheSize = CacheManager.getTotalCacheSize(this)
-        tvCache.text = totalCacheSize
+        mBinding.tvCache.text = totalCacheSize
 
         val type = SettingManager.getListAnimationType()
-        tvAnimation.text = resources.getStringArray(R.array.setting_modes)[type]
+        mBinding.tvAnimation.text = resources.getStringArray(R.array.setting_modes)[type]
     }
 
     override fun addListeners() {
-        llClearCache.setOnClickListener(this)
-        llAnimation.setOnClickListener(this)
-        rlTheme.setOnClickListener(this)
-        llVersion.setOnClickListener(this)
-        llProject.setOnClickListener(this)
-        btnLogout.setOnClickListener(this)
+        mBinding.llClearCache.setOnClickListener(this)
+        mBinding.llAnimation.setOnClickListener(this)
+        mBinding.rlTheme.setOnClickListener(this)
+        mBinding.llVersion.setOnClickListener(this)
+        mBinding.llProject.setOnClickListener(this)
+        mBinding.btnLogout.setOnClickListener(this)
 
-        titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+        mBinding.titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
 
             override fun leftClick(view: View) {
                 finish()
@@ -97,24 +92,18 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.llClearCache -> {
-                clearCache()
-            }
-            R.id.llAnimation -> {
-                changeListAnimationType()
-            }
-            R.id.rlTheme -> {
-                changeTheme()
-            }
-            R.id.llVersion -> {
-                getPresenter().checkVersion()
-            }
-            R.id.llProject -> {
-                RouterManager.jumpToWeb("Wan", "https://github.com/hjcasd/Wan")
-            }
-            R.id.btnLogout -> {
-                logout()
-            }
+            R.id.ll_clear_cache -> clearCache()
+
+            R.id.ll_animation -> changeListAnimationType()
+
+            R.id.rl_theme -> changeTheme()
+
+            R.id.ll_version -> getPresenter().checkVersion()
+
+            R.id.ll_project -> RouterManager.jumpToWeb("Wan", "https://github.com/hjcasd/Wan")
+
+            R.id.btn_logout -> logout()
+
         }
     }
 
@@ -125,14 +114,14 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
     private fun clearCache() {
         MaterialDialog(this).show {
             cornerRadius(10f)
-            title(R.string.title)
+            title(R.string.app_tip)
             message(text = "确定清除缓存吗")
             positiveButton(text = "确定") {
                 ToastUtils.showShort("清除缓存成功")
                 CacheManager.clearTotalCache(this@SettingActivity)
-                this@SettingActivity.tvCache.text = "0.0B"
+                mBinding.tvCache.text = "0.0B"
             }
-            negativeButton(R.string.cancel)
+            negativeButton(R.string.app_cancel)
         }
     }
 
@@ -147,13 +136,13 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
                 initialSelection = SettingManager.getListAnimationType()
             ) { dialog, index, text ->
                 SettingManager.setListAnimationType(index)
-                this@SettingActivity.tvAnimation.text = text
+                mBinding.tvAnimation.text = text
 
                 EventManager.sendEvent(MessageEvent(EventCode.CHANGE_LIST_ANIMATION, null))
             }
             title(text = "设置列表动画")
-            positiveButton(R.string.confirm)
-            negativeButton(R.string.cancel)
+            positiveButton(R.string.app_confirm)
+            negativeButton(R.string.app_cancel)
         }
     }
 
@@ -163,7 +152,7 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
     private fun changeTheme() {
         MaterialDialog(this).show {
             cornerRadius(10f)
-            title(R.string.choose_theme_color)
+            title(R.string.app_choose_theme_color)
             colorChooser(
                 ColorHelper.ACCENT_COLORS,
                 initialSelection = SettingManager.getThemeColor(),
@@ -172,20 +161,20 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
                 SettingManager.setThemeColor(color)
                 EventManager.sendEvent(MessageEvent(EventCode.CHANGE_THEME, null))
             }
-            positiveButton(R.string.confirm)
-            negativeButton(R.string.cancel)
+            positiveButton(R.string.app_confirm)
+            negativeButton(R.string.app_cancel)
         }
     }
 
     private fun logout() {
         MaterialDialog(this).show {
             cornerRadius(10f)
-            title(R.string.title)
+            title(R.string.app_tip)
             message(text = "确定退出登录吗")
             positiveButton(text = "确定") {
                 getPresenter().logout()
             }
-            negativeButton(R.string.cancel)
+            negativeButton(R.string.app_cancel)
         }
     }
 
@@ -199,9 +188,9 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
     fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
-                colorView.setViewColor(it)
-                titleBar.setBgColor(it)
-                val drawable = btnLogout.background as GradientDrawable
+                mBinding.colorView.setViewColor(it)
+                mBinding.titleBar.setBgColor(it)
+                val drawable = mBinding.btnLogout.background as GradientDrawable
                 drawable.setColor(it)
 
                 ImmersionBar.with(this)
@@ -209,6 +198,11 @@ class SettingActivity : BaseMvpActivity<SettingContract.View, SettingPresenter>(
                     .init()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 
 }

@@ -11,12 +11,15 @@ class MinePresenter : KotlinPresenter<MineContract.View>(), MineContract.Present
         launchWrapper({
             RetrofitClient.getApi().getIntegral()
         }, { result ->
+            getView()?.refreshComplete()
             if (result != null) {
                 getView()?.showIntegral(result)
             } else {
                 ToastUtils.showShort("获取积分数据失败")
             }
-        }, isShow)
+        }, isShow, error = {
+            getView()?.refreshComplete()
+        })
     }
 
 }

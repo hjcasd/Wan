@@ -18,7 +18,10 @@ class SystemPresenter : KotlinPresenter<SystemContract.View>(), SystemContract.P
             } else {
                 getView()?.showEmpty()
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
 }

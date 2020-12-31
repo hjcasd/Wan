@@ -27,7 +27,10 @@ class IntegralRankPresenter : KotlinPresenter<IntegralRankContract.View>(), Inte
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
 }

@@ -11,11 +11,12 @@ import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.gyf.immersionbar.ImmersionBar
+import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
-import com.hjc.baselib.fragment.BaseMvpFragment
-import com.hjc.wan.R
+import com.hjc.baselib.fragment.BaseFragment
 import com.hjc.wan.adapter.MyViewPagerAdapter
 import com.hjc.wan.constant.EventCode
+import com.hjc.wan.databinding.FragmentSquareBinding
 import com.hjc.wan.ui.square.child.NavigationFragment
 import com.hjc.wan.ui.square.child.PlazaFragment
 import com.hjc.wan.ui.square.child.SystemFragment
@@ -23,7 +24,6 @@ import com.hjc.wan.ui.square.contract.SquareContract
 import com.hjc.wan.ui.square.presenter.SquarePresenter
 import com.hjc.wan.utils.helper.SettingManager
 import com.hjc.wan.widget.indicator.ScaleTransitionPagerTitleView
-import kotlinx.android.synthetic.main.fragment_square.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
@@ -39,7 +39,8 @@ import java.util.*
  * @Date: 2019/11/9 15:38
  * @Description: 广场页面
  */
-class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
+class SquareFragment :
+    BaseFragment<FragmentSquareBinding, SquareContract.View, SquarePresenter>(),
     SquareContract.View {
 
     companion object {
@@ -57,11 +58,6 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_square
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
@@ -71,12 +67,11 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
     override fun initView() {
         super.initView()
 
-        flIndicator.setBackgroundColor(SettingManager.getThemeColor())
+        mBinding.flIndicator.setBackgroundColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
+        EventManager.register(this)
         getPresenter()?.loadSquareTitles()
     }
 
@@ -99,8 +94,8 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
         }
 
         val adapter = MyViewPagerAdapter(childFragmentManager, fragments)
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = fragments.size
+        mBinding.viewPager.adapter = adapter
+        mBinding.viewPager.offscreenPageLimit = fragments.size
 
 
         // Indicator init
@@ -116,7 +111,7 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
                     textSize = 18f
                     normalColor = Color.WHITE
                     selectedColor = Color.WHITE
-                    setOnClickListener { viewPager.setCurrentItem(index, false) }
+                    setOnClickListener { mBinding.viewPager.setCurrentItem(index, false) }
                 }
             }
 
@@ -132,21 +127,26 @@ class SquareFragment : BaseMvpFragment<SquareContract.View, SquarePresenter>(),
                 }
             }
         }
-        magicIndicator.navigator = commonNavigator
-        ViewPagerHelper.bind(magicIndicator, viewPager)
+        mBinding.magicIndicator.navigator = commonNavigator
+        ViewPagerHelper.bind(mBinding.magicIndicator, mBinding.viewPager)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun handleMessage(event: MessageEvent<*>?) {
         if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
-                flIndicator.setBackgroundColor(it)
+                mBinding.flIndicator.setBackgroundColor(it)
 
                 ImmersionBar.with(this)
                     .statusBarColor(ColorUtils.int2RgbString(it))
                     .init()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 
 }

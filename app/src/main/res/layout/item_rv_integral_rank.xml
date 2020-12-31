@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
@@ -19,10 +20,10 @@
             android:id="@+id/tv_ranking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
+            tools:text="1"
+            android:textColor="@color/app_black"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,9 +32,9 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="哈哈哈"
-            android:textColor="@color/black_666"
+            android:layout_marginStart="15dp"
+            tools:text="哈哈哈"
+            android:textColor="@color/app_black_666"
             android:textSize="14sp"
             app:layout_constraintLeft_toRightOf="@id/tv_ranking"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,8 +44,8 @@
             android:id="@+id/tv_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1243"
-            android:textColor="@color/black_333"
+            tools:text="1243"
+            android:textColor="@color/app_black_333"
             android:textSize="16sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

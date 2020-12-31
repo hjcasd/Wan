@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hjc.wan.widget.LoginLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/loginLayout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_color_dark"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rlTop"
+        android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="6">
 
         <LinearLayout
-            android:id="@+id/llBg"
+            android:id="@+id/ll_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible">
@@ -23,18 +24,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@mipmap/img_bg_login"
-                android:visibility="visible" />
+                android:src="@mipmap/img_bg_login" />
 
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/ivLogo"
+            android:id="@+id/iv_logo"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerInParent="true"
             android:src="@mipmap/ic_logo"
-            android:transitionName="@string/transition_logo_splash" />
+            android:transitionName="@string/app_transition_logo_splash"
+            tools:targetApi="lollipop" />
 
     </RelativeLayout>
 
@@ -55,12 +56,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUsername"
+                android:id="@+id/et_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入账号"
-                android:textColor="@color/white"
+                android:hint="@string/app_login_username_tip"
                 android:inputType="text"
+                android:textColor="@color/white"
                 android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -75,42 +76,40 @@
             app:layout_constraintTop_toBottomOf="@id/til_username">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPassword"
+                android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入密码"
-                android:textColor="@color/white"
+                android:hint="@string/app_login_password_tip"
                 android:inputType="textPassword"
+                android:textColor="@color/white"
                 android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btn_login"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_btn_login"
-            android:text="登录"
+            android:text="@string/app_login"
             android:textColor="@color/white"
             app:layout_constraintLeft_toLeftOf="@id/til_password"
             app:layout_constraintRight_toRightOf="@id/til_password"
             app:layout_constraintTop_toBottomOf="@id/til_password" />
 
         <TextView
-            android:id="@+id/tvRegister"
+            android:id="@+id/tv_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="还没有账号，去注册账号?"
+            android:text="@string/app_login_register_tip"
             android:textColor="@color/white"
             android:textSize="12sp"
-            app:layout_constraintRight_toRightOf="@id/btnLogin"
-            app:layout_constraintTop_toBottomOf="@id/btnLogin" />
-
+            app:layout_constraintRight_toRightOf="@id/btn_login"
+            app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </com.hjc.wan.widget.LoginLayout>

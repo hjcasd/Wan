@@ -2,14 +2,13 @@ package com.hjc.wan.ui.square.child
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hjc.baselib.fragment.BaseMvpLazyFragment
-import com.hjc.wan.R
+import com.hjc.baselib.fragment.BaseLazyFragment
+import com.hjc.wan.databinding.FragmentNavigationBinding
 import com.hjc.wan.model.NavigationBean
 import com.hjc.wan.ui.square.adapter.NavigationContentAdapter
 import com.hjc.wan.ui.square.adapter.NavigationMenuAdapter
 import com.hjc.wan.ui.square.contract.NavigationContract
 import com.hjc.wan.ui.square.presenter.NavigationPresenter
-import kotlinx.android.synthetic.main.fragment_navigation.*
 import java.util.*
 
 /**
@@ -17,7 +16,7 @@ import java.util.*
  * @Date: 2019/11/14 14:38
  * @Description: 导航子页面
  */
-class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, NavigationPresenter>(),
+class NavigationFragment : BaseLazyFragment<FragmentNavigationBinding, NavigationContract.View, NavigationPresenter>(),
     NavigationContract.View {
 
     private lateinit var mNavigationMenuAdapter: NavigationMenuAdapter
@@ -42,29 +41,23 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_navigation
-    }
-
     override fun initView() {
         super.initView()
 
-        initLoadSir(rlRoot)
+        initLoadSir(mBinding.rlRoot)
 
         val manager = LinearLayoutManager(mContext)
-        rvNavigationMenu.layoutManager = manager
+        mBinding.rvNavigationMenu.layoutManager = manager
         mNavigationMenuAdapter = NavigationMenuAdapter(null)
-        rvNavigationMenu.adapter = mNavigationMenuAdapter
+        mBinding.rvNavigationMenu.adapter = mNavigationMenuAdapter
 
         contentManager = LinearLayoutManager(mContext)
-        rvNavigationContent.layoutManager = contentManager
+        mBinding.rvNavigationContent.layoutManager = contentManager
         mNavigationContentAdapter = NavigationContentAdapter(null)
-        rvNavigationContent.adapter = mNavigationContentAdapter
+        mBinding.rvNavigationContent.adapter = mNavigationContentAdapter
     }
 
     override fun initData() {
-        super.initData()
-
         getPresenter()?.loadListData()
     }
 
@@ -89,12 +82,12 @@ class NavigationFragment : BaseMvpLazyFragment<NavigationContract.View, Navigati
         })
 
         //侧边栏菜单随右边列表一起滚动
-        rvNavigationContent.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        mBinding.rvNavigationContent.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val firstPosition = contentManager.findFirstVisibleItemPosition()
                 if (oldPosition != firstPosition) {
-                    rvNavigationMenu.smoothScrollToPosition(firstPosition)
+                    mBinding.rvNavigationMenu.smoothScrollToPosition(firstPosition)
                     mNavigationMenuAdapter.setSelection(firstPosition)
                     oldPosition = firstPosition
                 }

@@ -10,15 +10,15 @@
         android:orientation="vertical">
 
         <com.hjc.baselib.widget.bar.TitleBar
-            android:id="@+id/titleBar"
+            android:id="@+id/title_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleText="积分排行"
+            app:leftImage="@mipmap/icon_back"
             app:rightImage="@mipmap/icon_rule"
-            app:leftImage="@mipmap/icon_back"/>
+            app:titleText="@string/app_integral_rank_title" />
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/smartRefreshLayout"
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -29,7 +29,7 @@
             </com.scwang.smartrefresh.header.MaterialHeader>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvIntegralRank"
+                android:id="@+id/rv_rank"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical" />
@@ -45,7 +45,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabHistory"
+        android:id="@+id/fab_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

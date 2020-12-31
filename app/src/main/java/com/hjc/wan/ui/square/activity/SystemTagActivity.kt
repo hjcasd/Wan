@@ -7,9 +7,10 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
-import com.hjc.wan.R
+import com.hjc.baselib.activity.BaseActivity
+import com.hjc.baselib.widget.bar.OnBarLeftClickListener
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivitySystemTagBinding
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.square.adapter.SystemTagAdapter
 import com.hjc.wan.ui.square.contract.SystemTagContract
@@ -18,8 +19,6 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.activity_common.rvCommon
-import kotlinx.android.synthetic.main.activity_system_tag.*
 
 /**
  * @Author: HJC
@@ -27,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_system_tag.*
  * @Description: 体系tag下的文章列表页面
  */
 @Route(path = RoutePath.URL_SYSTEM_TAG)
-class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPresenter>(),
+class SystemTagActivity : BaseActivity<ActivitySystemTagBinding, SystemTagContract.View, SystemTagPresenter>(),
     SystemTagContract.View {
 
     private lateinit var mAdapter: SystemTagAdapter
@@ -48,10 +47,6 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_system_tag
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
@@ -60,11 +55,12 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
 
     override fun initView() {
         super.initView()
+
         val manager = LinearLayoutManager(this)
-        rvCommon.layoutManager = manager
+        mBinding.rvTag.layoutManager = manager
 
         mAdapter = SystemTagAdapter(null)
-        rvCommon.adapter = mAdapter
+        mBinding.rvTag.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -74,17 +70,15 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
             }
         }
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
+        mBinding.titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         bundle?.let {
             val title = it.getString("title")
             val cid = it.getInt("id", 0)
 
-            titleBar.setTitle(title)
+            mBinding.titleBar.setTitle(title)
             mCid = cid
 
             getPresenter().loadListData(mPage, mCid, true)
@@ -101,7 +95,15 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
     }
 
     override fun addListeners() {
-        smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        mBinding.titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+
+            override fun leftClick(view: View) {
+                finish()
+            }
+
+        })
+
+        mBinding.refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
@@ -153,8 +155,8 @@ class SystemTagActivity : BaseMvpActivity<SystemTagContract.View, SystemTagPrese
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
 }

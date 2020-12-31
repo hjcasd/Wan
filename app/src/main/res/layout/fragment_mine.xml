@@ -6,13 +6,13 @@
     android:orientation="vertical">
 
     <com.hjc.baselib.widget.bar.TitleBar
-        android:id="@+id/titleBar"
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="个人中心"/>
+        app:titleText="@string/app_mine_title" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/smartRefreshLayout"
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,11 +25,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gray_f4f5f6"
+            android:background="@color/app_gray_f4f5f6"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/accountCardView"
+                android:id="@+id/cv_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -43,37 +43,34 @@
                     android:padding="10dp">
 
                     <ImageView
-                        android:id="@+id/ivAvatar"
+                        android:id="@+id/iv_avatar"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:src="@mipmap/icon_avatar"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tvName"
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="哈哈哈"
+                        android:layout_marginStart="20dp"
                         android:textColor="@color/white"
-                        app:layout_constraintBottom_toTopOf="@id/tvInfo"
-                        app:layout_constraintLeft_toRightOf="@id/ivAvatar"
-                        app:layout_constraintTop_toTopOf="@id/ivAvatar" />
-
+                        app:layout_constraintBottom_toTopOf="@id/tv_info"
+                        app:layout_constraintLeft_toRightOf="@id/iv_avatar"
+                        app:layout_constraintTop_toTopOf="@id/iv_avatar" />
 
                     <TextView
-                        android:id="@+id/tvInfo"
+                        android:id="@+id/tv_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="id ： 123456　排名 ： 1000"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@id/ivAvatar"
-                        app:layout_constraintLeft_toLeftOf="@id/tvName"
-                        app:layout_constraintTop_toBottomOf="@id/tvName" />
+                        app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
+                        app:layout_constraintLeft_toLeftOf="@id/tv_name"
+                        app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -95,7 +92,7 @@
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:id="@+id/llIntegral"
+                        android:id="@+id/ll_integral"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -110,24 +107,24 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:text="我的积分"
-                            android:textColor="@color/black"
+                            android:text="@string/app_mine_integral"
+                            android:textColor="@color/app_black"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="当前积分："
-                            android:textColor="@color/black_666"
+                            android:text="@string/app_mine_integral_tip"
+                            android:textColor="@color/app_black_666"
                             android:textSize="12sp" />
 
                         <TextView
-                            android:id="@+id/tvIntegral"
+                            android:id="@+id/tv_integral"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="100"
+                            android:text="@string/app_mine_integral_value"
                             android:textColor="@color/app_color"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -135,13 +132,13 @@
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:src="@mipmap/icon_arrow_right" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llCollect"
+                        android:id="@+id/ll_collect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -156,22 +153,22 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:text="我的收藏"
-                            android:textColor="@color/black"
+                            android:text="@string/app_mine_collect"
+                            android:textColor="@color/app_black"
                             android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:src="@mipmap/icon_arrow_right" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llTodo"
+                        android:id="@+id/ll_todo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -186,16 +183,16 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:text="待办事项"
-                            android:textColor="@color/black"
+                            android:text="@string/app_mine_todo"
+                            android:textColor="@color/app_black"
                             android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:src="@mipmap/icon_arrow_right" />
 
                     </LinearLayout>
@@ -219,7 +216,7 @@
                     android:padding="10dp">
 
                     <LinearLayout
-                        android:id="@+id/llOpen"
+                        android:id="@+id/ll_open"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -234,22 +231,22 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:text="开源网站"
-                            android:textColor="@color/black"
+                            android:text="@string/app_mine_open_website"
+                            android:textColor="@color/app_black"
                             android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:src="@mipmap/icon_arrow_right" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llJoin"
+                        android:id="@+id/ll_join"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -264,22 +261,22 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:text="加入我们"
-                            android:textColor="@color/black"
+                            android:text="@string/app_mine_join"
+                            android:textColor="@color/app_black"
                             android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:src="@mipmap/icon_arrow_right" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llSetting"
+                        android:id="@+id/ll_setting"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -294,16 +291,16 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:text="系统设置"
-                            android:textColor="@color/black"
+                            android:text="@string/app_mine_setting"
+                            android:textColor="@color/app_black"
                             android:textStyle="bold" />
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:src="@mipmap/icon_arrow_right" />
 
                     </LinearLayout>

@@ -28,7 +28,10 @@ class PlazaPresenter : KotlinPresenter<PlazaContract.View>(), PlazaContract.Pres
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
     /**

@@ -2,16 +2,16 @@ package com.hjc.wan.ui.square.child
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
-import com.hjc.baselib.fragment.BaseMvpLazyFragment
-import com.hjc.wan.R
+import com.hjc.baselib.fragment.BaseLazyFragment
 import com.hjc.wan.constant.EventCode
+import com.hjc.wan.databinding.FragmentCommonBinding
 import com.hjc.wan.model.SystemBean
 import com.hjc.wan.ui.square.adapter.SystemAdapter
 import com.hjc.wan.ui.square.contract.SystemContract
 import com.hjc.wan.ui.square.presenter.SystemPresenter
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.fragment_common.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2019/11/14 14:38
  * @Description: 体系子页面
  */
-class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>(),
+class SystemFragment : BaseLazyFragment<FragmentCommonBinding, SystemContract.View, SystemPresenter>(),
     SystemContract.View {
 
     private lateinit var mAdapter: SystemAdapter
@@ -40,21 +40,17 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_common
-    }
-
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
-        smartRefreshLayout.setEnableLoadMore(false)
+        initLoadSir(mBinding.refreshLayout)
+        mBinding.refreshLayout.setEnableLoadMore(false)
 
         val manager = LinearLayoutManager(mContext)
-        rvCommon.layoutManager = manager
+        mBinding.rvList.layoutManager = manager
 
         mAdapter = SystemAdapter(null)
-        rvCommon.adapter = mAdapter
+        mBinding.rvList.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -66,7 +62,7 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     }
 
     override fun initData() {
-        super.initData()
+        EventManager.register(this)
         getPresenter()?.loadListData(true)
     }
 
@@ -75,11 +71,11 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishRefresh()
     }
 
     override fun addListeners() {
-        smartRefreshLayout.setOnRefreshListener { getPresenter()?.loadListData(false) }
+        mBinding.refreshLayout.setOnRefreshListener { getPresenter()?.loadListData(false) }
     }
 
     override fun onSingleClick(v: View?) {
@@ -102,6 +98,11 @@ class SystemFragment : BaseMvpLazyFragment<SystemContract.View, SystemPresenter>
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 
 }

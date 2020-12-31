@@ -6,19 +6,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
+import com.hjc.baselib.base.BasePresenter
 import com.hjc.baselib.base.IBaseView
 import com.hjc.baselib.dialog.LoadingDialog
+import com.hjc.baselib.loadsir.EmptyCallback
+import com.hjc.baselib.loadsir.ErrorCallback
+import com.hjc.baselib.loadsir.LoadingCallback
 import com.hjc.baselib.utils.ClickUtils
+import com.kingja.loadsir.core.LoadService
+import com.kingja.loadsir.core.LoadSir
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.lang.reflect.ParameterizedType
 
 /**
  * @Author: HJC
  * @Date: 2020/1/3 11:50
- * @Description:  Lazy Fragment基类
+ * @Description: Lazy Fragment基类(MVP)
  */
-abstract class BaseLazyFragment : Fragment(), View.OnClickListener, IBaseView {
+abstract class BaseLazyFragment<VB : ViewBinding, V : IBaseView, P : BasePresenter<V>?> : Fragment(), View.OnClickListener, IBaseView {
+
+    protected lateinit var mBinding: VB
+
+    private var mPresenter: P? = null
+
+    private lateinit var mView: V
+
+    protected var mLoadService: LoadService<*>? = null
 
     protected lateinit var mContext: Context
 
@@ -50,20 +69,32 @@ abstract class BaseLazyFragment : Fragment(), View.OnClickListener, IBaseView {
         lazyLoad()
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = LayoutInflater.from(mContext).inflate(getLayoutId(), container, false)
+        val type = javaClass.genericSuperclass
+        val clazz = (type as ParameterizedType).actualTypeArguments[0] as Class<VB>
+        val method = clazz.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        mBinding = method.invoke(null, layoutInflater, container, false) as VB
         isViewCreated = true
-        return rootView
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ARouter.getInstance().inject(this)
+        getImmersionBar()?.init()
         lazyLoad()
+    }
+
+    /**
+     * 初始化沉浸式
+     */
+    protected open fun getImmersionBar(): ImmersionBar? { //使用该属性,必须指定状态栏颜色
+        return null
     }
 
     /**
@@ -79,23 +110,20 @@ abstract class BaseLazyFragment : Fragment(), View.OnClickListener, IBaseView {
     }
 
     /**
-     * 获取布局的ID
-     */
-    abstract fun getLayoutId(): Int
-
-    /**
-     * 初始化沉浸式
-     */
-    protected open fun getImmersionBar(): ImmersionBar? { //使用该属性,必须指定状态栏颜色
-        return null
-    }
-
-    /**
      * 初始化View
      */
     protected open fun initView() {
-        ARouter.getInstance().inject(this)
-        getImmersionBar()?.init()
+        mPresenter = createPresenter()
+        mView = createView()
+        mPresenter?.attachView(mView)
+    }
+
+    abstract fun createPresenter(): P
+
+    abstract fun createView(): V
+
+    protected fun getPresenter(): P? {
+        return mPresenter
     }
 
     /**
@@ -122,10 +150,14 @@ abstract class BaseLazyFragment : Fragment(), View.OnClickListener, IBaseView {
      */
     abstract fun onSingleClick(v: View?)
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            getImmersionBar()?.init()
+    /**
+     * 注册LoadSir
+     *
+     * @param view 状态视图
+     */
+    protected open fun initLoadSir(view: View?) {
+        if (mLoadService == null) {
+            mLoadService = LoadSir.getDefault().register(view) { v: View? -> this.onRetryBtnClick(v) }
         }
     }
 
@@ -143,8 +175,50 @@ abstract class BaseLazyFragment : Fragment(), View.OnClickListener, IBaseView {
         }
     }
 
+    override fun showContent() {
+        GlobalScope.launch {
+            delay(500)
+            mLoadService?.showSuccess()
+        }
+    }
+
+    override fun showLoading() {
+        mLoadService?.showCallback(LoadingCallback::class.java)
+    }
+
+    override fun showEmpty() {
+        GlobalScope.launch {
+            delay(500)
+            mLoadService?.showCallback(EmptyCallback::class.java)
+        }
+    }
+
+    override fun showError() {
+        GlobalScope.launch {
+            delay(500)
+            mLoadService?.showCallback(ErrorCallback::class.java)
+        }
+    }
+
+    /**
+     * 失败重试,重新加载事件
+     */
+    protected open fun onRetryBtnClick(v: View?) {}
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            getImmersionBar()?.init()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         isViewCreated = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter?.detachView()
     }
 }

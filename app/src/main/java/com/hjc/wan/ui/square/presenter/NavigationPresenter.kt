@@ -4,7 +4,8 @@ import com.hjc.wan.common.KotlinPresenter
 import com.hjc.wan.http.RetrofitClient
 import com.hjc.wan.ui.square.contract.NavigationContract
 
-class NavigationPresenter : KotlinPresenter<NavigationContract.View>(), NavigationContract.Presenter {
+class NavigationPresenter : KotlinPresenter<NavigationContract.View>(),
+    NavigationContract.Presenter {
 
     override fun loadListData() {
         launchWrapper({
@@ -16,7 +17,9 @@ class NavigationPresenter : KotlinPresenter<NavigationContract.View>(), Navigati
             } else {
                 getView()?.showEmpty()
             }
-        }, isShowStatus = true)
+        }, isShowStatus = true, error = { e ->
+            getView()?.showError()
+        })
     }
 
 }

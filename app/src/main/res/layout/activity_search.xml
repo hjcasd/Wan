@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clSearch"
+        android:id="@+id/cl_search"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:background="@color/app_color"
@@ -15,10 +15,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/ivBack"
+            android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="?attr/selectableItemBackground"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
@@ -30,15 +30,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.hjc.wan.widget.SearchEditText
-            android:id="@+id/etSearch"
+            android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/shape_et_bg_white"
-            android:drawableRight="@mipmap/icon_clear"
+            android:drawableEnd="@mipmap/icon_clear"
             android:gravity="center_vertical"
-            android:hint="请输入搜索内容"
+            android:hint="@string/app_search_placeholder"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
@@ -46,16 +46,16 @@
             android:paddingRight="10dp"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/ivBack"
-            app:layout_constraintRight_toLeftOf="@id/tvSearch"
+            app:layout_constraintLeft_toRightOf="@id/iv_back"
+            app:layout_constraintRight_toLeftOf="@id/tv_search"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvSearch"
+            android:id="@+id/tv_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="搜索"
+            android:layout_marginEnd="10dp"
+            android:text="@string/app_search"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -66,27 +66,27 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clHot"
+        android:id="@+id/cl_hot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clSearch">
+        app:layout_constraintTop_toBottomOf="@id/cl_search">
 
         <TextView
             android:id="@+id/tv_hot_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="热门搜索"
-            android:textColorHint="@color/black"
+            android:text="@string/app_search_tip1"
+            android:textColorHint="@color/app_black"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.nex3z.flowlayout.FlowLayout
-            android:id="@+id/flHot"
+            android:id="@+id/fl_hot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -100,27 +100,27 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clHistory"
+        android:id="@+id/cl_history"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clHot">
+        app:layout_constraintTop_toBottomOf="@id/cl_hot">
 
         <TextView
             android:id="@+id/tv_history_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="历史搜索"
-            android:textColorHint="@color/black"
+            android:text="@string/app_search_tip2"
+            android:textColorHint="@color/app_black"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivClearHistory"
+            android:id="@+id/iv_clear_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_delete"
@@ -129,7 +129,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.nex3z.flowlayout.FlowLayout
-            android:id="@+id/flHistory"
+            android:id="@+id/fl_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -145,18 +145,18 @@
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/smartRefreshLayout"
+        android:id="@+id/refresh_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clSearch"
+        app:layout_constraintTop_toBottomOf="@id/cl_search"
         app:srlEnableRefresh="false">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvList"
+            android:id="@+id/rv_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

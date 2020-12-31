@@ -13,17 +13,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationContentDescription="返回"
         app:navigationIcon="@mipmap/icon_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="标题"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -31,7 +29,7 @@
 
 
     <com.hjc.webviewlib.X5WebView
-        android:id="@+id/webView"
+        android:id="@+id/web_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

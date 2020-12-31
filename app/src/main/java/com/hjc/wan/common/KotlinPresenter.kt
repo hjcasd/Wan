@@ -25,7 +25,8 @@ abstract class KotlinPresenter<V : IBaseView> : BasePresenter<V>() {
         api: suspend CoroutineScope.() -> BaseResponse<T>,
         success: CoroutineScope.(T?) -> Unit,
         isShowLoading: Boolean = false,
-        isShowStatus: Boolean = false
+        isShowStatus: Boolean = false,
+        error: (e: Throwable) -> Unit = {},
     ) {
         if (isShowLoading) {
             getView()?.startLoading()
@@ -39,14 +40,16 @@ abstract class KotlinPresenter<V : IBaseView> : BasePresenter<V>() {
                     val response = api()
                     withContext(Dispatchers.Main) {
                         if (ServerCode.CODE_SUCCESS == response.errorCode) { //请求成功
-                             success(response.data)
+                            success(response.data)
                         } else { //请求成功,Code错误,抛出ApiException
                             handleError(ApiException(response.errorMsg, response.errorCode))
+                            error(ApiException(response.errorMsg, response.errorCode))
                         }
                     }
                 }
             } catch (e: Throwable) { //请求失败
                 handleError(e)
+                error(e)
             } finally { //请求结束
                 if (isShowLoading) {
                     getView()?.dismissLoading()

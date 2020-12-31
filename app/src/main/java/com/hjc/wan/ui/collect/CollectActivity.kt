@@ -5,16 +5,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
-import com.hjc.wan.R
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityCollectBinding
 import com.hjc.wan.ui.collect.adapter.CollectAdapter
 import com.hjc.wan.ui.collect.child.CollectArticleFragment
 import com.hjc.wan.ui.collect.child.CollectLinkFragment
 import com.hjc.wan.ui.collect.contract.CollectContract
 import com.hjc.wan.ui.collect.presenter.CollectPresenter
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.activity_collect.*
 import java.util.*
 
 /**
@@ -23,7 +22,8 @@ import java.util.*
  * @Description: 我的收藏页面
  */
 @Route(path = RoutePath.URL_COLLECT)
-class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(),
+class CollectActivity :
+    BaseActivity<ActivityCollectBinding, CollectContract.View, CollectPresenter>(),
     CollectContract.View {
 
 
@@ -36,38 +36,33 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
     }
 
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_collect
-    }
-
-
     override fun initView() {
         super.initView()
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(mBinding.toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        colToolbar.run {
-            setContentScrimColor(SettingManager.getThemeColor())
-            setStatusBarScrimColor(SettingManager.getThemeColor())
+        SettingManager.getThemeColor().let { color ->
+            mBinding.toolbarLayout.run {
+                setContentScrimColor(color)
+                setContentScrimColor(color)
+            }
         }
     }
 
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
-            .titleBar(toolbar)
+            .titleBar(mBinding.toolbar)
             .fitsSystemWindows(true)
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         getPresenter().loadChild()
     }
 
     override fun addListeners() {
-        toolbar.setNavigationOnClickListener { finish() }
+        mBinding.toolbar.setNavigationOnClickListener { finish() }
     }
 
     override fun onSingleClick(v: View?) {
@@ -90,9 +85,9 @@ class CollectActivity : BaseMvpActivity<CollectContract.View, CollectPresenter>(
             fragments,
             titles
         )
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 3
-        tabLayout.setupWithViewPager(viewPager)
+        mBinding.viewPager.adapter = adapter
+        mBinding.viewPager.offscreenPageLimit = 3
+        mBinding.tabLayout.setupWithViewPager(mBinding.viewPager)
     }
 
 }

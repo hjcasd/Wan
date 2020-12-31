@@ -1,23 +1,22 @@
 package com.hjc.wan.ui.login
 
+import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.baselib.utils.helper.ActivityHelper
 import com.hjc.baselib.widget.bar.OnBarLeftClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityRegisterBinding
 import com.hjc.wan.ui.login.contract.RegisterContract
 import com.hjc.wan.ui.login.presenter.RegisterPresenter
 import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
-import kotlinx.android.synthetic.main.activity_login.etPassword
-import kotlinx.android.synthetic.main.activity_login.etUsername
-import kotlinx.android.synthetic.main.activity_register.*
 
 /**
  * @Author: HJC
@@ -25,7 +24,8 @@ import kotlinx.android.synthetic.main.activity_register.*
  * @Description: 注册页面
  */
 @Route(path = RoutePath.URL_REGISTER)
-class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresenter>(),
+class RegisterActivity :
+    BaseActivity<ActivityRegisterBinding, RegisterContract.View, RegisterPresenter>(),
     RegisterContract.View {
 
     override fun createPresenter(): RegisterPresenter {
@@ -36,16 +36,13 @@ class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresente
         return this
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_register
-    }
-
-
     override fun initView() {
         super.initView()
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
-        llRegister.setBackgroundColor(SettingManager.getThemeColor())
+        SettingManager.getThemeColor().let {
+            mBinding.titleBar.setBgColor(it)
+            mBinding.llRegister.setBackgroundColor(it)
+        }
     }
 
     override fun getImmersionBar(): ImmersionBar? {
@@ -54,10 +51,14 @@ class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresente
             .fitsSystemWindows(true)
     }
 
-    override fun addListeners() {
-        btnRegister.setOnClickListener(this)
+    override fun initData(savedInstanceState: Bundle?) {
 
-        titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+    }
+
+    override fun addListeners() {
+        mBinding.btnRegister.setOnClickListener(this)
+
+        mBinding.titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
 
             override fun leftClick(view: View) {
                 finish()
@@ -67,7 +68,7 @@ class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresente
 
     override fun onSingleClick(v: View?) {
         when (v?.id) {
-            R.id.btnRegister -> {
+            R.id.btn_register -> {
                 preRegister()
             }
         }
@@ -77,9 +78,9 @@ class RegisterActivity : BaseMvpActivity<RegisterContract.View, RegisterPresente
      * 注册准备
      */
     private fun preRegister() {
-        val username = etUsername.text.toString().trim()
-        val password = etPassword.text.toString().trim()
-        val confirmPassword = etConfirmPassword.text.toString().trim()
+        val username = mBinding.etUsername.text.toString().trim()
+        val password = mBinding.etPassword.text.toString().trim()
+        val confirmPassword = mBinding.etConfirmPassword.text.toString().trim()
 
         if (StringUtils.isEmpty(username)) {
             ToastUtils.showShort("请输入用户名")

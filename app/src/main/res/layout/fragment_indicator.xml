@@ -5,14 +5,13 @@
     android:orientation="vertical">
 
     <net.lucode.hackware.magicindicator.MagicIndicator
-        android:id="@+id/magicIndicator"
+        android:id="@+id/magic_indicator"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/app_color" />
 
-
     <com.hjc.baselib.widget.FixedViewPager
-        android:id="@+id/viewPager"
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

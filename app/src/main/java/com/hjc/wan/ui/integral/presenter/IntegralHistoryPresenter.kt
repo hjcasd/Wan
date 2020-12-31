@@ -28,7 +28,10 @@ class IntegralHistoryPresenter : KotlinPresenter<IntegralHistoryContract.View>()
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
 }

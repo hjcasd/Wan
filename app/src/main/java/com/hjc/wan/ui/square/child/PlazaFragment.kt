@@ -2,10 +2,11 @@ package com.hjc.wan.ui.square.child
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
-import com.hjc.baselib.fragment.BaseMvpLazyFragment
-import com.hjc.wan.R
+import com.hjc.baselib.fragment.BaseLazyFragment
 import com.hjc.wan.constant.EventCode
+import com.hjc.wan.databinding.FragmentCommonBinding
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.ui.square.adapter.PlazaAdapter
 import com.hjc.wan.ui.square.contract.PlazaContract
@@ -14,7 +15,6 @@ import com.hjc.wan.utils.helper.RouterManager
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.fragment_common.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -23,7 +23,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2019/11/14 14:38
  * @Description: 广场子页面
  */
-class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
+class PlazaFragment : BaseLazyFragment<FragmentCommonBinding, PlazaContract.View, PlazaPresenter>(),
     PlazaContract.View {
 
     private lateinit var mAdapter: PlazaAdapter
@@ -46,21 +46,16 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_common
-    }
-
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
+        initLoadSir(mBinding.refreshLayout)
 
         val manager = LinearLayoutManager(mContext)
-        rvCommon.layoutManager = manager
+        mBinding.rvList.layoutManager = manager
 
         mAdapter = PlazaAdapter(null)
-        rvCommon.adapter = mAdapter
+        mBinding.rvList.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -72,8 +67,7 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     }
 
     override fun initData() {
-        super.initData()
-
+        EventManager.register(this)
         getPresenter()?.loadListData(mPage, true)
     }
 
@@ -86,7 +80,7 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     }
 
     override fun addListeners() {
-        smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        mBinding.refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
@@ -138,8 +132,8 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -153,6 +147,11 @@ class PlazaFragment : BaseMvpLazyFragment<PlazaContract.View, PlazaPresenter>(),
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 
 }

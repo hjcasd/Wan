@@ -7,6 +7,7 @@ interface MineContract {
 
     interface View : IBaseView {
         fun showIntegral(result : IntegralBean)
+        fun refreshComplete()
     }
 
     interface Presenter {

@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.blankj.utilcode.util.ColorUtils
 import com.gyf.immersionbar.ImmersionBar
-import com.hjc.baselib.activity.BaseMvpActivity
+import com.hjc.baselib.activity.BaseActivity
 import com.hjc.baselib.widget.bar.OnBarLeftClickListener
-import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityIntegralHistoryBinding
 import com.hjc.wan.model.IntegralHistoryBean
 import com.hjc.wan.ui.integral.adapter.IntegralHistoryAdapter
 import com.hjc.wan.ui.integral.contract.IntegralHistoryContract
@@ -17,7 +17,6 @@ import com.hjc.wan.ui.integral.presenter.IntegralHistoryPresenter
 import com.hjc.wan.utils.helper.SettingManager
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
-import kotlinx.android.synthetic.main.activity_integral_history.*
 
 /**
  * @Author: HJC
@@ -26,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_integral_history.*
  */
 @Route(path = RoutePath.URL_INTEGRAL_HISTORY)
 class IntegralHistoryActivity :
-    BaseMvpActivity<IntegralHistoryContract.View, IntegralHistoryPresenter>(),
+    BaseActivity<ActivityIntegralHistoryBinding, IntegralHistoryContract.View, IntegralHistoryPresenter>(),
     IntegralHistoryContract.View {
 
     private lateinit var mAdapter: IntegralHistoryAdapter
@@ -42,20 +41,16 @@ class IntegralHistoryActivity :
     }
 
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_integral_history
-    }
-
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
+        initLoadSir(mBinding.refreshLayout)
 
         val manager = LinearLayoutManager(this)
-        rvHistory.layoutManager = manager
+        mBinding.rvHistory.layoutManager = manager
 
         mAdapter = IntegralHistoryAdapter(null)
-        rvHistory.adapter = mAdapter
+        mBinding.rvHistory.adapter = mAdapter
 
         SettingManager.getListAnimationType().let {
             if (it != 0) {
@@ -65,7 +60,7 @@ class IntegralHistoryActivity :
             }
         }
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
+        mBinding.titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
     override fun getImmersionBar(): ImmersionBar? {
@@ -75,8 +70,6 @@ class IntegralHistoryActivity :
     }
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         getPresenter().loadListData(mPage, true)
     }
 
@@ -89,19 +82,19 @@ class IntegralHistoryActivity :
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     override fun addListeners() {
-        titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
+        mBinding.titleBar.setOnBarLeftClickListener(object : OnBarLeftClickListener {
 
             override fun leftClick(view: View) {
                 finish()
             }
         })
 
-        smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        mBinding.refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 1

@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ColorUtils
-import com.blankj.utilcode.util.LogUtils
 import com.gyf.immersionbar.ImmersionBar
 import com.hjc.baselib.event.EventManager
 import com.hjc.baselib.event.MessageEvent
-import com.hjc.baselib.fragment.BaseMvpFragment
+import com.hjc.baselib.fragment.BaseFragment
 import com.hjc.baselib.widget.bar.OnBarRightClickListener
 import com.hjc.wan.R
 import com.hjc.wan.constant.EventCode
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.FragmentHomeBinding
 import com.hjc.wan.model.ArticleBean
 import com.hjc.wan.model.BannerBean
 import com.hjc.wan.ui.home.adapter.HomeAdapter
@@ -26,7 +26,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import com.youth.banner.Banner
 import com.youth.banner.BannerConfig
 import com.youth.banner.Transformer
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
@@ -36,7 +35,7 @@ import java.util.*
  * @Date: 2019/11/9 15:35
  * @Description: 首页
  */
-class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeContract.View {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeContract.View, HomePresenter>(), HomeContract.View {
 
     private var banner: Banner? = null
 
@@ -62,11 +61,6 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_home
-    }
-
     override fun getImmersionBar(): ImmersionBar? {
         return ImmersionBar.with(this)
             .statusBarColor(ColorUtils.int2RgbString(SettingManager.getThemeColor()))
@@ -76,16 +70,16 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     override fun initView() {
         super.initView()
 
-        initLoadSir(smartRefreshLayout)
+        initLoadSir(mBinding.refreshLayout)
 
         val headerView = View.inflate(mContext, R.layout.layout_header_banner, null)
         banner = headerView.findViewById<View>(R.id.banner) as Banner?
 
         val manager = LinearLayoutManager(mContext)
-        rvCommon.layoutManager = manager
+        mBinding.rvHome.layoutManager = manager
 
         mAdapter = HomeAdapter(null)
-        rvCommon.adapter = mAdapter
+        mBinding.rvHome.adapter = mAdapter
 
         mAdapter.addHeaderView(headerView)
 
@@ -95,15 +89,13 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
             mAdapter.closeLoadAnimation()
         }
 
-        titleBar.setBgColor(SettingManager.getThemeColor())
+        mBinding.titleBar.setBgColor(SettingManager.getThemeColor())
     }
 
 
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
         EventManager.register(this)
-
         getPresenter()?.loadBannerData()
         getPresenter()?.loadListData(mPage, true)
     }
@@ -135,7 +127,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     }
 
     override fun addListeners() {
-        titleBar.setOnBarRightClickListener(object : OnBarRightClickListener {
+        mBinding.titleBar.setOnBarRightClickListener(object : OnBarRightClickListener {
 
             override fun rightClick(view: View?) {
                 RouterManager.jump(RoutePath.URL_SEARCH)
@@ -147,7 +139,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
             RouterManager.jumpToWeb(bean.title, bean.url)
         }
 
-        smartRefreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+        mBinding.refreshLayout.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
 
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 mPage = 0
@@ -170,7 +162,6 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
 
             setOnItemChildClickListener { _, _, position ->
                 val bean = mAdapter.data[position]
-                LogUtils.e("collect: " +  bean.collect)
                 if (!bean.collect) {
                     getPresenter()?.collectArticle(bean)
                 } else {
@@ -202,8 +193,8 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     }
 
     override fun refreshComplete() {
-        smartRefreshLayout.finishRefresh()
-        smartRefreshLayout.finishLoadMore()
+        mBinding.refreshLayout.finishRefresh()
+        mBinding.refreshLayout.finishLoadMore()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -218,7 +209,7 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
             }
         } else if (event?.code == EventCode.CHANGE_THEME) {
             SettingManager.getThemeColor().let {
-                titleBar.setBgColor(it)
+                mBinding.titleBar.setBgColor(it)
 
                 ImmersionBar.with(this)
                     .statusBarColor(ColorUtils.int2RgbString(it))
@@ -230,5 +221,10 @@ class HomeFragment : BaseMvpFragment<HomeContract.View, HomePresenter>(), HomeCo
     override fun onDestroyView() {
         super.onDestroyView()
         banner?.stopAutoPlay()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventManager.unregister(this)
     }
 }

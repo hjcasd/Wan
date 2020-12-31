@@ -58,9 +58,6 @@ class X5WebView(context: Context, attrs: AttributeSet?) : WebView(context, attrs
         // 设置此属性，可任意比例缩放
         webSetting.useWideViewPort = true
 
-        // 设置WebView是否支持多窗口,如果为true需要实现onCreateWindow(WebView, boolean, boolean, Message)
-        webSetting.setSupportMultipleWindows(true)
-
         // 启动应用缓存
         webSetting.setAppCacheEnabled(true)
         // 设置应用缓存内容的最大值

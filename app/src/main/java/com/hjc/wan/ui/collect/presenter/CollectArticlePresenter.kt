@@ -30,7 +30,10 @@ class CollectArticlePresenter : KotlinPresenter<CollectArticleContract.View>(),
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
     /**

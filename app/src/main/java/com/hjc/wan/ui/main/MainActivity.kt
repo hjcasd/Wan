@@ -3,9 +3,10 @@ package com.hjc.wan.ui.main
 import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.hjc.baselib.activity.BaseMvpFragmentActivity
+import com.hjc.baselib.activity.BaseFragmentActivity
 import com.hjc.wan.R
 import com.hjc.wan.constant.RoutePath
+import com.hjc.wan.databinding.ActivityMainBinding
 import com.hjc.wan.ui.home.HomeFragment
 import com.hjc.wan.ui.main.contract.MainContract
 import com.hjc.wan.ui.main.presenter.MainPresenter
@@ -13,7 +14,6 @@ import com.hjc.wan.ui.mine.MineFragment
 import com.hjc.wan.ui.project.ProjectFragment
 import com.hjc.wan.ui.publics.PublicFragment
 import com.hjc.wan.ui.square.SquareFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @Author: HJC
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  * @Description: 主界面
  */
 @Route(path = RoutePath.URL_MAIN)
-class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>(),
+class MainActivity : BaseFragmentActivity<ActivityMainBinding, MainContract.View, MainPresenter>(),
     MainContract.View {
 
     private lateinit var mHomeFragment: HomeFragment
@@ -39,19 +39,11 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
         return this
     }
 
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
-
     override fun getFragmentContentId(): Int {
-        return R.id.flContent
+        return R.id.fl_content
     }
-
 
     override fun initData(savedInstanceState: Bundle?) {
-        super.initData(savedInstanceState)
-
         getPresenter()?.requestPermission()
 
         mHomeFragment = HomeFragment.newInstance()
@@ -64,47 +56,22 @@ class MainActivity : BaseMvpFragmentActivity<MainContract.View, MainPresenter>()
     }
 
     override fun addListeners() {
-        rgTab.setOnCheckedChangeListener { _, checkedId ->
+        mBinding.rgTab.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-                R.id.rbHome -> showFragment(mHomeFragment)
+                R.id.rb_home -> showFragment(mHomeFragment)
 
-                R.id.rbProject -> showFragment(mProjectFragment)
+                R.id.rb_project -> showFragment(mProjectFragment)
 
-                R.id.rbSquare -> showFragment(mSquareFragment)
+                R.id.rb_square -> showFragment(mSquareFragment)
 
-                R.id.rbPublic -> showFragment(mPublicFragment)
+                R.id.rb_public -> showFragment(mPublicFragment)
 
-                R.id.rbMine -> showFragment(mMineFragment)
+                R.id.rb_mine -> showFragment(mMineFragment)
             }
         }
     }
 
     override fun onSingleClick(v: View?) {
-
-    }
-
-
-    override fun dismissLoading() {
-
-    }
-
-    override fun showContent() {
-
-    }
-
-    override fun showLoading() {
-
-    }
-
-    override fun startLoading() {
-
-    }
-
-    override fun showEmpty() {
-
-    }
-
-    override fun showError() {
 
     }
 }

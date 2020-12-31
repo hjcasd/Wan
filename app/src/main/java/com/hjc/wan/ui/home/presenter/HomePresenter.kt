@@ -46,7 +46,10 @@ class HomePresenter : KotlinPresenter<HomeContract.View>(), HomeContract.Present
                     }
                 }
             }
-        }, isShowStatus = isFirst)
+        }, isShowStatus = isFirst, error = { e ->
+            getView()?.refreshComplete()
+            getView()?.showError()
+        })
     }
 
     /**

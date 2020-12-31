@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
@@ -19,9 +20,9 @@
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="签到积分： 10 + 19"
+            tools:text="签到积分： 10 + 19"
+            android:textColor="@color/app_black_333"
             android:textSize="14sp"
-            android:textColor="@color/black_333"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,24 +31,24 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2019-12-20 12:23:23"
-            android:textColor="@color/black_666"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@id/tv_desc"
             android:layout_marginTop="5dp"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            tools:text="2019-12-20 12:23:23"
+            android:textColor="@color/app_black_666"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_desc" />
 
 
         <TextView
             android:id="@+id/tv_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+28"
+            tools:text="+28"
             android:textColor="@color/app_color"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

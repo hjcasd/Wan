@@ -7,8 +7,8 @@
     <color name="app_color">#58ae6b</color>
     <color name="app_color_dark">#488252</color>
 
-    <color name="black">#000000</color>
-    <color name="black_333">#ff333333</color>
-    <color name="black_666">#ff333333</color>
-    <color name="gray_f4f5f6">#f4f5f6</color>
+    <color name="app_black">#000000</color>
+    <color name="app_black_333">#ff333333</color>
+    <color name="app_black_666">#ff333333</color>
+    <color name="app_gray_f4f5f6">#f4f5f6</color>
 </resources>
