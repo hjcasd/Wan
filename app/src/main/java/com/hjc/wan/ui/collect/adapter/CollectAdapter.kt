@@ -15,7 +15,7 @@ class CollectAdapter(fm: FragmentManager, private val mFragments: List<Fragment>
         return mFragments.size
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): CharSequence {
         return mTitles[position]
     }
 }

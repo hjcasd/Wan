@@ -14,8 +14,10 @@ import com.hjc.wan.utils.image.ImageManager
 class HomeAdapter(data: MutableList<ArticleBean>?) :
     BaseQuickAdapter<ArticleBean, BaseViewHolder>(R.layout.item_rv_home, data) {
 
-    private val TYPE_TEXT = 1
-    private val TYPE_IMAGE = 2
+    companion object{
+        private const val TYPE_TEXT = 1
+        private const val TYPE_IMAGE = 2
+    }
 
     init {
         multiTypeDelegate = object : MultiTypeDelegate<ArticleBean>() {

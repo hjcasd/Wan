@@ -33,8 +33,7 @@ class TodoAdapter(data: MutableList<TodoBean>?) :
                     helper.setVisible(R.id.iv_state, false)
                 }
             }
-            helper.getView<ImageView>(R.id.iv_tag).imageTintList =
-                SettingManager.getOneColorStateList(SettingManager.getColorByType(it.priority))
+            helper.getView<ImageView>(R.id.iv_tag).imageTintList = SettingManager.getOneColorStateList(SettingManager.getColorByType(it.priority))
         }
     }
 

@@ -15,7 +15,10 @@ import java.nio.charset.Charset
  * @Description: 日志拦截器
  */
 class LogInterceptor : Interceptor {
-    private val UTF8 = Charset.forName("UTF-8")
+
+    companion object{
+        private val UTF8 = Charset.forName("UTF-8")
+    }
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
